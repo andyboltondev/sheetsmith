@@ -3,6 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.18.0" },
-  "scripts": { "test": "node --test test/*.test.ts" }
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "inspect-pdf": "node scripts/inspect-pdf.mjs"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2"
+  }
 }

@@ -1,0 +1,107 @@
+{
+  "data": {
+    "name": "Mara Ashford",
+    "race": {
+      "fullName": "Human",
+      "weightSpeeds": {
+        "normal": {
+          "walk": 30
+        }
+      }
+    },
+    "background": {
+      "definition": {
+        "name": "Soldier"
+      }
+    },
+    "classes": [
+      {
+        "definition": {
+          "name": "Fighter",
+          "hitDice": 10
+        },
+        "level": 5
+      }
+    ],
+    "stats": [
+      {
+        "id": 1,
+        "value": 16
+      },
+      {
+        "id": 2,
+        "value": 14
+      },
+      {
+        "id": 3,
+        "value": 15
+      },
+      {
+        "id": 4,
+        "value": 10
+      },
+      {
+        "id": 5,
+        "value": 12
+      },
+      {
+        "id": 6,
+        "value": 8
+      }
+    ],
+    "overrideArmorClass": 18,
+    "overrideHitPoints": 44,
+    "modifiers": {
+      "class": [
+        {
+          "type": "proficiency",
+          "subType": "strength-saving-throws"
+        },
+        {
+          "type": "proficiency",
+          "subType": "constitution-saving-throws"
+        },
+        {
+          "type": "proficiency",
+          "subType": "athletics"
+        },
+        {
+          "type": "proficiency",
+          "subType": "perception"
+        }
+      ]
+    },
+    "inventory": [
+      {
+        "definition": {
+          "name": "Longsword"
+        },
+        "quantity": 1,
+        "equipped": true
+      },
+      {
+        "definition": {
+          "name": "Shield"
+        },
+        "quantity": 1,
+        "equipped": true
+      },
+      {
+        "definition": {
+          "name": "Rations"
+        },
+        "quantity": 10
+      }
+    ],
+    "currencies": {
+      "gp": 35,
+      "sp": 8
+    },
+    "traits": {
+      "personalityTraits": "I keep my promises, even when the road gets difficult.",
+      "ideals": "Everyone deserves someone in their corner.",
+      "bonds": "My old company is my family.",
+      "flaws": "I volunteer before I think."
+    }
+  }
+}

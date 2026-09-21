@@ -1,33 +1,55 @@
-# D&D Beyond Character Sheet PDF
+# Field Notes — D&D Beyond Character Sheet PDF
 
-Import once. Normalise once. Output anywhere.
+A local-first initial build: import a public D&D Beyond character, review it, choose a portrait and player name, and download an editable A4 PDF. Includes a sample character for offline exploration.
 
-## Status
+## Start
 
-Initial TypeScript foundation, not yet a working web application. Includes URL validation, a replaceable importer with timeout/error handling, a normalized identity/class/ability model, and offline tests. The supplied brief is in `docs/project-brief.md`.
+Requires Node.js 22.18 or newer.
 
-## Run tests
+```sh
+npm install
+npm start
+```
 
-Install Node.js 22.18 or newer, then run `npm test`. There are no package dependencies yet. Node executes the TypeScript directly; a separate type-check step will be added with the application toolchain.
+Open http://localhost:3000. Use `npm run dev` for server restart on changes. Set `PORT` to choose another port. The server binds only to your computer (127.0.0.1).
+
+```sh
+npm test
+npm run typecheck
+npm run inspect-pdf -- path/to/sheet.pdf
+```
+
+## What works
+
+- Supported D&D Beyond URL validation, server-side fetching, timeout, bounded responses and clear errors.
+- Identity, multiple classes, base/bonus/override ability scores, common unconditional score bonuses, saves, skills and expertise, passive Perception, inventory, currency, traits, features and basic spell lists.
+- Player-name override; D&D Beyond, uploaded PNG/JPEG/WebP, or no portrait. Images are fitted without cropping.
+- An original three-page A4 template with editable AcroForms, configurable mappings, and editable continuation pages for long text.
+- Responsive interface, light/dark/system appearance, labeled controls, keyboard focus and announced status/errors.
+- No accounts, character database, saved uploads or saved generated PDFs. PDF generation happens in the browser; the import server handles character data transiently. The browser downloads the resulting file only when requested.
+
+## Initial-build limits
+
+Review values before play. The undocumented upstream format and all D&D rule interactions are not fully supported. Item effects, conditional modifiers, Jack of All Trades, custom overrides, complex multiclass spellcasting, attacks, spell DCs and slot calculations remain future work. AC and HP are imported only from explicit overrides; otherwise they stay blank and can be entered before export. Speed currently uses base species walking speed. The UI always shows a review notice.
+
+Remote portraits use a transient, size-limited local proxy with validated D&D Beyond HTTPS URLs and redirects. If upstream images are unavailable, upload a local copy or choose no portrait. Uploads are limited to 5 MB and 40 megapixels. Standard PDF fonts support Western text; unsupported characters become `?` with a visible export warning.
+
+This is a local development app, not a hardened public hosting service. Imports are limited to 20 per minute and three concurrent requests. Live endpoint availability is outside this app's control.
 
 ## Architecture
 
-- `src/importers/dndbeyond`: upstream URL parsing, transport and normalization.
-- `src/character`: source-independent model and calculations.
-- Future `src/pdf`: template mapping and PDF generation, consuming only the normalized model.
-- Future UI and server: transient import proxy to avoid browser CORS restrictions; no character persistence.
+- `src/importers/dndbeyond`: URL parsing, bounded fetch and normalization; all upstream-specific assumptions stay here.
+- `src/character`: source-independent model, skills and calculations.
+- `src/pdf/template.js`: original template layout and model-to-field mapping. No third-party sheet artwork is bundled.
+- `src/pdf/generator.js`: browser/Node-compatible PDF creation, editable forms, portrait placement and overflow.
+- `src/server.ts`: local HTTP app and transient import route. Static files are explicitly allowlisted.
+- `public`: browser interface; overrides operate on a copy of the normalized character.
+- `test`: offline normalization, importer, HTTP and PDF roundtrip tests.
 
-The character-service endpoint is undocumented. Current normalization is intentionally incomplete and emits a warning: species, feat, item and class modifiers are not yet applied. Do not treat these initial scores as a verified final sheet. Live upstream access has not been validated.
+The full supplied brief is in `docs/project-brief.md`. The first build is an end-to-end foundation, not completion of every item in that brief.
 
 ## Next milestones
 
-- [ ] Add a responsive, accessible interface with light/dark/system appearance.
-- [ ] Add a server import route with request limits and no character logging/storage.
-- [ ] Expand the normalized model, modifier handling, skills, combat, inventory and spells.
-- [ ] Add sanitized martial, caster, multiclass and edge-case fixtures.
-- [ ] Select a redistributable fillable PDF or create an original template.
-- [ ] Add configurable field mappings and a PDF-field inspection utility.
-- [ ] Add player-name and portrait overrides without changing source data.
-- [ ] Generate editable PDFs; verify overflow and portrait placement visually.
-
-No original PDF template was supplied. Template selection and mapping remain open.
+1. Validate against a representative set of real public characters, adding sanitized fixtures for edge cases.
+2. Extend equipment-aware combat, conditional effects and spellcasting calculations.
+3. Support user-supplied fillable PDF templates, font embedding, and richer review/edit controls.
