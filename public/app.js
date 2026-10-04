@@ -1,5 +1,6 @@
 import { resolveTemplate } from '/pdf/selection.js';
 import { createPdfJob } from '/pdf-job.js';
+import { blankForPlay, playReminders } from '/pdf/fresh.js';
 const $ = id => document.getElementById(id);
 let character = null;
 let busy = false;
@@ -39,6 +40,7 @@ async function loadCharacter(sample = false) {
     $('portrait-mode').value = portrait ? 'beyond' : 'none';
     $('upload-wrap').hidden = true;
     for (const [id,key] of [['armour-class','armourClass'],['max-hp','maxHP'],['speed','speed']]) $(id).value = data.combat[key] ?? '';
+    const reminders = playReminders(data);for (const key of ['hp','coins','tracking']) $(`blank-${key}-note`).textContent = reminders[key];
     $('export-status').textContent = '';$('status').textContent = sample ? 'Sample character loaded. Make it yours below.' : 'Character imported. Review the details below.';
     $('character-section').hidden = false;updateAvatar();$('character-name').focus();
   } catch (error) { $('status').textContent = '';showError('error',error.message || 'Could not connect. Please try again.');$('error').focus(); }
@@ -81,10 +83,13 @@ async function portraitBytes() {
   if (bitmap.width * bitmap.height > 40_000_000) { bitmap.close();throw new Error('This image is too large. Choose an image under 40 megapixels.'); }
   const scale = Math.min(1,1200/Math.max(bitmap.width,bitmap.height));
   const canvas = document.createElement('canvas');canvas.width = Math.max(1,Math.round(bitmap.width*scale));canvas.height = Math.max(1,Math.round(bitmap.height*scale));
-  canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
-  const png = await new Promise(resolve => canvas.toBlob(resolve,'image/png'));
-  if (!png) throw new Error('Could not prepare your portrait. Please choose another image.');
-  return new Uint8Array(await png.arrayBuffer());
+  const context = canvas.getContext('2d');context.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+  // Photos travel as JPEG, several times smaller in the PDF than PNG; images with transparency stay PNG.
+  const { data } = context.getImageData(0,0,canvas.width,canvas.height);
+  let opaque = true;for (let i = 3; i < data.length; i += 4) if (data[i] < 255) { opaque = false;break; }
+  const image = await new Promise(resolve => opaque ? canvas.toBlob(resolve,'image/jpeg',0.9) : canvas.toBlob(resolve,'image/png'));
+  if (!image) throw new Error('Could not prepare your portrait. Please choose another image.');
+  return new Uint8Array(await image.arrayBuffer());
 }
 $('generate-form').addEventListener('submit', async event => {
   event.preventDefault();if (busy || !character) return;
@@ -95,15 +100,20 @@ $('generate-form').addEventListener('submit', async event => {
     // Keep the recorded damage when Max HP is overridden, so current HP never exceeds the new maximum.
     const { maxHP, currentHP } = character.combat;
     if (final.combat.maxHP !== maxHP) final.combat.currentHP = final.combat.maxHP !== null && maxHP != null && currentHP != null ? Math.max(0, final.combat.maxHP - (maxHP - currentHP)) : null;
+    const blanks = {hp:$('blank-hp').checked,coins:$('blank-coins').checked,tracking:$('blank-tracking').checked};
+    // Reminders reflect the values that would have been printed, including any Max HP override.
+    const reminders = playReminders(final);
+    const notes = Object.keys(blanks).filter(key => blanks[key]).map(key => reminders[key].replace(/^Currently:? /,'').replace(/\.$/,''));
+    const printed = Object.values(blanks).some(Boolean) ? blankForPlay(final,blanks) : final;
     const templateId=$('template').value;
     const options = {playerName:$('player-name').value.trim(),templateId,abilityOrder:$('ability-order').value};
     const portrait = await portraitBytes();
-    pdfJob = createPdfJob(final,{...options,portrait});$('cancel-export').hidden=false;
+    pdfJob = createPdfJob(printed,{...options,portrait});$('cancel-export').hidden=false;
     const result = await pdfJob.promise;
     if(downloadUrl)URL.revokeObjectURL(downloadUrl);
     downloadUrl=URL.createObjectURL(new Blob([result.bytes],{type:'application/pdf'}));
     const a=$('download-link');a.textContent=`Download ${final.identity.name}'s character sheet`;a.href=downloadUrl;a.download=`${final.identity.name.replace(/[^a-z0-9_-]/gi,'-').slice(0,70)||'character'}-sheet.pdf`;a.hidden=false;a.click();
-    $('export-status').textContent = `Your editable sheet is ready. Check your downloads.${result.warnings.length ? ' ' + result.warnings.join(' ') : ''}`;
+    $('export-status').textContent = `Your editable sheet is ready. Check your downloads.${notes.length ? ' Left blank to fill in: ' + notes.join(' · ') + '.' : ''}${result.warnings.length ? ' ' + result.warnings.join(' ') : ''}`;
   } catch (error) { $('export-status').textContent = '';showError('export-error',error.message || 'Could not generate the PDF. Please try again.');$('export-error').focus(); }
   finally { pdfJob=null;$('cancel-export').hidden=true;setBusy(false); }
 });
@@ -129,11 +139,11 @@ async function loadTemplates() {
   const previous=$('template').value;
   const entries=catalog.filter(t=>!t.characterClass&&!t.resource);
   let match;try{match=resolveTemplate(catalog,character,'class');}catch{}
-  if(match)entries.push({id:'class',name:`Class Sheet — ${match.name.replace(/ — 5e$/,'')}`});
-  entries.push({id:'field-notes',name:'Field Notes — 5e (grouped)'});
+  if(match)entries.push({id:'class',name:`Class Sheet — ${match.name.replace(/ — 5e$/,'').replace(/ Class Sheet$/,'')} — 5e`});
+  entries.push({id:'compact',name:'Compact (beta) — 5e'});
   $('template').replaceChildren(...entries.map(t=>{const option=document.createElement('option');option.value=t.id;option.textContent=t.name;return option;}));
   $('template').value=entries.some(t=>t.id===previous)?previous:'official-standard';
-  $('template-description').textContent='5e (2014). '+(match?'Class sheets automatically match your class and available subclass variant.':'No matching single-class sheet is available; use Official or Field Notes.')+' Each style stays consistent across its pages.';
+  $('template-description').textContent='5e (2014). '+(match?'Class sheets automatically match your class and available subclass variant.':'No matching single-class sheet is available; use Official or Compact.')+' Each style stays consistent across its pages.';
 }
 $('ability-order').addEventListener('change',()=>{renderAbilities();$('position-status').textContent=$('ability-order').selectedOptions[0].textContent;});
 $('cancel-export').addEventListener('click',()=>pdfJob?.cancel());

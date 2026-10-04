@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createDndBeyondImporter } from './importers/dndbeyond/index.ts';
 import { normalise } from './importers/dndbeyond/parser.ts';
@@ -14,12 +14,25 @@ const assets: Record<string, [string, string]> = {
   '/pdf-worker.js': ['public/pdf-worker.js', 'text/javascript'],
   '/banner-placeholder.svg': ['public/banner-placeholder.svg', 'image/svg+xml'],
   '/pdf/selection.js': ['src/pdf/selection.js', 'text/javascript'],
+  '/pdf/fresh.js': ['src/pdf/fresh.js', 'text/javascript'],
   '/pdf/grouped.js': ['src/pdf/grouped.js', 'text/javascript'],
   '/pdf/spells.js': ['src/pdf/spells.js', 'text/javascript'],
   '/pdf/continuation.js': ['src/pdf/continuation.js', 'text/javascript'],
   '/pdf/supplied.js': ['src/pdf/supplied.js', 'text/javascript'],
-  '/pdf-lib.js': ['node_modules/pdf-lib/dist/pdf-lib.esm.js', 'text/javascript'],
+  '/pdf-lib.js': ['node_modules/pdf-lib/dist/pdf-lib.esm.min.js', 'text/javascript'],
 };
+// Static files are hashed and compressed once per version on disk, not on every request (templates reach 20 MB).
+type Cached = { version: string; content: Buffer; etag: string; gzip?: Buffer };
+const fileCache = new Map<string, Cached>();
+async function cachedFile(path: string): Promise<Cached> {
+  const url = new URL(path, root), info = await stat(url), version = `${info.mtimeMs}:${info.size}`;
+  const hit = fileCache.get(path);
+  if (hit?.version === version) return hit;
+  const content = await readFile(url);
+  const entry = { version, content, etag: `W/"${createHash('sha256').update(content).digest('hex')}"` };
+  fileCache.set(path, entry);
+  return entry;
+}
 export function createApp(importer = createDndBeyondImporter()) {
   let active = 0;
   let requests: number[] = [];
@@ -29,17 +42,18 @@ export function createApp(importer = createDndBeyondImporter()) {
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: https://*.dndbeyond.com; connect-src 'self' https://*.dndbeyond.com; worker-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
     const send = (status: number, data: unknown) => { res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); };
-    const sendAsset = (content: Buffer, type: string) => {
+    const sendAsset = (file: Cached, type: string) => {
       // Cache public application resources, never imported character data or portraits.
-      const etag = `W/"${createHash('sha256').update(content).digest('hex')}"`;
+      const { etag } = file;
       res.setHeader('Cache-Control','public, max-age=0, must-revalidate');
       res.setHeader('ETag',etag);res.setHeader('Vary','Accept-Encoding');
       if(req.headers['if-none-match']===etag){res.writeHead(304);res.end();return;}
       res.setHeader('Content-Type',type);
-      if(type!=='application/pdf' && content.length>1024 && (req.headers['accept-encoding']??'').split(',').some(part=>{const [coding,...params]=part.trim().split(';');return coding==='gzip' && !params.some(p=>/^\s*q\s*=\s*0(?:\.0*)?\s*$/.test(p));})){
-        res.setHeader('Content-Encoding','gzip');content=gzipSync(content);
+      let body=file.content;
+      if(type!=='application/pdf' && body.length>1024 && (req.headers['accept-encoding']??'').split(',').some(part=>{const [coding,...params]=part.trim().split(';');return coding==='gzip' && !params.some(p=>/^\s*q\s*=\s*0(?:\.0*)?\s*$/.test(p));})){
+        res.setHeader('Content-Encoding','gzip');body=file.gzip??=gzipSync(body);
       }
-      res.writeHead(200);res.end(content);
+      res.writeHead(200);res.end(body);
     };
     const host = req.headers.host ?? '';
     if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return send(403, { error: 'Unrecognized local host.' });
@@ -81,13 +95,11 @@ export function createApp(importer = createDndBeyondImporter()) {
         const filename=path.slice('/templates/'.length);
         const entry=catalog.find(t=>filename===t.file || filename===`${t.id}.json`);
         if (!entry) return send(404,{error:'Template not found.'});
-        const content=await readFile(new URL(`templates/${filename}`,root));
-        sendAsset(content,filename.endsWith('.pdf')?'application/pdf':'application/json');return;
+        sendAsset(await cachedFile(`templates/${filename}`),filename.endsWith('.pdf')?'application/pdf':'application/json');return;
       }
       const asset = assets[path];
       if (!asset) return send(404, { error: 'Not found.' });
-      const content = await readFile(new URL(asset[0], root));
-      sendAsset(content,`${asset[1]}; charset=utf-8`);
+      sendAsset(await cachedFile(asset[0]),`${asset[1]}; charset=utf-8`);
     } catch { send(500, { error: 'Something went wrong. Please try again.' }); }
   });
 }

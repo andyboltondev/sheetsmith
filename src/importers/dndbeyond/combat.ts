@@ -1,12 +1,11 @@
 import type { Character } from '../../character/model.ts';
+import { characterModifiers } from './modifiers.ts';
 type Data = Record<string, any>;
 const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
 export function calculateCombat(raw: Data, scores: Character['abilities'], level: number) {
   const warnings: string[] = [];
   const items: Data[] = (raw.inventory ?? []).filter((i: Data) => i.equipped);
-  const mods: Data[] = ['race','class','background','feat'].flatMap(k => raw.modifiers?.[k] ?? []);
-  // Read item bonuses from equipped items, once, and respect attunement.
-  for (const i of items) if (!i.definition?.canAttune || i.isAttuned) mods.push(...(i.definition?.grantedModifiers ?? []));
+  const mods = characterModifiers(raw);
   const active = mods.filter(m => !m.restriction);
   const bonus = (key: string) => active.filter(m => m.type === 'bonus' && m.subType === key).reduce((s,m) => s + (num(m.value) ? m.value : 0),0);
   const armour = items.filter(i => [1,2,3].includes(i.definition?.armorTypeId));

@@ -17,7 +17,7 @@ test('imports recorded resources and explicit class slot tables without guessing
  assert.equal(c.experience,650);assert.equal(c.inspiration,true);
  assert.equal(c.combat.currentHP,37);assert.equal(c.combat.temporaryHP,3);assert.equal(c.combat.hitDiceUsed,2);
  assert.deepEqual(c.spellSlots,[{level:1,total:4,used:1},{level:2,total:2,used:0}]);
- assert.deepEqual(c.featureUses,[{name:'Action Surge',maximum:1,remaining:1}]);
+ assert.deepEqual(c.featureUses,[{name:'Action Surge',maximum:1,remaining:1,reset:'',activation:'Special'}]);
  d.classes[0].subclassDefinition={spellRules:{levelSpellSlots:[[],[],[],[],[],[3]]}};
  assert.equal(normalise(raw).spellSlots?.[0].total,3);
  d.classes.push({...d.classes[0],level:1});assert.deepEqual(normalise(raw).spellSlots,[]);
@@ -33,13 +33,14 @@ test('inherited base features remain class features when also present in the sub
 test('native families retain appearance, notes, holdings and numeric counters',async()=>{
  const raw=await fixture();raw.data.notes={allies:'Ally marker',organizations:'Organization marker',enemies:'Enemy marker',personalPossessions:'Possession marker',otherHoldings:'Holding marker',otherNotes:'Notes marker'};raw.data.traits.appearance='Appearance marker';raw.data.removedHitPoints=4;raw.data.temporaryHitPoints=2;
  const c=normalise(raw);c.featureUses=[{name:'Action Surge',remaining:1,maximum:1}];c.featureRows!.push({name:'Action Surge',summary:'Take an extra action.',reference:'PHB (2014), p. 72',group:'Class features',level:2});c.spellSlots=[{level:1,total:2,used:0}];
- for(const id of ['official-standard','official-alternative','class-fighter-eldritch-knight','field-notes']){
-  const cls=id.startsWith('class-'),native=id!=='field-notes';const a=native?await asset(id):null;
-  const options=a?{templateId:id,templateBytes:a.bytes,layout:a.layout,reference:await asset(cls?'class-reference':'official-reference')}:{templateId:id};
+ for(const id of ['official-standard','official-alternative','class-fighter-eldritch-knight','compact']){
+  const cls=id.startsWith('class-'),native=id!=='compact';const a=native?await asset(id):null;
+  const options=a?{templateId:id,templateBytes:a.bytes,layout:a.layout}:{templateId:id};
   const {bytes}=await generatePdf(P,c,options),doc=await P.PDFDocument.load(bytes),form=doc.getForm();
   const text=form.getFields().filter(f=>f instanceof P.PDFTextField).map(f=>(f as P.PDFTextField).getText()).join(' ');
   for(const marker of ['Ally','Organization','Enemy','Possession','Holding','Notes','Appearance'])assert.ok(text.includes(marker+' marker'),`${id}: ${marker}`);
-  assert.match(text,/level 1: 2 total/i);
+  if(native)assert.match(text,/level 1: 2 total/i);
+  else{assert.ok(form.getCheckBox('Slots.1.2'));assert.throws(()=>form.getCheckBox('Slots.1.3'));assert.equal(form.getTextField('HPCurrent').getText(),'40');}
   if(cls){assert.equal(form.getTextField('Front_Inspiration-Arc2').getText()??'','');assert.equal(form.getTextField('Front_Action Surge-Arc2').getText(),'1');assert.equal(form.getTextField('Front_Current HP-Arc2').getText(),'40');assert.equal(form.getTextField('Front_Passive Insight-Arc2').getText(),'11');}
   else if(native)assert.equal(form.getTextField('HPCurrent').getText(),'40');
  }

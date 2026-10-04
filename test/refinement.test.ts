@@ -18,21 +18,25 @@ test('class matching covers every supplied class and exact subclass variants, ne
  assert.throws(()=>resolveTemplate(catalog,{classes:[{name:'Unknown'}]},'class'),/No class sheet/);
  assert.throws(()=>resolveTemplate(catalog,{classes:[{name:'Wizard'}]},'class-fighter'));
 });
-test('book pages require explicit matching source and do not relabel Basic Rules as PHB',()=>{
+test('book pages require explicit page metadata and cite the PHB for Basic Rules entries',()=>{
  assert.equal(sourceReference({sources:[{sourceId:2,pageNumber:242}]}),'PHB (2014), p. 242');
- assert.equal(sourceReference({sources:[{sourceId:1,pageNumber:20}]}),'Basic Rules (2014), p. 20');
+ // D&D Beyond numbers Basic Rules entries by PHB page.
+ assert.equal(sourceReference({sources:[{sourceId:1,pageNumber:20}]}),'PHB (2014), p. 20');
+ assert.equal(sourceReference({sources:[{sourceId:1}]}),'');
  assert.equal(sourceReference({sources:[{sourceId:2}]}),'');
  assert.equal(sourceReference({isHomebrew:true,sources:[{sourceId:2,pageNumber:1}]}),'Homebrew');
 });
 test('grouped custom PDF keeps scores, saves and skills together and retains long content',async()=>{
  const c=normalise(JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8')));
  c.featureRows=Array.from({length:40},(_,i)=>({name:`Feature ${i}`,summary:'A useful rule for gameplay. '.repeat(8),reference:'',group:'Class',level:1}));
- const {bytes}=await generatePdf(PDFLib,c,{templateId:'field-notes',abilityOrder:'modifier-first'});
+ const {bytes}=await generatePdf(PDFLib,c,{templateId:'compact',abilityOrder:'modifier-first'});
  const doc=await PDFLib.PDFDocument.load(bytes),form=doc.getForm();
  assert.equal(form.getTextField('strength.modifier').getText(),'+3');
  assert.equal(form.getTextField('strength.score').getText(),'16');
- assert.match(form.getTextField('strength.saving throw').getText()!,/Saving throw/);
- assert.match(form.getTextField('strength.Athletics').getText()!,/Athletics/);
+ assert.equal(form.getTextField('strength.save').getText(),'+'+(c.saves.find(s=>s.name==='strength')!.bonus));
+ assert.equal(form.getTextField('strength.Athletics').getText(),'+'+(c.skills.find(s=>s.name==='Athletics')!.bonus));
+ assert.equal(form.getCheckBox('Proficient.strength.save').isChecked(),c.saves.find(s=>s.name==='strength')!.proficient);
+ assert.equal(form.getCheckBox('Proficient.strength.Athletics').isChecked(),c.skills.find(s=>s.name==='Athletics')!.proficient);
  assert.ok(form.getTextField('strength.modifier').acroField.getWidgets()[0].getRectangle().y>form.getTextField('strength.score').acroField.getWidgets()[0].getRectangle().y);
  assert.ok(form.getFields().some(f=>f.getName().includes('Feature 39')));
 });

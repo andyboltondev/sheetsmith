@@ -33,7 +33,8 @@ test('continued text is titled for readers and never splits list lines together'
   const c = normalise(JSON.parse(await readFile(new URL('./fixtures/martial.json', import.meta.url), 'utf8')));
   c.details = { ...c.details, personalityTraits: Array.from({ length: 12 }, (_, i) => `Trait sentence ${i} is quite memorable.`).join(' ') };
   c.equipment = Array.from({ length: 60 }, (_, i) => `1 x Thing ${i} with a long descriptive inventory name`).join('\n');
-  const result = await generatePdf(PDFLib, c, { templateId: 'official-standard', templateBytes: await load('official-standard.pdf'), layout: JSON.parse((await load('official-standard.json')).toString()), reference: { bytes: await load('official-reference.pdf'), layout: JSON.parse((await load('official-reference.json')).toString()) } });
+  c.inventoryRows = Array.from({ length: 60 }, (_, i) => ({ name: `Thing ${i} with a long descriptive inventory name`, quantity: 1, equipped: false, category: 'Gear', armourType: null }));
+  const result = await generatePdf(PDFLib, c, { templateId: 'official-standard', templateBytes: await load('official-standard.pdf'), layout: JSON.parse((await load('official-standard.json')).toString()) });
   const doc = await PDFLib.PDFDocument.load(result.bytes);
   const text = doc.getForm().getFields().map(field => field instanceof PDFLib.PDFTextField ? field.getText() ?? '' : '').join('\n');
   assert.match(text, /PERSONALITY TRAITS \(CONTINUED\)/);

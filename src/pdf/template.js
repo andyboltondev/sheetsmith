@@ -1,6 +1,6 @@
 // Original A4 template. Coordinates use PDF points, measured from bottom left.
 export const template = {
-  id: 'field-notes', name: 'Field Notes · A4', width: 595.28, height: 841.89,
+  id: 'legacy', name: 'SheetSmith Legacy · A4', width: 595.28, height: 841.89,
   portrait: { page: 0, x: 445, y: 611, width: 108, height: 133, mode: 'contain' },
   fields: [
     { name: 'CharacterName', path: 'identity.name', label: 'CHARACTER NAME', x: 42, y: 697, width: 380, height: 33 },

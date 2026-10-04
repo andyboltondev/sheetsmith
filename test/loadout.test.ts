@@ -16,12 +16,12 @@ async function sample(){
 test('weapons and inventory retain quantities, equipped state and basic rolls',async()=>{
  const c=await sample();assert.equal(c.weapons?.[0].name,'Warhammer');assert.equal(c.weapons?.[0].attackBonus,c.abilities.strength.modifier+c.proficiencyBonus);assert.match(c.weapons![0].damage,/1d8 \+3 Bludgeoning/);assert.equal(c.inventoryRows?.[2].quantity,20);assert.equal(c.spellRows?.[0].attackBonus,c.abilities.intelligence.modifier+c.proficiencyBonus);
 });
-for(const id of ['class-fighter-eldritch-knight','official-standard','official-alternative','field-notes'])test(`${id}: weapons, spells and gear survive export in their visible sections`,async()=>{
+for(const id of ['class-fighter-eldritch-knight','official-standard','official-alternative','compact'])test(`${id}: weapons, spells and gear survive export in their visible sections`,async()=>{
  const c=await sample();let options:any={templateId:id};
- if(id!=='field-notes')options={...options,templateBytes:await readFile(new URL(`../templates/${id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${id}.json`,import.meta.url),'utf8'))};
+ if(id!=='compact')options={...options,templateBytes:await readFile(new URL(`../templates/${id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${id}.json`,import.meta.url),'utf8'))};
  const {bytes}=await generatePdf(PDFLib,c,options);const doc=await PDFLib.PDFDocument.load(bytes),form=doc.getForm();
- const content=form.getFields().filter(f=>f instanceof PDFLib.PDFTextField).map(f=>(id==='field-notes'?f.getName()+' ': '')+(f as PDFLib.PDFTextField).getText()).join('\n');
+ const content=form.getFields().filter(f=>f instanceof PDFLib.PDFTextField).map(f=>(id==='compact'?f.getName()+' ': '')+(f as PDFLib.PDFTextField).getText()).join('\n');
  for(const text of ['Warhammer','Fire Bolt','Shield','Chain Mail','20 × Bolts'])assert.ok(content.includes(text),text);
  if(id.startsWith('class-')){assert.equal(form.getTextField('Front_Weapon Name 1-Arc2').getText(),'Warhammer');assert.equal(form.getTextField('Front_Spell Name 1-Arc2').getText(),'Fire Bolt');assert.equal(form.getTextField('Back_Armour').getText(),'Chain Mail');assert.match(form.getTextField('Back_Backpack').getText()!,/EQUIPPED/);}
- else if(id!=='field-notes')assert.equal(form.getTextField('Wpn Name').getText(),'Warhammer');
+ else if(id!=='compact')assert.equal(form.getTextField('Wpn Name').getText(),'Warhammer');
 });

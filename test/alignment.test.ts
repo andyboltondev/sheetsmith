@@ -11,10 +11,10 @@ test('alignment imports DDB IDs and explicit text without guessing missing value
 test('alignment reaches every supplied template, the custom sheet and legacy layout',async()=>{
  const raw=await fixture();raw.data.alignmentId=6;const c=normalise(raw);
  const catalog=JSON.parse(await readFile(new URL('../templates/catalog.json',import.meta.url),'utf8'));
- for(const t of [...catalog.filter((t:any)=>!t.resource),{id:'field-notes'},{id:'legacy'}]){
-  let opts:any={};if(t.id==='field-notes')opts.templateId=t.id;else if(t.id!=='legacy')opts={templateId:t.id,templateBytes:await readFile(new URL(`../templates/${t.id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${t.id}.json`,import.meta.url),'utf8'))};
+ for(const t of [...catalog.filter((t:any)=>!t.resource),{id:'compact'},{id:'legacy'}]){
+  let opts:any={};if(t.id==='compact')opts.templateId=t.id;else if(t.id!=='legacy')opts={templateId:t.id,templateBytes:await readFile(new URL(`../templates/${t.id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${t.id}.json`,import.meta.url),'utf8'))};
   const {bytes}=await generatePdf(P,c,opts),form=(await P.PDFDocument.load(bytes)).getForm();
-  const value=t.id==='field-notes'?form.getTextField('Identity').getText():form.getFields().filter(f=>f.getName().includes('Alignment')).map(f=>(f as P.PDFTextField).getText()).join('');
+  const value=t.id==='compact'?form.getTextField('Identity').getText():form.getFields().filter(f=>f.getName().includes('Alignment')).map(f=>(f as P.PDFTextField).getText()).join('');
   assert.ok(value?.includes('Chaotic Neutral'),t.id);
  }
 });
