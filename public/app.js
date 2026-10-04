@@ -140,10 +140,10 @@ async function loadTemplates() {
   const entries=catalog.filter(t=>!t.characterClass&&!t.resource);
   let match;try{match=resolveTemplate(catalog,character,'class');}catch{}
   if(match)entries.push({id:'class',name:`Class Sheet — ${match.name.replace(/ — 5e$/,'').replace(/ Class Sheet$/,'')} — 5e`});
-  entries.push({id:'compact',name:'Compact (beta) — 5e'});
+  entries.unshift({id:'compact',name:'SheetSmith — 5e'});
   $('template').replaceChildren(...entries.map(t=>{const option=document.createElement('option');option.value=t.id;option.textContent=t.name;return option;}));
-  $('template').value=entries.some(t=>t.id===previous)?previous:'official-standard';
-  $('template-description').textContent='5e (2014). '+(match?'Class sheets automatically match your class and available subclass variant.':'No matching single-class sheet is available; use Official or Compact.')+' Each style stays consistent across its pages.';
+  $('template').value=entries.some(t=>t.id===previous)?previous:'compact';
+  $('template-description').textContent='5e (2014). '+(match?'Class sheets automatically match your class and available subclass variant.':'No matching single-class sheet is available; use Official or SheetSmith.')+' Each style stays consistent across its pages.';
 }
 $('ability-order').addEventListener('change',()=>{renderAbilities();$('position-status').textContent=$('ability-order').selectedOptions[0].textContent;});
 $('cancel-export').addEventListener('click',()=>pdfJob?.cancel());

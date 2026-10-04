@@ -1,7 +1,7 @@
 import { createCleaner, displayItems, embedPortrait, fieldFactory, savePdf, fitText, lineHeight, ordinal, signed as sign, wrapText } from './generator.js';
 import { BLANK } from './fresh.js';
 import { PROFICIENCY_ONLY } from './supplied.js';
-// Compact: a minimal one-page summary (abilities, saves and skills in one table with proficiency dots),
+// SheetSmith (template id 'compact'): a minimal one-page summary (abilities, saves and skills in one table with proficiency dots),
 // followed by compact two-column detail and spellbook pages. Everything stays editable.
 const groups={strength:['Athletics'],dexterity:['Acrobatics','Sleight of Hand','Stealth'],constitution:[],intelligence:['Arcana','History','Investigation','Nature','Religion'],wisdom:['Animal Handling','Insight','Medicine','Perception','Survival'],charisma:['Deception','Intimidation','Performance','Persuasion']};
 const signed=n=>n==null||n===''?'':sign(n);
@@ -395,6 +395,6 @@ const FLOOR=BOTTOM+150;
    for(const [k,v] of [...detailNotes].sort((x,y)=>rank(x[0])-rank(y[0])))if(![...physical,'appearance'].includes(k))section(names[k]??titleCase(k),v,'Character');}
  }
  if(c.spells&&!spells.length){start('Spellbook');section('Spells',c.spells,'Spellbook');}
- doc.setTitle(`${clean(c.identity.name)} — Compact — 5e (2014)`);
+ doc.setTitle(`${clean(c.identity.name)} — SheetSmith — 5e (2014)`);
  return {bytes:await savePdf(PDFLib,doc,form,font),warnings};
 }
