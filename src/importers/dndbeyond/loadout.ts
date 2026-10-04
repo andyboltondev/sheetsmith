@@ -26,7 +26,7 @@ export function loadout(raw:Data,scores:Character['abilities'],proficiency:numbe
   // Base rolls only: conditional styles, alternate abilities and magic effects are not silently activated.
   const supported=[1,2].includes(d.attackType)&&!d.magic&&!d.isHomebrew;
   const dice=plainText(d.damage?.diceString)||String(d.fixedDamage??'');
-  return {name:plainText(d.name),equipped:!!i.equipped,attackBonus:supported?modifier+(proficient?proficiency:0)+extraAttack:null,damage:`${dice}${supported&&dice?' '+sign(modifier+extraDamage):''} ${plainText(d.damageType)}`.trim(),notes:[d.range?`Range ${d.range}${d.longRange>d.range?'/'+d.longRange:''} ft`:'',properties.map((p:Data)=>p.name+(p.notes?' ('+plainText(p.notes)+')':'')).join(', '),supported&&oneHanded?`Includes ${sign(oneHanded)} damage when wielded in one hand with no other weapon`:'',supported?'Base roll; conditional bonuses not included.':'Check attack and damage bonuses.'].filter(Boolean).join('; ')};
+  return {name:plainText(d.name),equipped:!!i.equipped,attackBonus:supported?modifier+(proficient?proficiency:0)+extraAttack:null,damage:`${dice}${supported&&dice?' '+sign(modifier+extraDamage):''} ${plainText(d.damageType)}`.trim(),notes:[d.range?(d.longRange>d.range?`Range ${d.range}/${d.longRange} ft`:d.range<=5?`Melee · ${d.range} ft`:`Range ${d.range} ft`):'',properties.filter((p:Data)=>!/^range$/i.test(p.name)).map((p:Data)=>p.name+(p.notes?' ('+plainText(p.notes)+')':'')).join(', '),supported&&oneHanded?`Includes ${sign(oneHanded)} damage when wielded in one hand with no other weapon`:'',supported?'Base roll; conditional bonuses not included.':'Check attack and damage bonuses.'].filter(Boolean).join('; ')};
  });
  return {inventoryRows,weapons};
 }
@@ -38,6 +38,6 @@ export function attackRows(weapons:NonNullable<Character['weapons']>,spells:NonN
  const monk=classes.find(c=>c.name==='Monk')?.level??0;
  const mod=monk?Math.max(scores.strength.modifier,scores.dexterity.modifier):scores.strength.modifier;
  const die=monk>=17?'1d10':monk>=11?'1d8':monk>=5?'1d6':monk?'1d4':'';
- const unarmed={name:'Unarmed Strike',source:'unarmed' as const,attackBonus:mod+proficiency,damage:die?`${die} ${sign(mod)} Bludgeoning`:`${Math.max(1,1+mod)} Bludgeoning`,notes:monk?'Martial Arts':'Melee; 5 ft'};
+ const unarmed={name:'Unarmed Strike',source:'unarmed' as const,attackBonus:mod+proficiency,damage:die?`${die} ${sign(mod)} Bludgeoning`:`${Math.max(0,1+mod)} Bludgeoning`,notes:monk?'Martial Arts':'Melee; 5 ft'};
  return [...weapons.filter(w=>w.equipped).map(weapon),...cantrips,unarmed,...weapons.filter(w=>!w.equipped).map(weapon)];
 }

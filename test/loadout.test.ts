@@ -21,7 +21,17 @@ for(const id of ['class-fighter-eldritch-knight','official-standard','official-a
  if(id!=='compact')options={...options,templateBytes:await readFile(new URL(`../templates/${id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${id}.json`,import.meta.url),'utf8'))};
  const {bytes}=await generatePdf(PDFLib,c,options);const doc=await PDFLib.PDFDocument.load(bytes),form=doc.getForm();
  const content=form.getFields().filter(f=>f instanceof PDFLib.PDFTextField).map(f=>(id==='compact'?f.getName()+' ': '')+(f as PDFLib.PDFTextField).getText()).join('\n');
- for(const text of ['Warhammer','Fire Bolt','Shield','Chain Mail','20 × Bolts'])assert.ok(content.includes(text),text);
+ for(const text of ['Warhammer','Fire Bolt','Shield','Chain Mail',id==='compact'?'Bolts':'20 × Bolts'])assert.ok(content.includes(text),text);
+ if(id==='compact')assert.match(content,/Item\.\d+\.Qty 20/);
  if(id.startsWith('class-')){assert.equal(form.getTextField('Front_Weapon Name 1-Arc2').getText(),'Warhammer');assert.equal(form.getTextField('Front_Spell Name 1-Arc2').getText(),'Fire Bolt');assert.equal(form.getTextField('Back_Armour').getText(),'Chain Mail');assert.match(form.getTextField('Back_Backpack').getText()!,/EQUIPPED/);}
  else if(id!=='compact')assert.equal(form.getTextField('Wpn Name').getText(),'Warhammer');
+});
+test('turning equipment weights off removes item weights and carry totals from the official sheet and Compact',async()=>{
+ const c=await sample();c.inventoryRows!.forEach(r=>{r.weight=5;});c.carrying={weight:15,capacity:240,pushDragLift:480};
+ for(const id of ['official-standard','compact']){
+  const on:any=id==='compact'?{templateId:id}:{templateId:id,templateBytes:await readFile(new URL(`../templates/${id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${id}.json`,import.meta.url),'utf8'))};
+  const text=async(options:any)=>{const form=(await PDFLib.PDFDocument.load((await generatePdf(PDFLib,c,options)).bytes)).getForm();return form.getFields().filter(f=>f instanceof PDFLib.PDFTextField).map(f=>(f as PDFLib.PDFTextField).getText()).join('\n');};
+  assert.match(await text(on),/\d lb/,id+' shows weights by default');
+  assert.doesNotMatch(await text({...on,equipmentWeight:false}),/\d lb|Carried \d|capacity \d/i,id+' leaves weights off');
+ }
 });

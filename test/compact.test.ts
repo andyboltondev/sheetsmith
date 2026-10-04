@@ -43,11 +43,11 @@ test('compact summary page carries actions, spells, weights and milestone; perso
  assert.equal(form.getTextField('Experience').getText(),'Milestone');
  assert.match(form.getTextField('Action.Second Wind').getText()!,/Regain/);assert.ok(onFirst('Action.Second Wind'));
  assert.ok(form.getCheckBox('Uses.Action Surge.1').isChecked());assert.ok(!form.getCheckBox('Uses.Second Wind.1').isChecked());
- assert.equal(form.getTextField('SpellList.Shield.time').getText(),'Reaction');assert.ok(onFirst('SpellList.Shield.effect'));
- // Fighters know their spells, so there is no prepared marker to leave misleadingly empty.
- assert.ok(!form.getFields().some(f=>f.getName().endsWith('.prepared')));
- assert.equal(form.getTextField('Carry.Carried').getText(),'76.5 lb');
- assert.match(form.getTextField('EquipmentWeight').getText()!,/55 lb/);
+ assert.equal(form.getTextField('Spell.Shield.time').getText(),'Reaction');assert.ok(!onFirst('Spell.Shield.effect'),'spells live on their own page');
+ // Every levelled spell carries a prepared bullet, ticked only when the source marks it prepared.
+ assert.ok(!form.getFields().some(f=>f.getName().endsWith('.prepared')),'known-spell casters get no prepared marker');
+ assert.ok(!form.getFields().some(f=>f.getName().startsWith('Carry.')),'no carried box');
+ assert.equal(form.getTextField('Item.1.Weight').getText(),'55 lb');assert.equal(form.getTextField('Item.2.Qty').getText(),'20');
  assert.match(form.getTextField('Proficiencies').getText()!,/Armour: Heavy Armor, Shields\nWeapons: Martial Weapons\nTools: Smith's Tools/);
  const personality=form.getFields().find(f=>/Details\.\d+\.Personality Traits/.test(f.getName()));
  if(c.details?.personalityTraits)assert.ok(personality&&!onFirst(personality.getName()));

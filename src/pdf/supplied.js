@@ -29,9 +29,11 @@ export async function generateSuppliedPdf(PDFLib, character, options) {
   // Official sheets have no subclass box, so it joins the class and level (D&D Beyond lists it as a feature).
   const classLevel=character.classes.map(c=>`${c.name} ${c.level}${c.subclass?` (${c.subclass})`:''}`).join(' / ');
   // Items with their weight, as on D&D Beyond's equipment page, then the encumbrance totals.
-  const lb=n=>n?`${Math.round(n*100)/100} lb`:'';
+  // Weights can be left off entirely: no item weights and no carried / capacity line.
+  const weights=options.equipmentWeight!==false;
+  const lb=n=>weights&&n?`${Math.round(n*100)/100} lb`:'';
   const itemLine=(i,tagEquipped)=>{const tags=[tagEquipped&&i.equipped?'equipped':'',i.attuned?'attuned':'',lb(i.weight)].filter(Boolean);return `${i.quantity==null?'__ × ':i.quantity>1?i.quantity+' × ':''}${i.name}${tags.length?` (${tags.join(', ')})`:''}`;};
-  const carry=character.carrying,carryLine=carry?`Carried ${lb(carry.weight)||'0 lb'} · capacity ${lb(carry.capacity)} · push, drag or lift ${lb(carry.pushDragLift)}`:'';
+  const carry=weights?character.carrying:null,carryLine=carry?`Carried ${lb(carry.weight)||'0 lb'} · capacity ${lb(carry.capacity)} · push, drag or lift ${lb(carry.pushDragLift)}`:'';
   const front=layout.find(f=>f.name.startsWith('Front_Character Name'))?.name.replace('Front_Character Name','')??'';
   const fp=k=>`Front_${k}${front}`;
   const set=(official,cls,v)=>put(isClass?fp(cls):official,v);

@@ -106,7 +106,7 @@ $('generate-form').addEventListener('submit', async event => {
     const notes = Object.keys(blanks).filter(key => blanks[key]).map(key => reminders[key].replace(/^Currently:? /,'').replace(/\.$/,''));
     const printed = Object.values(blanks).some(Boolean) ? blankForPlay(final,blanks) : final;
     const templateId=$('template').value;
-    const options = {playerName:$('player-name').value.trim(),templateId,abilityOrder:$('ability-order').value};
+    const options = {playerName:$('player-name').value.trim(),templateId,abilityOrder:$('ability-order').value,equipmentWeight:$('equipment-weight').checked,equipmentQuantity:$('equipment-quantity').checked};
     const portrait = await portraitBytes();
     pdfJob = createPdfJob(printed,{...options,portrait});$('cancel-export').hidden=false;
     const result = await pdfJob.promise;

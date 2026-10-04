@@ -7,10 +7,11 @@ const groups={strength:['Athletics'],dexterity:['Acrobatics','Sleight of Hand','
 const signed=n=>n==null||n===''?'':sign(n);
 const titleCase=key=>key.replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase());
 const plural=(n,one,many=one+'s')=>`${n} ${n===1?one:many}`;
-// Classes that prepare spells from a list; everyone else simply knows theirs, so no prepared marker.
+// Classes that prepare spells from a list; everyone else knows theirs, so they get no prepared marker.
 const preparers=new Set(['Artificer','Cleric','Druid','Paladin','Wizard']);
 const A4=[595.28,841.89],M=30,RIGHT=A4[0]-M,BOTTOM=38;
 export async function generateGroupedPdf(PDFLib,c,options){
+ const weights=options.equipmentWeight!==false;
  const {PDFDocument,StandardFonts,rgb}=PDFLib;
  const doc=await PDFDocument.create();doc.setLanguage('en-GB');
  const font=await doc.embedFont(StandardFonts.Helvetica),bold=await doc.embedFont(StandardFonts.HelveticaBold),form=doc.getForm(),fields=fieldFactory(PDFLib,form),warnings=[];
@@ -47,6 +48,16 @@ export async function generateGroupedPdf(PDFLib,c,options){
   b.updateAppearances(()=>({normal:{on:PDFLib.drawEllipse({x:r,y:r,xScale:r-.6,yScale:r-.6,color:accent,borderColor:undefined,borderWidth:0}),off:[]}}));
   return b;
  };
+ // Saving-throw bullet: a diamond, as on the official sheet, so saves read differently from skills.
+ const diamondPath=r=>`M 0 ${-r} L ${r} 0 L 0 ${r} L ${-r} 0 Z`;
+ const diamond=(p,name,x,y,on,r=3.4)=>{
+  p.drawSvgPath(diamondPath(r),{x,y,borderColor:ink,borderWidth:.55,color:white});
+  const b=fields.checkBox(unique(name));
+  b.addToPage(p,{x:x-r,y:y-r,width:2*r,height:2*r,borderWidth:0,backgroundColor:undefined,borderColor:undefined});
+  if(on)b.check();
+  b.updateAppearances(()=>({normal:{on:PDFLib.drawSvgPath(diamondPath(r-.9),{x:r,y:r,color:accent,borderColor:undefined,borderWidth:0}),off:[]}}));
+  return b;
+ };
  // Section heading: small accent caps, a hairline to the column edge and an optional right-hand note.
  const heading=(p,title,x,y,w,note='')=>{label(p,title,x,y,6.8,accent);const end=note?x+w-width(note.toUpperCase(),5.6,bold)-6:x+w;if(note)rightLabel(p,note,x+w,y,5.6);rule(p,x+width(title.toUpperCase(),6.8,bold)+5,end,y+2.3);};
  const ruled=(p,x,w,top)=>{for(let y=top-12;y>BOTTOM+2;y-=12)rule(p,x,x+w,y,tint,.7);};
@@ -71,7 +82,7 @@ export async function generateGroupedPdf(PDFLib,c,options){
  field(p,'Identity',identity,M-2,769,nameW+statsW-4,13,{size:8.5});
  {let x=RIGHT-portraitW-(portraitW?8:0);
   // A blanked export clears experience to '' so it can be pencilled in.
-  if(showXP){rightLabel(p,milestone?'Advancement':'XP',x,801);field(p,'Experience',c.experience===''?'':milestone?'Milestone':c.experience,x-62,784,64,15,{size:milestone?10:12,align:'right'});x-=70;}
+  if(showXP){rightLabel(p,milestone?'Advancement':'XP',x,801);field(p,'Experience',c.experience===''?'':milestone?'Milestone':c.experience,x-62,784,64,15,{size:milestone?10:12,align:'center'});x-=70;}
   rightLabel(p,'Level',x,801);text(p,String(level),x-width(String(level),15,bold),787.5,15,bold);}
  if(options.portrait){const image=await embedPortrait(doc,options.portrait),s=Math.min(portraitW/image.width,portraitW/image.height);p.drawImage(image,{x:RIGHT-portraitW+(portraitW-image.width*s)/2,y:765+(portraitW-image.height*s)/2,width:image.width*s,height:image.height*s});}
  rule(p,M,RIGHT,761,accent,1.2);
@@ -92,190 +103,241 @@ export async function generateGroupedPdf(PDFLib,c,options){
   vx+=w+gap;});
 
  // Left column: abilities, saves and skills as one grouped table.
- const LX=M,LW=244,RX=LX+LW+14,RW=RIGHT-RX;
- let ly=703;heading(p,'Abilities · saves · skills',LX,ly,LW-84);
- {const y=ly+2.3,kx=LX+LW-78;p.drawCircle({x:kx,y,size:2.6,color:accent,borderColor:ink,borderWidth:.55});text(p,'proficient',kx+5,ly,6,font,muted);
-  p.drawCircle({x:kx+48,y,size:2.6,color:accent,borderColor:ink,borderWidth:.55});p.drawCircle({x:kx+48,y,size:4.2,borderColor:ink,borderWidth:.45});text(p,'expertise',kx+55,ly,6,font,muted);}
+ const RX=M,RW=RIGHT-M;
+// Equipment spans the foot of page one, so both columns stop above this line.
+const FLOOR=BOTTOM+150;
+ let ly=703;heading(p,'Abilities · saves · skills',M,ly,RIGHT-M,'P proficient · E expertise');
  ly-=7;
- const row=11,badgeW=46,dotX=LX+badgeW+11;
+ // Six blocks across the page, three a side: each has a key row, the saving throw, then skills in two columns.
+ const row=11,badgeW=46,keyH=6,BH=keyH+4*row,colW=104,GAP=12,PW=RIGHT-M-(badgeW+7+colW)-(badgeW+7+2*colW)-2*GAP;
+ // Blocks fill a skill column with three skills before starting the next, so the left-hand abilities (three skills or fewer) are narrower.
+ const blockW=idx=>badgeW+7+(idx<3?1:2)*colW;
+ const cell=(ox,col)=>{const px=ox+badgeW+7+col*colW+5;return {px,ex:px+9,bx:px+14,nx:px+33};};
  const order=options.abilityOrder==='modifier-first'?['modifier','score']:['score','modifier'];
- for(const [ability,skills] of Object.entries(groups)){
+ Object.entries(groups).forEach(([ability,skills],idx)=>{
+  const ox=idx<3?M:M+(badgeW+7+colW)+GAP,top=ly-(idx%3)*(BH+5),a=c.abilities[ability];
   const save=c.saves.find(s=>s.name===ability)??{bonus:0,proficient:false};
-  const rows=[{name:'Saving throw',key:'save',bonus:save.bonus,proficient:save.proficient,expertise:false},...skills.map(n=>c.skills.find(s=>s.name===n)).filter(Boolean).map(s=>({...s,key:s.name}))];
-  const h=Math.max(rows.length*row,40),top=ly,a=c.abilities[ability];
-  rbox(p,LX,top-h,badgeW,h,{fill:tint,border:undefined});
-  centred(p,ability.slice(0,3),LX,top-8.5,badgeW,6.5,accent);
+  const list=skills.map(n=>c.skills.find(s=>s.name===n)).filter(Boolean),perCol=3;
+  const rows=[{name:'Saving throw',key:'save',bonus:save.bonus,proficient:save.proficient,expertise:false,isSave:true,col:0,line:0},...list.map((s,i)=>({...s,key:s.name,col:Math.floor(i/perCol),line:1+i%perCol}))];
+  rbox(p,ox,top-BH,badgeW,BH,{fill:tint,border:undefined});
+  centred(p,ability.slice(0,3),ox,top-9,badgeW,6.5,accent);
   const [first,second]=order.map(k=>[k,k==='modifier'?signed(a.modifier):a.score]);
-  field(p,`${ability}.${first[0]}`,first[1],LX+2,top-27,badgeW-4,18,{size:15,align:'center',f:bold});
-  rbox(p,LX+badgeW/2-11,top-38,22,10,{fill:white,r:5,bw:.5});
-  field(p,`${ability}.${second[0]}`,second[1],LX+badgeW/2-11,top-38,22,10,{size:7.5,align:'center'});
-  rows.forEach((r,j)=>{const y=top-(j+1)*row;
-   if(r.expertise)p.drawCircle({x:dotX,y:y+row/2,size:4.2,borderColor:ink,borderWidth:.45});
-   dot(p,`Proficient.${ability}.${r.key}`,dotX,y+row/2,r.proficient||r.expertise);
-   field(p,`${ability}.${r.key}`,signed(r.bonus??0),dotX+5,y+.3,22,row-.6,{size:8,align:'center',f:j===0?bold:font});
-   text(p,r.name,dotX+30,y+3.1,8,j===0?bold:font);
-   // Armour that imposes disadvantage is flagged on the row itself (Stealth in chain mail).
-   if(r.disadvantage){const t=clean(r.disadvantage).replace(/^Disadvantage/,'Disadv.');text(p,t,LX+LW-width(t,6),y+3.4,6,font,accent);}
-   if(j===0&&rows.length>1)rule(p,dotX-4,LX+LW,y,hair,.4);
+  field(p,`${ability}.${first[0]}`,first[1],ox+2,top-29,badgeW-4,18,{size:15,align:'center',f:bold});
+  rbox(p,ox+badgeW/2-11,top-42,22,10,{fill:white,r:5,bw:.5});
+  field(p,`${ability}.${second[0]}`,second[1],ox+badgeW/2-11,top-42,22,10,{size:7.5,align:'center'});
+  // The P / E key appears over each column that holds bullets.
+  for(const col of list.length>perCol?[0,1]:[0]){const k=cell(ox,col);centred(p,'P',k.px-5,top-4.6,10,5.4,accent);centred(p,'E',k.ex-5,top-4.6,10,5.4,accent);}
+  rows.forEach(r=>{const y=top-keyH-(r.line+1)*row,k=cell(ox,r.col),cy=y+row/2;
+   if(r.isSave)diamond(p,`Proficient.${ability}.save`,k.px,cy,r.proficient);
+   else{dot(p,`Proficient.${ability}.${r.key}`,k.px,cy,r.proficient||r.expertise);dot(p,`Expertise.${ability}.${r.key}`,k.ex,cy,r.expertise);}
+   field(p,`${ability}.${r.key}`,signed(r.bonus??0),k.bx,y+.3,19,row-.6,{size:8,align:'center',f:r.isSave?bold:font});
+   text(p,r.name,k.nx,y+3.1,7.6,r.isSave?bold:font);
+   // Situational notes (armour disadvantage, advantage, conditional bonuses) are flagged beside the skill.
+   {const tags=[r.disadvantage&&'Disadv.',r.advantage&&'Adv.',...(r.notes??[])].filter(Boolean).join(' · ');if(tags)text(p,tags,k.nx+width(r.name,7.6)+3,y+3.4,5.6,font,accent);}
   });
-  ly-=h+5;
- }
- const skill=n=>c.skills.find(s=>s.name===n)?.bonus??0;
- ly-=7;heading(p,'Passive scores',LX,ly,LW);ly-=6;
- {const pass=[['Perception',c.passivePerception],['Insight',c.passiveInsight??10+skill('Insight')],['Investigation',c.passiveInvestigation??10+skill('Investigation')]],w=LW/3;
-  rbox(p,LX,ly-18,LW,18);
-  pass.forEach(([n,v],i)=>{const x=LX+i*w;if(i)vrule(p,x,ly-14,ly-4);label(p,n,x+6,ly-11.3,5.8);field(p,`Passive${n}`,v,x+w-30,ly-16,26,14,{size:10,align:'right',f:bold});});
-  ly-=31;}
+  if(list.length)rule(p,ox+badgeW+7,ox+blockW(idx),top-keyH-row,hair,.4);
+ });
+ // Passive scores and inspiration: a lighter column beside the abilities, quieter than the ability blocks.
+ {const skill=n=>c.skills.find(s=>s.name===n)?.bonus??0,px=RIGHT-PW,total=3*BH+2*5,bh=(total-3*5)/4;
+  const boxes=[['Perception',c.passivePerception],['Insight',c.passiveInsight??10+skill('Insight')],['Investigation',c.passiveInvestigation??10+skill('Investigation')]];
+  boxes.forEach(([n,v],i)=>{const top=ly-i*(bh+5);
+   rbox(p,px,top-bh,PW,bh,{});centred(p,`Passive ${n}`,px,top-9,PW,5.4,muted);
+   field(p,`Passive${n}`,v,px+4,top-bh+3,PW-8,17,{size:13,align:'center'});});
+  // Inspiration is a box to write in, as on the official sheets.
+  const top=ly-3*(bh+5);rbox(p,px,top-bh,PW,bh,{fill:tint,border:undefined});centred(p,'Inspiration',px,top-9,PW,5.8,accent);
+  rbox(p,px+PW/2-14,top-bh+4,28,15,{fill:white,r:7,bw:.5});field(p,'Inspiration',c.inspiration?1:'',px+PW/2-14,top-bh+4,28,15,{size:10,align:'center',f:bold});}
+ ly-=3*BH+2*5+16;
+ let colTop=ly;
  // Training grouped as on the official sheet, then what protects the character.
  const def=c.defences??{},list=(n,v)=>v?.length?`${n}: ${v.join(', ')}`:'',pg=c.proficiencyGroups;
  const training=pg?[list('Armour',pg.armour),list('Weapons',pg.weapons),list('Tools',pg.tools)]:[c.proficiencies&&`Armour, weapons & tools: ${c.proficiencies}`];
  const profs=[...training,c.languages&&`Languages: ${c.languages}`].filter(Boolean).join('\n');
- heading(p,'Proficiencies · languages',LX,ly,LW);ly-=4;
- ly-=Math.max(block(p,'Proficiencies',profs,LX,ly,LW,Math.min(90,(ly-BOTTOM)/3),{title:'Proficiencies & languages'}),24)+12;
  const defence=[list('Senses',c.senses),list('Speeds',c.speeds),list('Resistances',def.resistances),list('Immunities',def.immunities),list('Vulnerabilities',def.vulnerabilities),list('Saving throws',def.saveNotes)].filter(Boolean).join('\n');
- if(defence){heading(p,'Senses · defences',LX,ly,LW);ly-=4;ly-=block(p,'Defences',defence,LX,ly,LW,Math.min(70,(ly-BOTTOM)/3),{title:'Senses & defences'})+12;}
- // Conditions change every round; exhaustion is a six-step track.
- heading(p,'Conditions',LX,ly,LW);ly-=13;
- label(p,'Exhaustion',LX,ly,5.8);for(let k=0;k<6;k++)dot(p,`Exhaustion.${k+1}`,LX+44+k*9,ly+2.1,false);
- rule(p,LX+104,LX+LW,ly-2,hair,.5);field(p,'Conditions','',LX+102,ly-2,LW-102,11,{size:8});ly-=16;
- // Passive features by name; anything already listed under actions is left out here.
- const passive=(c.featureRows??[]).filter(f=>!(c.actions??[]).some(a=>a.name===f.name));
- const featureList=c.featureRows?.length?Object.entries(Object.groupBy(passive,f=>f.group||'Features')).map(([g,fs])=>`${g}: ${fs.map(f=>f.name).join(' · ')}`).join('\n'):String(c.features??'').split('\n').filter(Boolean).slice(0,6).join('\n');
- if(featureList){heading(p,'Features & traits',LX,ly,LW,'details overleaf');ly-=4;
-  const lines=wrapText(clean(featureList),font,7.3,LW-4),need=Math.max(12,lines.length*lineHeight(font,7.3)+4),h=Math.min(need,90);
-  const fit=need>h?fitText(clean(featureList),font,{width:LW-4,height:h-4,max:7.3,min:6.5,marker:'(More overleaf)'}):{text:lines.join('\n'),size:7.3};
-  field(p,'FeatureSummary',fit.text,LX-2,ly-h,LW+4,h,{size:fit.size,multi:true});ly-=h+12;}
- heading(p,'Notes',LX,ly,LW);ly-=4;
- field(p,'NotesLeft','',LX-2,BOTTOM,LW+4,ly-BOTTOM,{multi:true});ruled(p,LX,LW,ly);
-
- // Right column: what you do on your turn, what you can spend, then what you carry.
- let ry=703;heading(p,'Attacks & cantrips',RX,ry,RW,'base rolls');ry-=6;
+ let ry=colTop;
+ // What applies right now: senses, resistances and conditional saves in one short line.
+ {const cap=t=>String(t).replace(/\b[a-z]/g,m=>m.toUpperCase()),short=t=>String(t).replace(/\.$/,'');
+  const save=t=>{const m=String(t).match(/^(Advantage|Disadvantage) on saving throws\s*(?:against|vs\.?)?\s*(.*)$/i);return m?`${/^adv/i.test(m[1])?'Adv.':'Disadv.'} ${m[2]?`vs ${cap(m[2])} Saves`:'on Saves'}`:short(t);};
+  const parts=[...(c.senses??[]).map(short),...(def.resistances??[]).map(r=>`${cap(r)} Resistance`),...(def.immunities??[]).map(r=>`${cap(r)} Immunity`),...(def.vulnerabilities??[]).map(r=>`${cap(r)} Vulnerability`),...(def.saveNotes??[]).map(save)].filter(Boolean);
+  if(parts.length){const text1=clean(parts.join('  ·  ')),lw0=width('SENSES & DEFENCES',5.8,bold)+14,lines=wrapText(text1,font,7.4,RW-lw0-12),h=Math.max(16,Math.min(3,lines.length)*lineHeight(font,7.4)+7);
+   rbox(p,RX,ry-h,RW,h,{});label(p,'Senses & defences',RX+7,ry-h/2-2,5.8,accent);
+   field(p,'SensesDefences',lines.slice(0,3).join('\n'),RX+lw0+8,ry-h+2,RW-lw0-8,h-4,{size:7.4,multi:true});ry-=h+16;}}
+ heading(p,'Attacks',RX,ry,RW,'base rolls');ry-=6;
  // The base-roll caveat is stated once in the heading rather than on every row.
  const note=n=>String(n??'').replace(/;? ?Base roll; conditional bonuses not included\./,'').replace(/^; /,'').trim();
- const attacks=c.attacks?.length?c.attacks.map(a=>({name:a.name,hit:a.attackBonus!=null?signed(a.attackBonus):a.save??'',damage:a.damage,notes:note(a.notes)})):[...(c.weapons??[]).map(w=>({name:w.name+(w.equipped?'':' (stowed)'),hit:w.attackBonus==null?'':signed(w.attackBonus),damage:w.damage,notes:note(w.notes)})),
-  ...(c.spellRows??[]).filter(s=>s.level===0&&(s.requiresAttack||s.requiresSave)).map(s=>({name:s.name,hit:s.requiresSave?`${s.savingThrow} DC ${s.saveDC??'?'}`:signed(s.attackBonus),damage:s.damage??'',notes:'Cantrip · '+s.range}))];
- const NW=RW-204;
- rbox(p,RX,ry-11,RW,11,{fill:tint,border:undefined,r:2});
- label(p,'Name',RX+4,ry-7.8,5.4);centred(p,'Hit / DC',RX+90,ry-7.8,34,5.4);label(p,'Damage',RX+127,ry-7.8,5.4);label(p,'Notes',RX+206,ry-7.8,5.4);ry-=11;
- const attackRows=Math.min(6,Math.max(3,attacks.length)),nlh=lineHeight(font,6.3);
- for(let i=0;i<attackRows;i++){const a=attacks[i]??{},notes=wrapText(clean(a.notes??''),font,6.3,NW-4),h=Math.max(13,Math.min(3,notes.length)*nlh+3),y=ry-h;
-  field(p,`Attack.${i+1}.Name`,a.name??'',RX+2,y+h-13,88,13,{size:8,f:bold});field(p,`Attack.${i+1}.Hit`,a.hit??'',RX+90,y+h-13,34,13,{size:8,align:'center'});
-  field(p,`Attack.${i+1}.Damage`,a.damage??'',RX+125,y+h-13,79,13,{size:7.5});field(p,`Attack.${i+1}.Notes`,(notes.length>3?[...notes.slice(0,2),notes[2]+' …']:notes).join('\n'),RX+204,y+1,NW+2,h-1,{size:6.3,multi:true});
-  rule(p,RX,RX+RW,y,hair,.4);ry-=h;if(notes.length>3)overflow.push([`${a.name} (notes)`,a.notes]);}
- if(attacks.length>attackRows)overflow.push(['Attacks (continued)',attacks.slice(attackRows).map(a=>`${a.name}: ${a.hit} ${a.damage} ${a.notes}`.trim()).join('\n')]);
- ry-=16;
+ const attackRow=a=>({name:a.name,hit:a.attackBonus!=null?signed(a.attackBonus):a.save??'',damage:a.damage,notes:note(a.notes)});
+ // Damaging spells are short references here; their full text stays on the spells page.
+ const spellRef=s=>({name:s.level?`${s.name} (${ordinal(s.level)})`:s.name,hit:s.requiresSave&&!s.requiresAttack?`${s.savingThrow} ${s.saveDC??'?'}`.trim():s.attackBonus!=null?signed(s.attackBonus):'',damage:s.damage??'',notes:`${s.range} · see Spells`});
+ const spellsList=c.spellRows??[],isAttackSpell=s=>s.damage&&(s.requiresAttack||s.requiresSave);
+ let attackList;
+ if(c.attacks?.length){
+  attackList=c.attacks.map(a=>a.source==='spell'?{...attackRow(a),notes:`${String(a.notes??'').split(';')[0]} · see Spells`}:attackRow(a));
+  const kinds=c.attacks.map(a=>a.source);let at=kinds.lastIndexOf('spell');if(at<0){const u=kinds.indexOf('unarmed');at=u<0?attackList.length-1:u-1;}
+  attackList.splice(at+1,0,...spellsList.filter(s=>s.level>0&&s.prepared&&isAttackSpell(s)).map(spellRef));
+ }else attackList=[...(c.weapons??[]).map(w=>attackRow({name:w.name+(w.equipped?'':' (stowed)'),attackBonus:w.attackBonus,damage:w.damage,notes:w.notes})),...spellsList.filter(s=>s.level===0&&isAttackSpell(s)).map(spellRef)];
+ const nlh=lineHeight(font,7),NX=RX+322,NWd=RW-322;
+ // One table: weapons, unarmed strikes and spell attacks are all just attacks, followed by blank rows to pencil in.
+ {rbox(p,RX,ry-10,RW,10,{fill:tint,border:undefined,r:2});label(p,'Name',RX+4,ry-7,5.2);centred(p,'Hit / DC',RX+134,ry-7,36,5.2);label(p,'Damage',RX+178,ry-7,5.2);label(p,'Range · properties · notes',NX+2,ry-7,5.2);ry-=10;
+  const rows=Math.min(12,Math.max(4,attackList.length+3));
+  for(let i=0;i<rows;i++){const a=attackList[i]??{},notes=wrapText(clean((a.notes??'').replace(/; /g,'  ·  ')),font,7,NWd-4),shown=notes.length>3?[notes[0],notes[1],notes[2].replace(/[ ,;.]*$/,'')+' …']:notes,h=Math.max(2,shown.length)*nlh+6,y=ry-h;
+   field(p,`Attack.${i+1}.Name`,a.name??'',RX+2,y+h-14,130,13,{size:8.4,f:bold});field(p,`Attack.${i+1}.Hit`,a.hit??'',RX+134,y+h-14,36,13,{size:8.4,align:'center'});
+   field(p,`Attack.${i+1}.Damage`,a.damage??'',RX+176,y+h-14,142,13,{size:8});
+   field(p,`Attack.${i+1}.Notes`,shown.join('\n'),NX,y+1,NWd,h-1,{size:7,multi:true});
+   rule(p,RX,RX+RW,y,hair,.4);ry-=h;if(notes.length>3)overflow.push([`${a.name} (notes)`,a.notes]);}
+  if(attackList.length>rows)overflow.push(['Attacks (continued)',attackList.slice(rows).map(a=>`${a.name}: ${a.hit} ${a.damage} ${a.notes}`.trim()).join('\n')]);}
+ ry-=14;
 
- // Actions by what they cost, with limited uses tracked beside them. Spells cast as a bonus action
- // or reaction are listed by name so they are not forgotten; their details are in the spell table.
- const spells=c.spellRows??[],preparer=c.classes.some(v=>preparers.has(v.name));
+ // Actions by what they cost, in two columns, with limited uses tracked beside them.
+ const spells=c.spellRows??[];
  const resetShort={'Short rest':'SR','Long rest':'LR','Dawn':'dawn'};
  const uses=c.featureUses??[],acts=c.actions??[];
- const spellNote=s=>s.level?`${ordinal(s.level)}-level spell`:'cantrip';
- const actionGroups=[['Action',[]],['Bonus action',[]],['Reaction',[{name:'Opportunity attack',summary:'When a hostile creature you can see leaves your reach, make one melee attack against it.'}]],['Special',[]]];
+ const actionGroups=[['Action',[]],['Bonus action',[]],['Reaction',[]],['Special',[]]];
  for(const a of acts)actionGroups.find(([g])=>g===a.activation)?.[1].push(a);
- for(const s of spells)if(/^(Bonus action|Reaction)$/.test(s.casting))actionGroups.find(([g])=>g===s.casting)[1].push({name:s.name,note:spellNote(s)});
- heading(p,'Actions & resources',RX,ry,RW,'filled = used');ry-=11;
- const loose=[['Inspiration',1,c.inspiration?1:0,'Inspiration'],['Hit dice spent',Math.min(level,20),c.combat.hitDiceUsed??0,'HitDiceUsed'],
-  ...uses.filter(u=>!acts.some(a=>a.name===u.name)).map(u=>[u.name+(resetShort[u.reset]?` (${resetShort[u.reset]})`:''),u.maximum,u.remaining==null?0:u.maximum-u.remaining,`Uses.${named(u.name)}`])];
- const half=(RW-12)/2;
- const tracker=(id,max,used,right,y)=>{if(max<=10){for(let k=0;k<max;k++)dot(p,`${id}.${k+1}`,right-(max-1-k)*8-3,y+2.6,k<used);return max*8;}field(p,id,`${max-used} / ${max}`,right-40,y-3,40,11,{size:8,align:'right'});return 40;};
- loose.forEach(([n,max,used,id],i)=>{const x=RX+(i%2)*(half+12),y=ry-Math.floor(i/2)*11;
-  const name=clean(n);let s=7.5;while(s>6&&font.widthOfTextAtSize(name,s)>half-Math.min(max,10)*8-6)s-=.5;text(p,name,x,y,s);tracker(id,max,used,x+half,y);});
- ry-=Math.ceil(loose.length/2)*11-4;
- // Class dice that grow with level (Sneak Attack 3d6, Martial Arts 1d6); dice on listed actions show beside them.
- const scaleOf=n=>c.classScales?.find(v=>v.name===n&&/^\d*d\d+$/.test(v.value))?.value;
- const dice=(c.classScales??[]).filter(v=>/^\d*d\d+$/.test(v.value)&&!acts.some(a=>a.name===v.name));
- if(dice.length){ry-=9;let dx=RX;for(const v of dice){const n=clean(v.name),w=width(n,7.5)+width(v.value,7.5,bold)+18;if(dx>RX&&dx+w>RX+RW){dx=RX;ry-=11;}text(p,n,dx,ry,7.5);text(p,v.value,dx+width(n,7.5)+4,ry,7.5,bold);dx+=w;}ry-=2;}
- // Space below is kept for the spell table and equipment; actions that do not fit continue overleaf.
- const casting=spells.length||c.spellSlots?.length,floor=BOTTOM+(casting?210:0)+120,later=[];
- const entryHeight=e=>10+(e.summary?Math.min(3,wrapText(clean(e.summary),font,6.6,RW-10).length)*lineHeight(font,6.6)+4:0);
- for(const [g,entries] of actionGroups){
-  const shown=[];for(const e of entries)if(!later.length&&ry-14-[...shown,e].reduce((n,x)=>n+entryHeight(x),0)>=floor)shown.push(e);else later.push([g,e]);
-  if(!shown.length)continue;
-  const title=g+(g==='Special'?'':'s');
-  ry-=4;label(p,title,RX,ry-6,5.8,accent);rule(p,RX+width(title.toUpperCase(),5.8,bold)+5,RX+RW,ry-4,tint,.7);ry-=10;
-  for(const e of shown){
-   const use=uses.find(u=>u.name===e.name);
-   text(p,e.name,RX+6,ry-7,7.8,bold);
-   const aside=e.note??scaleOf(e.name);if(aside)text(p,aside,RX+10+width(e.name,7.8,bold),ry-7,6.3,font,muted);
-   if(use){const r=resetShort[use.reset]??'';if(r)rightLabel(p,r,RX+RW,ry-6.8,5.6);tracker(`Uses.${named(use.name)}`,use.maximum,use.remaining==null?0:use.maximum-use.remaining,RX+RW-(r?width(r,5.6,bold)+5:0),ry-9);}
-   ry-=10;
-   if(e.summary){const lines=wrapText(clean(e.summary),font,6.6,RW-10),shown=lines.length>3?[...lines.slice(0,2),lines[2]+' …']:lines,h=shown.length*lineHeight(font,6.6)+2;
-    field(p,`Action.${named(e.name)}`,shown.join('\n'),RX+4,ry-h,RW-4,h,{size:6.6,multi:true});ry-=h+2;}
-  }
- }
- if(later.length){overflow.push(['Actions (continued)',later.map(([g,e])=>`${e.name} (${g.toLowerCase()}): ${e.summary??e.note}`).join('\n')]);text(p,`+ ${plural(later.length,'more action')} overleaf`,RX+6,ry-8,6.3,font,muted);ry-=11;}
- text(p,'Standard: Attack · Cast a Spell · Dash · Disengage · Dodge · Help · Hide · Ready · Search · Use an Object',RX,ry-8,5.8,font,muted);
- ry-=24;
 
- // Spells at a glance: one row of stats and one line of effect each; full text in the spellbook.
- if(spells.length||c.spellSlots?.length){
-  heading(p,'Spellcasting',RX,ry,RW,`${plural(spells.filter(s=>s.level===0).length,'cantrip')} · ${plural(spells.filter(s=>s.level>0).length,'spell')}`);ry-=6;
-  const atk=[...new Set(spells.map(s=>s.attackBonus).filter(v=>v!=null))],dc=[...new Set(spells.map(s=>s.saveDC).filter(v=>v!=null))],ability=[...new Set(spells.map(s=>s.ability).filter(Boolean))];
-  const stats=[['Ability',ability.join(' / '),'SpellAbility'],['Save DC',dc.length===1?dc[0]:'','SpellSaveDC'],['Attack',atk.length===1?signed(atk[0]):'','SpellAttack']],sw=RW/3;
-  rbox(p,RX,ry-18,RW,18);
-  stats.forEach(([n,v,id],i)=>{const x=RX+i*sw;if(i)vrule(p,x,ry-14,ry-4);label(p,n,x+6,ry-11.3,5.8);field(p,id,v,x+sw-40,ry-16,36,14,{size:10,align:'right',f:bold});});
-  ry-=18;
-  if(c.spellSlots?.length){ry-=11;let sx=RX;
-   for(const s of c.spellSlots){const n=Math.min(s.total,9),w=20+n*8;if(sx+w>RX+RW-60){sx=RX;ry-=11;}
-    label(p,ordinal(s.level),sx,ry-2.2,6);for(let i=0;i<n;i++)dot(p,`Slots.${s.level}.${i+1}`,sx+17+i*8,ry,s.used!=null&&i<s.used);sx+=w+10;}
-   rightLabel(p,'slots · filled = used',RX+RW,ry-2.2,5.4);ry-=4;}
-  if(spells.length){ry-=8;
-   const cols=[['Spell',RX+4],['Level',RX+112],['Time',RX+146],['Range',RX+196],['Hit / DC',RX+RW-38]];
-   rbox(p,RX,ry-11,RW,11,{fill:tint,border:undefined,r:2});cols.forEach(([n,x])=>label(p,n,x,ry-7.8,5.4));ry-=11;
-   const sorted=[...spells].sort((a,b)=>a.level-b.level),rowH=20,fits=Math.max(2,Math.floor((ry-BOTTOM-140)/rowH)),shown=sorted.length>fits?sorted.slice(0,fits-1):sorted;
-   for(const s of shown){const y=ry-rowH;
-    if(preparer&&s.level>0)dot(p,`SpellList.${named(s.name)}.prepared`,RX+4,y+14,s.prepared,2.4);
-    const nx=preparer&&s.level>0?RX+9:RX+2;
-    field(p,`SpellList.${named(s.name)}.name`,s.name,nx,y+9,RX+110-nx,11,{size:7.8,f:bold});
-    field(p,`SpellList.${named(s.name)}.level`,s.level?ordinal(s.level):'Cantrip',RX+110,y+9,34,11,{size:7});
-    field(p,`SpellList.${named(s.name)}.time`,s.casting+(s.concentration?' · C':'')+(s.ritual?' · R':''),RX+144,y+9,50,11,{size:7});
-    field(p,`SpellList.${named(s.name)}.range`,s.range,RX+194,y+9,RW-236,11,{size:7});
-    field(p,`SpellList.${named(s.name)}.hit`,s.requiresSave?`${s.savingThrow} ${s.saveDC??''}`.trim():s.requiresAttack&&s.attackBonus!=null?signed(s.attackBonus):'',RX+RW-40,y+9,40,11,{size:7});
-    const effect=wrapText(clean(s.summary),font,6.4,RW-8);
-    field(p,`SpellList.${named(s.name)}.effect`,effect.length>1?effect[0].replace(/[ ,;.]*$/,'')+' …':effect[0]??'',RX+2,y+1,RW-2,9,{size:6.4});
-    rule(p,RX,RX+RW,y,hair,.4);ry-=rowH;}
-   if(shown.length<sorted.length){text(p,`+ ${sorted.length-shown.length} more in the spellbook overleaf`,RX+2,ry-8,6.3,font,muted);ry-=10;}
+ const loose=uses.filter(u=>!acts.some(a=>a.name===u.name)).map(u=>[u.name+(resetShort[u.reset]?` (${resetShort[u.reset]})`:''),u.maximum,u.remaining==null?0:u.maximum-u.remaining,`Uses.${named(u.name)}`]);
+ const hasActions=loose.length||actionGroups.some(g=>g[1].length);
+ if(hasActions){heading(p,'Actions & resources',RX,ry,RW,'filled = used'+(uses.length?' · SR short rest · LR long rest':''));ry-=11;}
+ const lw=(RW-2*18)/3;
+ const tracker=(id,max,used,right,y)=>{if(max<=10){for(let k=0;k<max;k++)dot(p,`${id}.${k+1}`,right-(max-1-k)*8-3,y+2.6,k<used);return max*8;}field(p,id,`${max-used} / ${max}`,right-40,y-3,40,11,{size:8,align:'center'});return 40;};
+ loose.forEach(([n,max,used,id],i)=>{const x=RX+(i%3)*(lw+18),y=ry-Math.floor(i/3)*12;
+  const name=clean(n);let sz=7.5;while(sz>6&&font.widthOfTextAtSize(name,sz)>lw-Math.min(max,10)*8-6)sz-=.5;text(p,name,x,y,sz);tracker(id,max,used,x+lw,y);});
+ if(loose.length)ry-=Math.ceil(loose.length/3)*12+2;
+ // Class dice that grow with level (Sneak Attack 3d6) show beside the action they belong to.
+ const scaleOf=n=>c.classScales?.find(v=>v.name===n&&/^\d*d\d+$/.test(v.value))?.value;
+ // Space below is kept for the equipment; actions that do not fit continue overleaf.
+ const floor=FLOOR+10,later=[],aw=(RW-16)/2,y0=ry;
+ const entryHeight=e=>13+(e.summary?Math.min(3,wrapText(clean(e.summary),font,6.6,aw-10).length)*lineHeight(font,6.6)+6:2);
+ const groupHeight=entries=>entries.length?22+entries.reduce((n,e)=>n+entryHeight(e),0):0;
+ // Fill the left column up to half the total height, then continue in the right.
+ const columns=[[],[]],used=[0,0],everything=actionGroups.reduce((n,[,e])=>n+groupHeight(e),0);
+ for(const g of actionGroups){if(!g[1].length)continue;const k=used[0]>0&&used[0]+groupHeight(g[1])>everything/2+4?1:0;columns[k].push(g);used[k]+=groupHeight(g[1]);}
+ let lowest=y0;
+ columns.forEach((groups,k)=>{const ax=RX+k*(aw+16);let cy=y0,full=false;
+  for(const [g,entries] of groups){
+   const shown=[];for(const e of entries)if(!full&&cy-22-[...shown,e].reduce((n,x)=>n+entryHeight(x),0)>=floor)shown.push(e);else{full=true;later.push([g,e]);}
+   if(!shown.length)continue;
+   const title=g+(g==='Special'?'':'s');
+   cy-=8;label(p,title,ax,cy-6,5.8,accent);rule(p,ax+width(title.toUpperCase(),5.8,bold)+5,ax+aw,cy-4,tint,.7);cy-=14;
+   for(const e of shown){
+    const use=uses.find(u=>u.name===e.name);
+    text(p,e.name,ax+6,cy-7,7.8,bold);
+    const aside=e.note??scaleOf(e.name);if(aside)text(p,aside,ax+10+width(e.name,7.8,bold),cy-7,6.3,font,muted);
+    if(use){const r=resetShort[use.reset]??'';if(r)rightLabel(p,r,ax+aw,cy-7.4,5.6);tracker(`Uses.${named(use.name)}`,use.maximum,use.remaining==null?0:use.maximum-use.remaining,ax+aw-(r?width(r,5.6,bold)+5:0),cy-7.6);}
+    cy-=12;
+    if(e.summary){const lines=wrapText(clean(e.summary),font,6.6,aw-10),shown=lines.length>3?[...lines.slice(0,2),lines[2]+' …']:lines,h=shown.length*lineHeight(font,6.6)+2;
+     field(p,`Action.${named(e.name)}`,shown.join('\n'),ax+4,cy-h,aw-4,h,{size:6.6,multi:true});cy-=h+6;}else cy-=2;
+   }
   }
-  ry-=16;
- }
- heading(p,'Equipment',RX,ry,RW,c.inventoryRows?.some(r=>r.equipped)?'• equipped':'');ry-=6;
- const coins=['pp','gp','ep','sp','cp'],cw=RW/5;
- rbox(p,RX,ry-18,RW,18);
- coins.forEach((k,i)=>{const x=RX+i*cw;if(i)vrule(p,x,ry-14,ry-4);label(p,k,x+6,ry-11.3,5.8);field(p,`Coins.${k.toUpperCase()}`,Number(c.coins?.[k])||'',x+18,ry-16,cw-22,14,{size:9,align:'right'});});
- ry-=24;
- // Items in two columns with weights beside them; whatever does not fit continues overleaf.
- {const size=7.2,elh=lineHeight(font,size),cap=Math.max(2,Math.floor((ry-BOTTOM-(c.carrying?30:8))/elh)),ww=26,nameW=half-ww-2;
+  lowest=Math.min(lowest,cy);});
+ ry=lowest;
+ // Actions that do not fit are already described under features; only those with no entry there continue overleaf.
+ const carried=later.filter(([,e])=>!e.note&&!(c.featureRows??[]).some(f=>f.name===e.name));
+ if(carried.length){overflow.push(['Actions (continued)',carried.map(([g,e])=>`${e.name} (${g.toLowerCase()}): ${e.summary}`).join('\n')]);text(p,`+ ${plural(carried.length,'more action')} overleaf`,RX+6,ry-8,6.3,font,muted);ry-=11;}
+ ry-=18;
+
+ // The foot of the page is split in half: equipment (coins, then two columns of items) beside a notes block.
+ {const weights=options.equipmentWeight!==false,quantity=options.equipmentQuantity!==false;
+  const HW=(RIGHT-M-16)/2,NX0=M+HW+16;
+  let ey=Math.min(ly,ry)-2;
+  const rowsIn=c.inventoryRows??[],lbs=n=>`${Math.round(n*100)/100}`;
+  const keyNotes=[rowsIn.some(r=>r.equipped)&&'filled = equipped',rowsIn.some(r=>r.attunement||r.attuned)&&'diamond = attuned',weights&&c.carrying&&`carried ${lbs(c.carrying.weight)} / ${lbs(c.carrying.capacity)} lb`].filter(Boolean).join(' · ');
+  heading(p,'Equipment',M,ey,HW,keyNotes);
+  heading(p,'Notes',NX0,ey,HW);
+  const notesTop=ey-4;field(p,'Notes','',NX0-2,BOTTOM,HW+4,notesTop-BOTTOM,{multi:true});ruled(p,NX0,HW,notesTop);
+  ey-=8;
+  const coins=['pp','gp','ep','sp','cp'],cw=HW/5;
+  rbox(p,M,ey-18,HW,18);
+  coins.forEach((k,i)=>{const x=M+i*cw;if(i)vrule(p,x,ey-14,ey-4);label(p,k,x+5,ey-11.3,5.8);field(p,`Coins.${k.toUpperCase()}`,Number(c.coins?.[k])||'',x+15,ey-16,cw-18,14,{size:9,align:'center'});});
+  ey-=24;
+  const gap=12,colW=(HW-gap)/2,qw=quantity?15:0,ww=weights?27:0,nameW=colW-9-qw-ww-(quantity?2:0)-(weights?2:0)-(rowsIn.some(r=>r.attunement||r.attuned)?8:0);
   const lb=n=>n?`${Math.round(n*100)/100} lb`:'';
-  const rows=c.inventoryRows?.length?c.inventoryRows.map(r=>[`${r.quantity==null?BLANK+' × ':r.quantity>1?r.quantity+' × ':''}${r.name}${r.attuned?' (attuned)':''}`,lb(r.weight),r.equipped])
-   :displayItems(c.equipment).split('\n').filter(s=>s.trim()).map(s=>[s,'',false]);
-  const items=rows.map(([n,w,on])=>{const lines=wrapText(clean((on?'• ':'')+n),font,size,nameW-4);return [lines,[...Array(lines.length-1).fill(''),w]];});
-  const total=items.reduce((n,[l])=>n+l.length,0),target=Math.min(cap,Math.ceil(total/2)),out=[[[],[]],[[],[]]],rest=[];let k=0;
-  for(const [lines,ws] of items){if(k===0&&out[0][0].length+lines.length>target)k=1;if(k===1&&out[1][0].length+lines.length>cap)k=2;if(k<2){out[k][0].push(...lines);out[k][1].push(...ws);}else rest.push(lines.join(' '));}
-  const h=Math.max(out[0][0].length,out[1][0].length,2)*elh+4;
-  [['Equipment',RX],['EquipmentMore',RX+half+12]].forEach(([id,x],i)=>{field(p,id,out[i][0].join('\n'),x-2,ry-h,nameW+4,h,{size,multi:true});field(p,id+'Weight',out[i][1].join('\n'),x+nameW,ry-h,ww+2,h,{size,multi:true,align:'right'});});
-  if(rest.length)overflow.push(['Equipment (continued)',rest.join('\n')]);
-  ry-=h+4;
-  const carry=c.carrying,attunable=(c.inventoryRows??[]).filter(r=>r.attuned).length;
-  if(carry){rule(p,RX,RX+RW,ry,hair,.5);ry-=9;
-   const parts=[['Carried',`${lb(carry.weight)||'0 lb'}`],['Capacity',lb(carry.capacity)],['Push · drag · lift',lb(carry.pushDragLift)],...(attunable?[['Attuned',`${attunable} / 3`]]:[])],pw=RW/parts.length;
-   parts.forEach(([n,v],i)=>{label(p,n,RX+i*pw,ry-1,5.4);field(p,`Carry.${n}`,v,RX+i*pw+width(n.toUpperCase(),5.4,bold)+3,ry-4,pw-width(n.toUpperCase(),5.4,bold)-6,10,{size:7.5,f:bold});});
-   ry-=10;}
-  ry-=12;}
- if(ry-BOTTOM>30){heading(p,'Notes',RX,ry,RW);ry-=4;field(p,'Notes','',RX-2,BOTTOM,RW+4,ry-BOTTOM,{multi:true});ruled(p,RX,RW,ry);}
+  const items=c.inventoryRows?.length?c.inventoryRows.map(r=>({name:r.name,qty:r.quantity==null?'':r.quantity,weight:lb(r.weight),equipped:r.equipped,attunable:!!(r.attunement||r.attuned),attuned:!!r.attuned}))
+   :displayItems(c.equipment).split('\n').filter(t=>t.trim()).map(t=>({name:t,qty:'',weight:'',equipped:false}));
+  const rowH=11,perCol=Math.min(16,Math.max(3,Math.floor((ey-BOTTOM-9)/rowH)));
+  [0,1].forEach(col=>{const x=M+col*(colW+gap);
+   if(quantity)label(p,'Qty',x+9,ey-5,4.8);label(p,'Item',x+9+qw+(quantity?2:0),ey-5,4.8);if(weights)rightLabel(p,'Weight',x+colW,ey-5,4.8);});
+  const top=ey-8;
+  for(let k=0;k<perCol*2;k++){const col=Math.floor(k/perCol),r=k%perCol,x=M+col*(colW+gap),y=top-(r+1)*rowH,it=items[k],id=`Item.${k+1}`;
+   rule(p,x,x+colW,y,hair,.4);
+   if(it)dot(p,`${id}.Equipped`,x+3,y+rowH/2,it.equipped,2.2);
+   if(quantity)field(p,`${id}.Qty`,it?.qty??'',x+7,y+.5,qw,rowH-1,{size:7.2,align:'center'});
+   field(p,`${id}.Name`,it?.name??'',x+9+qw+(quantity?2:0)-2,y+.5,nameW+2,rowH-1,{size:7.2});
+   if(it?.attunable)diamond(p,`${id}.Attuned`,x+colW-ww-(weights?2:0)-4.5,y+rowH/2,it.attuned,2.5);
+   if(weights)field(p,`${id}.Weight`,it?.weight??'',x+colW-ww,y+.5,ww,rowH-1,{size:6.8,align:'center'});}
+  if(items.length>perCol*2)overflow.push(['Equipment (continued)',items.slice(perCol*2).map(it=>`${it.qty===''?'':it.qty+' × '}${it.name}${it.weight?' — '+it.weight:''}`).join('\n')]);
+ }
+
+ // Spells: one page of tables, each spell a stat line with its full description beneath. Prepared bullets, slots and the casting summary live here.
+ if(spells.length||c.spellSlots?.length){
+  const STOP=782,SW=RIGHT-M,preparer=c.classes.some(v=>preparers.has(v.name));let sp=null,sy=0;
+  const newPage=cont=>{sp=doc.addPage(A4);text(sp,'Cantrips & spells'+(cont?' (continued)':''),M,800,13,bold,accent);const n=clean(c.identity.name);text(sp,n,RIGHT-width(n,7.5),801,7.5,font,muted);rule(sp,M,RIGHT,792,accent,1.2);sy=STOP;};
+  newPage(false);
+  const atk=[...new Set(spells.map(s=>s.attackBonus).filter(v=>v!=null))],dc=[...new Set(spells.map(s=>s.saveDC).filter(v=>v!=null))],ability=[...new Set(spells.map(s=>s.ability).filter(Boolean))];
+  const stats=[['Spellcasting ability',ability.join(' / '),'SpellAbility'],['Spell save DC',dc.length===1?dc[0]:'','SpellSaveDC'],['Spell attack bonus',atk.length===1?signed(atk[0]):'','SpellAttack']],sw=SW/3;
+  rbox(sp,M,sy-20,SW,20);
+  stats.forEach(([n,v,id],i)=>{const x=M+i*sw;if(i)vrule(sp,x,sy-16,sy-4);label(sp,n,x+8,sy-12.5,5.8);field(sp,id,v,x+sw-60,sy-17,54,15,{size:11,align:'center',f:bold});});
+  {const key=[spells.some(s=>s.concentration)&&'C concentration',spells.some(s=>s.ritual)&&'R ritual',preparer&&spells.some(s=>s.level>0)&&'circle = prepared'].filter(Boolean).join(' · ');if(key)rightLabel(sp,key,RIGHT,sy-28,5.4);}
+  sy-=36;
+  const cols={name:M+11,time:M+142,range:M+194,hit:M+248,dmg:M+294,dur:M+384,comp:M+470};
+  const colEnd={name:cols.time,time:cols.range,range:cols.hit,hit:cols.dmg,dmg:cols.dur,dur:cols.comp,comp:RIGHT};
+  const slotsFor=l=>c.spellSlots?.find(v=>v.level===l);
+  const groupBar=(lvl,cont)=>{
+   rbox(sp,M,sy-13,SW,13,{fill:tint,border:undefined,r:2});
+   const title=(lvl===0?'Cantrips':`${ordinal(lvl)} level`)+(cont?' (continued)':'');label(sp,title,M+5,sy-9,6.5,accent);
+   const slot=slotsFor(lvl);
+   if(slot&&!cont){const n=Math.min(slot.total,9);rightLabel(sp,'slots',RIGHT-5,sy-9,5.4);for(let i=0;i<n;i++)dot(sp,`Slots.${lvl}.${i+1}`,RIGHT-36-(n-1-i)*9,sy-6.5,slot.used!=null&&i<slot.used,2.8);}
+   sy-=17;
+   [['Spell','name'],['Time','time'],['Range','range'],['Hit / DC','hit'],['Damage','dmg'],['Duration','dur'],['Comp.','comp']].forEach(([n,k])=>label(sp,n,cols[k],sy-4,5.2));
+   sy-=8;rule(sp,M,RIGHT,sy,hair,.5);
+  };
+  const lh7=lineHeight(font,7.2);
+  const byLevel=Object.groupBy([...spells].sort((a,b)=>a.level-b.level),s=>s.level);for(const s of c.spellSlots??[])byLevel[s.level]??=[];
+  for(const [lvlKey,list] of Object.entries(byLevel).sort((a,b)=>a[0]-b[0])){
+   const lvl=Number(lvlKey);
+   if(sy-BOTTOM<90)newPage(true);
+   groupBar(lvl,false);
+   for(const s of list){
+    const n=named(s.name),letters=(s.components.match(/\b[VSM]\b/g)||[]).join(', ')||s.components,materials=s.components.length>10?`Components: ${s.components}.`:'';
+    const body=clean([s.school&&`${s.school}${s.ritual?' (ritual)':''}.`,materials,s.summary,s.restriction].filter(Boolean).join(' '));
+    let lines=wrapText(body,font,7.2,SW-34),room=Math.floor((sy-BOTTOM-24)/lh7),rest='';
+    if(lines.length>room&&room<Math.min(lines.length,6)){newPage(true);groupBar(lvl,true);room=Math.floor((sy-BOTTOM-24)/lh7);}
+    if(lines.length>room){const fit=fitText(body,font,{width:SW-34,height:room*lh7,max:7.2,min:6.6,marker:'(Continued overleaf)'});lines=wrapText(fit.text,font,fit.size||7.2,SW-34);rest=fit.rest;}
+    const refH=s.reference?8:0,nh=lines.length*lh7+3,y=sy-13;
+    if(preparer&&s.level>0)dot(sp,`Spell.${n}.prepared`,M+4,y+5.5,s.prepared,2.4);
+    // Concentration and ritual are marked with small tags after the name.
+    const tags=[s.concentration&&'C',s.ritual&&'R'].filter(Boolean);
+    tags.forEach((t,k)=>{const tx=cols.time-5-(tags.length-k)*10;rbox(sp,tx,y+2,8,8,{fill:accent,border:undefined,r:2});text(sp,t,tx+2.4,y+4,5.6,bold,white);});
+    field(sp,`Spell.${n}.name`,s.name,cols.name,y,cols.time-cols.name-3-tags.length*10,12,{size:8.2,f:bold});
+    field(sp,`Spell.${n}.time`,s.casting,cols.time,y,colEnd.time-cols.time-3,12,{size:7.2});
+    field(sp,`Spell.${n}.range`,s.range,cols.range,y,colEnd.range-cols.range-3,12,{size:7.2});
+    field(sp,`Spell.${n}.hit`,s.requiresSave?`${s.savingThrow} ${s.saveDC??''}`.trim():s.requiresAttack&&s.attackBonus!=null?signed(s.attackBonus):'',cols.hit,y,colEnd.hit-cols.hit-3,12,{size:7.2});
+    field(sp,`Spell.${n}.damage`,s.damage??'',cols.dmg,y,colEnd.dmg-cols.dmg-3,12,{size:7.2});
+    field(sp,`Spell.${n}.duration`,s.duration.replace(/^Concentration, up to /i,''),cols.dur,y,colEnd.dur-cols.dur-3,12,{size:7.2});
+    field(sp,`Spell.${n}.components`,letters,cols.comp,y,colEnd.comp-cols.comp,12,{size:7.2});
+    // Components that cost gold or are used up are flagged so they are not missed.
+    {const cost=s.components.match(/(\d[\d,]*)\s*(gp|sp|cp|ep|pp)\b/i),used=/consum/i.test(s.components),flag=cost?`${cost[1]}${cost[2].toLowerCase()}`:used?'consumed':'';
+     if(flag){const fw=width(flag,5.2,bold)+5,fx=cols.comp+width(letters,7.2)+4;rbox(sp,fx,y+2,fw,8,{fill:accent,border:undefined,r:2});text(sp,flag,fx+2.5,y+4.2,5.2,bold,white);}}
+    label(sp,'Notes',M+11,y-8.5,5.2);field(sp,`Spell.${n}.effect`,lines.join('\n'),M+30,y-nh,SW-30,nh,{size:7.2,multi:true});
+    if(s.reference){const r=clean(s.reference);text(sp,r,RIGHT-width(r,6),y-nh-6.5,6,font,muted);}
+    sy=y-nh-refH-3;rule(sp,M,RIGHT,sy,hair,.4);sy-=2;
+    if(rest)overflow.push([`${s.name} (continued)`,rest]);
+   }
+   sy-=8;
+  }
+ }
 
  // Detail pages: two-column flow of headed sections.
  const COLW=(RIGHT-M-16)/2,TOP=782,size=8,lh=lineHeight(font,size);
  let page=null,col=0,y=0,serial=0;
  const header=title=>{const pg=doc.addPage(A4);text(pg,title,M,800,13,bold,accent);const n=clean(c.identity.name);text(pg,n,RIGHT-width(n,7.5),801,7.5,font,muted);rule(pg,M,RIGHT,792,accent,1.2);return pg;};
- const next=title=>{if(page&&col===0){col=1;y=TOP;return;}page=header(title);col=0;y=TOP;};
+ const next=title=>{if(page&&col===0){col=1;y=page===bandPage?bandY:TOP;return;}page=header(title);col=0;y=TOP;};
  // A new part starts in a spare column of the current page when there is one, under its own title.
  const start=title=>{
-  if(page&&(col===0||y-BOTTOM>(TOP-BOTTOM)*.45)){if(col===0){col=1;y=TOP;}else y-=8;text(page,title,x(),y-11,11,bold,accent);y-=22;return;}
+  if(page&&(col===0||y-BOTTOM>(TOP-BOTTOM)*.45)){if(col===0){col=1;y=page===bandPage?bandY:TOP;}else y-=8;text(page,title,x(),y-11,11,bold,accent);y-=22;return;}
   page=null;next(title);};
  const x=()=>M+col*(COLW+16);
+ let flowed=false;
  const section=(title,body,pageTitle,ref='')=>{
-  const lines=wrapText(clean(String(body??'').trim()),font,size,COLW-4);if(!lines.some(Boolean))return;
+  const lines=wrapText(clean(String(body??'').trim()),font,size,COLW-4);if(!lines.some(Boolean))return;flowed=true;
   // Keep short sections whole rather than strand a heading or a couple of lines.
   const need=lines.length*lh+18;if(need>y-BOTTOM&&need<TOP-BOTTOM)next(pageTitle);else if(y-BOTTOM<36)next(pageTitle);
   let offset=0;
@@ -289,12 +351,26 @@ export async function generateGroupedPdf(PDFLib,c,options){
    y-=h+19;offset+=count;
   }
  };
- const group=(name,pageTitle,note='')=>{if(y-BOTTOM<64)next(pageTitle);rbox(page,x(),y-13,COLW,13,{fill:tint,border:undefined,r:2});label(page,name,x()+5,y-9,6.5,accent);if(note)rightLabel(page,note,x()+COLW-5,y-9,5.6);y-=20;};
+ const group=(name,pageTitle,note='')=>{flowed=true;if(y-BOTTOM<64)next(pageTitle);rbox(page,x(),y-13,COLW,13,{fill:tint,border:undefined,r:2});label(page,name,x()+5,y-9,6.5,accent);if(note)rightLabel(page,note,x()+COLW-5,y-9,5.6);y-=20;};
+ // Proficiencies, languages and defences head the features page in three columns.
+ const bandCols=[['Proficiencies',training.filter(Boolean).join('\n'),'Proficiencies'],['Languages',c.languages??'','Languages'],['Senses & defences',defence,'Defences']].filter(v=>v[1]);
+ let bandPage=null,bandY=0;
  const d=c.details??{},personal=['personalityTraits','ideals','bonds','flaws'];
- const physical=['gender','age','size','height','weight','eyes','skin','hair','faith','lifestyle'];
+ const physical=['gender','age','size','height','weight','eyes','skin','hair','faith','lifestyle'],tableKeys=['gender','age','size','height','weight','eyes','skin','hair','faith','lifestyle'];
  const physicalValue=k=>k==='weight'&&/^\d+(\.\d+)?$/.test(String(d[k]).trim())?`${d[k]} lb`:d[k];
  const detailNotes=Object.entries(d).filter(([k,v])=>v&&!personal.includes(k));
- if(c.featureRows?.length||c.features||overflow.length||detailNotes.length||personal.some(k=>d[k])){start('Features & notes');
+ if(c.featureRows?.length||c.features||overflow.length||detailNotes.length||personal.some(k=>d[k])||bandCols.length||tableKeys.some(k=>d[k])){start('Features & notes');
+  // Appearance at a glance: a table of short fields across the top of the page.
+  if(tableKeys.some(k=>d[k])){const keys=tableKeys.filter(k=>d[k]),per=keys.length<=5?keys.length:Math.ceil(keys.length/2),cw=(RIGHT-M-(per-1)*8)/per;heading(page,'Appearance',M,y,RIGHT-M);y-=8;
+   keys.forEach((k,i)=>{const x=M+(i%per)*(cw+8),top=y-Math.floor(i/per)*30;rbox(page,x,top-24,cw,24,{});label(page,titleCase(k),x+5,top-8,5.4);
+    field(page,`Appearance.${titleCase(k)}`,d[k]?String(physicalValue(k)):'',x+3,top-22,cw-6,13,{size:9});});
+   y-=Math.ceil(keys.length/per)*30+16;bandPage=page;bandY=y;}
+  if(bandCols.length){const bw=(RIGHT-M-16*(bandCols.length-1))/bandCols.length,bsize=7.6,blh=lineHeight(font,bsize);
+   const parts=bandCols.map(([t,b,id])=>({t,id,text:clean(b),lines:wrapText(clean(b),font,bsize,bw-4)})),bh=Math.min(150,Math.max(...parts.map(v=>v.lines.length))*blh+4);
+   parts.forEach((v,i)=>{const x=M+i*(bw+16);heading(page,v.t,x,y,bw);
+    const fit=v.lines.length*blh+4>bh?fitText(v.text,font,{width:bw-4,height:bh-4,max:bsize,min:6.5}):{text:v.lines.join('\n'),size:bsize};
+    field(page,v.id,fit.text,x-2,y-6-bh,bw+4,bh,{size:fit.size,multi:true});if(fit.rest)overflow.push([`${v.t} (continued)`,fit.rest]);});
+   y-=bh+22;bandPage=page;bandY=y;}
   if(c.featureRows?.length)for(const [g,fs] of Object.entries(Object.groupBy(c.featureRows,f=>f.group||'Features'))){
    // Traits whose only effect is a proficiency share one entry; the proficiency lists carry the rule.
    const covered=fs.filter(f=>f.summary===PROFICIENCY_ONLY),shown=fs.filter(f=>!covered.includes(f)),refs=[...new Set(covered.map(f=>f.reference).filter(Boolean))];
@@ -305,35 +381,20 @@ export async function generateGroupedPdf(PDFLib,c,options){
   const magic=(c.inventoryRows??[]).filter(r=>r.magic);
   if(magic.length){group('Magic items','Features & notes',plural(magic.length,'item'));for(const r of magic)section(r.name,r.summary,'Features & notes',[r.rarity,r.attunement?(r.attuned?'attuned':'requires attunement'):''].filter(Boolean).join(', '));}
   for(const [t,b] of overflow)section(t,b,'Features & notes');
-  // Roleplay notes live with the character details, leaving the summary page for play.
-  if(detailNotes.length||personal.some(k=>d[k]))group('Character','Features & notes');
-  for(const k of personal)section(titleCase(k),d[k],'Features & notes');
-  section('Appearance',[physical.filter(k=>d[k]).map(k=>`${titleCase(k)}: ${physicalValue(k)}`).join('  ·  '),d.appearance].filter(Boolean).join('\n\n'),'Features & notes');
-  for(const [k,v] of detailNotes)if(![...physical,'appearance'].includes(k))section(k==='backstory'?'Background':titleCase(k),v,'Features & notes');
+  // The Character heading spans both columns and governs everything beneath it; it starts a fresh page once features have been laid out.
+  if(detailNotes.length||personal.some(k=>d[k])||d.appearance||physical.some(k=>d[k]&&!tableKeys.includes(k))){
+   if(flowed){page=null;next('Character');}
+   rbox(page,M,y-13,RIGHT-M,13,{fill:tint,border:undefined,r:2});label(page,'Character',M+5,y-9,6.5,accent);rightLabel(page,'personality · appearance · background · notes',RIGHT-5,y-9,5.6);
+   y-=20;col=0;bandPage=page;bandY=y;
+   for(const k of personal)section(titleCase(k),d[k],'Character');
+   section('Appearance',[physical.filter(k=>d[k]&&!tableKeys.includes(k)).map(k=>`${titleCase(k)}: ${physicalValue(k)}`).join('  ·  '),d.appearance].filter(Boolean).join('\n\n'),'Character');
+   // Personality and appearance fill the left column; the longer notes follow in the right.
+   if(col===0&&y<bandY){col=1;y=bandY;}
+   const order=['allies','personalPossessions','otherHoldings','organizations','enemies','backstory','otherNotes'],names={backstory:'Background',organizations:'Organisations',personalPossessions:'Personal Possessions',otherHoldings:'Other Holdings',otherNotes:'Other Notes'};
+   const rank=k=>order.includes(k)?order.indexOf(k):order.length;
+   for(const [k,v] of [...detailNotes].sort((x,y)=>rank(x[0])-rank(y[0])))if(![...physical,'appearance'].includes(k))section(names[k]??titleCase(k),v,'Character');}
  }
- if(spells.length){start('Spellbook');
-  for(const [lvl,list] of Object.entries(Object.groupBy(spells,s=>s.level)).sort((a,b)=>a[0]-b[0])){
-   const slot=c.spellSlots?.find(s=>s.level===Number(lvl));
-   group(lvl==='0'?'Cantrips':`${ordinal(Number(lvl))} level`,'Spellbook',slot?plural(slot.total,'slot'):'');
-   for(const s of list){
-    const meta=[s.school,s.casting,s.range,s.duration+(s.concentration?' (C)':''),s.components+(s.ritual?' · ritual':''),s.requiresSave?`${s.savingThrow} save DC ${s.saveDC??'?'}`:s.requiresAttack&&s.attackBonus!=null?`${signed(s.attackBonus)} to hit`:''].filter(Boolean).join('  ·  ');
-    const body=wrapText(clean([s.summary,s.restriction].filter(Boolean).join('\n')),font,7.6,COLW-4),bh=body.length*lineHeight(font,7.6)+3;
-    const metaLines=wrapText(clean(meta),font,6.6,COLW-4),mh=metaLines.length*lineHeight(font,6.6)+2,need=14+mh+bh+8;
-    if(need>y-BOTTOM)next('Spellbook');
-    const marked=preparer&&s.level>0;if(marked)dot(page,`Spell.${named(s.name)}.prepared`,x()+3,y-5.5,s.prepared);
-    field(page,`Spell.${named(s.name)}.name`,s.name,x()+(marked?8:-2),y-11,COLW-70,12,{size:8.5,f:bold});
-    if(s.reference){const r=clean(s.reference);text(page,r,x()+COLW-width(r,6),y-8,6,font,muted);}
-    field(page,`Spell.${named(s.name)}.meta`,metaLines.join('\n'),x()-2,y-12-mh,COLW+4,mh,{size:6.6,multi:true});
-    const avail=y-BOTTOM-14-mh,fit=bh>avail?fitText(body.join('\n'),font,{width:COLW-4,height:avail,max:7.6,min:6.5,marker:'(Continued below)'}):{text:body.join('\n'),size:7.6,rest:''};
-    const h=Math.min(bh,avail);field(page,`Spell.${named(s.name)}.effect`,fit.text,x()-2,y-13-mh-h,COLW+4,h,{size:fit.size,multi:true});
-    y-=14+mh+h+6;rule(page,x(),x()+COLW,y+3,hair,.4);
-    if(fit.rest)section(`${s.name} (continued)`,fit.rest,'Spellbook');
-   }
-  }
-  if(c.spells&&!spells.length)section('Spells',c.spells,'Spellbook');
- }else if(c.spells){start('Spellbook');section('Spells',c.spells,'Spellbook');}
- const total=doc.getPageCount(),foot=clean(`${c.identity.name}  ·  Compact  ·  5e (2014)  ·  Review imported values before play.`);
- doc.getPages().forEach((pg,i)=>{const t=`${i+1} / ${total}`;text(pg,foot,M,22,6,font,muted);text(pg,t,RIGHT-width(t,6.5,bold),22,6.5,bold,muted);});
+ if(c.spells&&!spells.length){start('Spellbook');section('Spells',c.spells,'Spellbook');}
  doc.setTitle(`${clean(c.identity.name)} — Compact — 5e (2014)`);
  return {bytes:await savePdf(PDFLib,doc,form,font),warnings};
 }
