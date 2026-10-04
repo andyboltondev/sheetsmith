@@ -1,3 +1,5 @@
+import { generateGroupedPdf } from './grouped.js';
+import { generateSuppliedPdf } from './supplied.js';
 import { template } from './template.js';
 const signed = value => value >= 0 ? `+${value}` : String(value);
 export function mapCharacter(character, playerName = '') {
@@ -10,6 +12,8 @@ export function mapCharacter(character, playerName = '') {
 }
 const get = (data, path) => path.split('.').reduce((value, key) => value?.[key], data);
 export async function generatePdf(PDFLib, character, options = {}) {
+  if (options.templateId === 'field-notes') return generateGroupedPdf(PDFLib,character,options);
+  if (options.templateBytes) return generateSuppliedPdf(PDFLib,character,options);
   const { PDFDocument, StandardFonts, rgb } = PDFLib;
   const doc = await PDFDocument.create();
   const font = await doc.embedFont(StandardFonts.Helvetica);
@@ -46,6 +50,7 @@ export async function generatePdf(PDFLib, character, options = {}) {
       } else content = lines.join('\n');
     }
     field.setText(content);
+    if(!config.multiline&&(/^[+-]?\d+(?:\s*\([+-]?\d+\))?$/.test(content)||/^(AC|HPMax|Speed|Initiative|ProfBonus|Passive|HDTotal|HD)$/.test(config.name)))field.setAlignment(PDFLib.TextAlignment.Center);
     field.addToPage(page,{x:config.x,y:config.y,width:config.width,height:config.height,borderWidth:.5,borderColor:rgb(.72,.76,.7),backgroundColor:rgb(.98,.985,.97),font});
     const preferredSize = config.name === 'CharacterName' ? 22 : config.height >= 40 ? 17 : 14;
     field.setFontSize(config.multiline ? 10 : Math.max(4, Math.min(preferredSize, (config.width - 8) / Math.max(1, font.widthOfTextAtSize(content || ' ', 1)))));
@@ -68,6 +73,48 @@ export async function generatePdf(PDFLib, character, options = {}) {
   form.updateFieldAppearances(font);
   doc.setTitle(`${clean(character.identity.name)} - Character Sheet`);
   return { bytes: await doc.save(), warnings };
+}
+// Display only: single items need no count, and coins list just what the character holds.
+export const displayItems = text => String(text??'').replace(/^1 x /gm,'').replace(/^(\d+) x /gm,'$1 × ');
+export const coinLine = coins => { const held=['pp','gp','ep','sp','cp'].filter(c=>Number(coins?.[c])>0).map(c=>`${coins[c]} ${c.toUpperCase()}`); return `Coins: ${held.join(', ')||'none'}`; };
+// Matches pdf-lib's multiline appearance: line height is 1.2 × the font's full height.
+export const lineHeight = (font, size) => font.heightAtSize(size) * 1.2;
+export const CONTINUED = '(Continued on extra pages)';
+// Use the largest readable size that fits the box; shrink before overflowing, and only
+// then split at a line or sentence boundary. `rest` keeps the original line structure so
+// continuation pages can re-wrap it at their own width.
+export function fitText(text, font, { width, height, max = 10, min = 7, step = 0.5, marker = CONTINUED }) {
+  const source = String(text ?? '').replace(/\n{3,}/g, '\n\n').trim();
+  for (let size = max; size >= min - 1e-9; size -= step) {
+    const lines = wrapText(source, font, size, width);
+    if (lines.length * lineHeight(font, size) <= height) return { size, text: lines.join('\n'), rest: '' };
+  }
+  const capacity = Math.max(1, Math.floor(height / lineHeight(font, min)) - 1);
+  const kept = [];
+  const paragraphs = source.split('\n');
+  let index = 0;
+  for (; index < paragraphs.length; index++) {
+    const lines = wrapText(paragraphs[index], font, min, width);
+    if (kept.length + lines.length > capacity) break;
+    kept.push(...lines);
+  }
+  let rest = paragraphs.slice(index);
+  // Never leave a large box nearly empty: split a long paragraph after its last whole sentence that fits.
+  if (index < paragraphs.length && capacity - kept.length >= 2) {
+    const sentences = paragraphs[index].split(/(?<=[.!?;])\s+/);
+    let taken = 0;
+    while (taken < sentences.length - 1 && kept.length + wrapText(sentences.slice(0, taken + 1).join(' '), font, min, width).length <= capacity) taken++;
+    if (taken === 0) {
+      const words = paragraphs[index].split(/\s+/);
+      while (taken < words.length - 1 && kept.length + wrapText(words.slice(0, taken + 1).join(' '), font, min, width).length <= capacity) taken++;
+      if (taken) { kept.push(...wrapText(words.slice(0, taken).join(' ') + ' …', font, min, width)); rest = ['… ' + words.slice(taken).join(' '), ...rest.slice(1)]; }
+    } else {
+      kept.push(...wrapText(sentences.slice(0, taken).join(' '), font, min, width));
+      rest = [sentences.slice(taken).join(' '), ...rest.slice(1)];
+    }
+  }
+  while (kept.length && !kept[kept.length - 1]) kept.pop();
+  return { size: min, text: [...kept, marker].join('\n'), rest: rest.join('\n').replace(/^\n+/, '') };
 }
 export function wrapText(text, font, size, width) {
   return text.split('\n').flatMap(paragraph => {

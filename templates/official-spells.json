@@ -1,0 +1,3212 @@
+[
+  {
+    "name": "Spellcasting Class 2",
+    "page": 0,
+    "rect": [
+      47.52,
+      705.92,
+      255.96,
+      726.8
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SpellcastingAbility 2",
+    "page": 0,
+    "rect": [
+      283.779,
+      711.36,
+      348.633,
+      735.75
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SpellSaveDC  2",
+    "page": 0,
+    "rect": [
+      384.49,
+      711.36,
+      449.344,
+      735.75
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SpellAtkBonus 2",
+    "page": 0,
+    "rect": [
+      488.288,
+      711.36,
+      553.143,
+      735.75
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsTotal 19",
+    "page": 0,
+    "rect": [
+      51.855,
+      457.452,
+      91.095,
+      478.332
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 19",
+    "page": 0,
+    "rect": [
+      103.005,
+      457.452,
+      195.84,
+      478.332
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1014",
+    "page": 0,
+    "rect": [
+      40.32,
+      607.464,
+      198.72,
+      619.56
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1015",
+    "page": 0,
+    "rect": [
+      40.77,
+      422.352,
+      198.72,
+      432.288
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1016",
+    "page": 0,
+    "rect": [
+      40.32,
+      593.522,
+      198.72,
+      605.618
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1017",
+    "page": 0,
+    "rect": [
+      40.32,
+      579.58,
+      198.72,
+      591.676
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1018",
+    "page": 0,
+    "rect": [
+      40.32,
+      565.638,
+      198.72,
+      577.734
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1019",
+    "page": 0,
+    "rect": [
+      40.32,
+      551.696,
+      198.72,
+      563.792
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1020",
+    "page": 0,
+    "rect": [
+      40.32,
+      537.602,
+      198.72,
+      549.698
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1021",
+    "page": 0,
+    "rect": [
+      40.32,
+      523.508,
+      198.72,
+      535.604
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1022",
+    "page": 0,
+    "rect": [
+      40.32,
+      509.531,
+      198.72,
+      521.627
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 314",
+    "page": 0,
+    "rect": [
+      221.4,
+      591.054,
+      227.304,
+      599.529
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3031",
+    "page": 0,
+    "rect": [
+      221.4,
+      577.056,
+      227.304,
+      585.531
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3032",
+    "page": 0,
+    "rect": [
+      221.4,
+      563.058,
+      227.304,
+      571.533
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3033",
+    "page": 0,
+    "rect": [
+      221.4,
+      549.061,
+      227.304,
+      557.535
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3034",
+    "page": 0,
+    "rect": [
+      221.4,
+      535.063,
+      227.304,
+      543.537
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3035",
+    "page": 0,
+    "rect": [
+      221.4,
+      521.065,
+      227.304,
+      529.539
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3036",
+    "page": 0,
+    "rect": [
+      221.4,
+      507.067,
+      227.304,
+      515.541
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3037",
+    "page": 0,
+    "rect": [
+      221.4,
+      493.069,
+      227.304,
+      501.543
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3038",
+    "page": 0,
+    "rect": [
+      221.4,
+      479.071,
+      227.304,
+      487.545
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3039",
+    "page": 0,
+    "rect": [
+      221.4,
+      465.072,
+      227.304,
+      473.547
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3040",
+    "page": 0,
+    "rect": [
+      221.4,
+      451.075,
+      227.304,
+      459.549
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 321",
+    "page": 0,
+    "rect": [
+      408.528,
+      605.162,
+      414.432,
+      613.636
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 320",
+    "page": 0,
+    "rect": [
+      408.528,
+      591.153,
+      414.432,
+      599.627
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3060",
+    "page": 0,
+    "rect": [
+      408.528,
+      577.144,
+      414.432,
+      585.619
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3061",
+    "page": 0,
+    "rect": [
+      408.528,
+      563.136,
+      414.432,
+      571.611
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3062",
+    "page": 0,
+    "rect": [
+      408.528,
+      549.128,
+      414.432,
+      557.602
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3063",
+    "page": 0,
+    "rect": [
+      408.528,
+      535.069,
+      414.432,
+      543.543
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3064",
+    "page": 0,
+    "rect": [
+      408.528,
+      521.078,
+      414.432,
+      529.552
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3065",
+    "page": 0,
+    "rect": [
+      408.528,
+      507.087,
+      414.432,
+      515.561
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3066",
+    "page": 0,
+    "rect": [
+      408.528,
+      493.097,
+      414.432,
+      501.571
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 315",
+    "page": 0,
+    "rect": [
+      221.4,
+      605.053,
+      227.304,
+      613.527
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3041",
+    "page": 0,
+    "rect": [
+      221.4,
+      437.077,
+      227.304,
+      445.551
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1023",
+    "page": 0,
+    "rect": [
+      40.77,
+      408.384,
+      198.72,
+      418.32
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 251",
+    "page": 0,
+    "rect": [
+      32.418,
+      421.291,
+      38.322,
+      429.765
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 309",
+    "page": 0,
+    "rect": [
+      32.418,
+      407.306,
+      38.322,
+      415.78
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3010",
+    "page": 0,
+    "rect": [
+      32.418,
+      393.322,
+      38.322,
+      401.796
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3011",
+    "page": 0,
+    "rect": [
+      32.418,
+      379.338,
+      38.322,
+      387.812
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3012",
+    "page": 0,
+    "rect": [
+      32.418,
+      365.354,
+      38.322,
+      373.828
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3013",
+    "page": 0,
+    "rect": [
+      32.418,
+      351.369,
+      38.322,
+      359.843
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3014",
+    "page": 0,
+    "rect": [
+      32.418,
+      337.385,
+      38.322,
+      345.859
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3015",
+    "page": 0,
+    "rect": [
+      32.418,
+      323.401,
+      38.322,
+      331.875
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3016",
+    "page": 0,
+    "rect": [
+      32.418,
+      309.417,
+      38.322,
+      317.891
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3017",
+    "page": 0,
+    "rect": [
+      32.418,
+      295.432,
+      38.322,
+      303.906
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3018",
+    "page": 0,
+    "rect": [
+      32.418,
+      281.448,
+      38.322,
+      289.922
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3019",
+    "page": 0,
+    "rect": [
+      32.418,
+      267.464,
+      38.322,
+      275.938
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1024",
+    "page": 0,
+    "rect": [
+      40.77,
+      394.416,
+      198.72,
+      404.352
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1025",
+    "page": 0,
+    "rect": [
+      40.77,
+      380.376,
+      198.72,
+      390.312
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1026",
+    "page": 0,
+    "rect": [
+      40.77,
+      366.376,
+      198.72,
+      376.312
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1027",
+    "page": 0,
+    "rect": [
+      40.77,
+      352.368,
+      198.72,
+      362.304
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1028",
+    "page": 0,
+    "rect": [
+      40.77,
+      338.4,
+      198.72,
+      348.336
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1029",
+    "page": 0,
+    "rect": [
+      40.77,
+      324.36,
+      198.72,
+      334.296
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1030",
+    "page": 0,
+    "rect": [
+      40.77,
+      310.392,
+      198.72,
+      320.328
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1031",
+    "page": 0,
+    "rect": [
+      40.77,
+      296.424,
+      198.72,
+      306.36
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1032",
+    "page": 0,
+    "rect": [
+      40.77,
+      282.384,
+      198.72,
+      292.32
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1033",
+    "page": 0,
+    "rect": [
+      40.77,
+      268.416,
+      198.72,
+      278.352
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 20",
+    "page": 0,
+    "rect": [
+      51.855,
+      228.87,
+      91.095,
+      249.75
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 20",
+    "page": 0,
+    "rect": [
+      103.005,
+      228.87,
+      195.84,
+      249.75
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1034",
+    "page": 0,
+    "rect": [
+      40.77,
+      195.732,
+      198.72,
+      205.668
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1035",
+    "page": 0,
+    "rect": [
+      40.77,
+      181.764,
+      198.72,
+      191.7
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1036",
+    "page": 0,
+    "rect": [
+      40.77,
+      167.796,
+      198.72,
+      177.732
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1037",
+    "page": 0,
+    "rect": [
+      40.77,
+      153.792,
+      198.72,
+      163.728
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1038",
+    "page": 0,
+    "rect": [
+      40.77,
+      139.824,
+      198.72,
+      149.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1039",
+    "page": 0,
+    "rect": [
+      40.77,
+      125.856,
+      198.72,
+      135.792
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1040",
+    "page": 0,
+    "rect": [
+      40.77,
+      111.816,
+      198.72,
+      121.752
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1041",
+    "page": 0,
+    "rect": [
+      40.77,
+      97.848,
+      198.72,
+      107.784
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1042",
+    "page": 0,
+    "rect": [
+      40.77,
+      83.8125,
+      198.72,
+      93.7485
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1043",
+    "page": 0,
+    "rect": [
+      40.77,
+      69.8045,
+      198.72,
+      79.7405
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1044",
+    "page": 0,
+    "rect": [
+      40.77,
+      55.8182,
+      198.72,
+      65.7542
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1045",
+    "page": 0,
+    "rect": [
+      40.77,
+      41.832,
+      198.72,
+      51.768
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1046",
+    "page": 0,
+    "rect": [
+      40.77,
+      209.808,
+      198.72,
+      219.744
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 21",
+    "page": 0,
+    "rect": [
+      240.837,
+      625.176,
+      280.077,
+      646.056
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 21",
+    "page": 0,
+    "rect": [
+      291.987,
+      625.176,
+      384.822,
+      646.056
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1047",
+    "page": 0,
+    "rect": [
+      229.752,
+      592.038,
+      387.702,
+      601.974
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1048",
+    "page": 0,
+    "rect": [
+      229.752,
+      606.114,
+      387.702,
+      616.05
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1049",
+    "page": 0,
+    "rect": [
+      229.752,
+      578.07,
+      387.702,
+      588.006
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1050",
+    "page": 0,
+    "rect": [
+      229.752,
+      564.102,
+      387.702,
+      574.038
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1051",
+    "page": 0,
+    "rect": [
+      229.752,
+      550.098,
+      387.702,
+      560.034
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1052",
+    "page": 0,
+    "rect": [
+      229.752,
+      536.13,
+      387.702,
+      546.066
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1053",
+    "page": 0,
+    "rect": [
+      229.752,
+      522.162,
+      387.702,
+      532.098
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1054",
+    "page": 0,
+    "rect": [
+      229.752,
+      508.122,
+      387.702,
+      518.058
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1055",
+    "page": 0,
+    "rect": [
+      229.752,
+      494.154,
+      387.702,
+      504.09
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1056",
+    "page": 0,
+    "rect": [
+      229.752,
+      480.118,
+      387.702,
+      490.055
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1057",
+    "page": 0,
+    "rect": [
+      229.752,
+      466.11,
+      387.702,
+      476.046
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1058",
+    "page": 0,
+    "rect": [
+      229.752,
+      452.124,
+      387.702,
+      462.06
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1059",
+    "page": 0,
+    "rect": [
+      229.752,
+      438.138,
+      387.702,
+      448.074
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 22",
+    "page": 0,
+    "rect": [
+      240.837,
+      399.6,
+      280.077,
+      420.48
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 22",
+    "page": 0,
+    "rect": [
+      291.987,
+      399.6,
+      384.822,
+      420.48
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1060",
+    "page": 0,
+    "rect": [
+      229.752,
+      366.462,
+      387.702,
+      376.398
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1061",
+    "page": 0,
+    "rect": [
+      229.752,
+      380.538,
+      387.702,
+      390.474
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1062",
+    "page": 0,
+    "rect": [
+      229.752,
+      352.494,
+      387.702,
+      362.43
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1063",
+    "page": 0,
+    "rect": [
+      229.752,
+      338.526,
+      387.702,
+      348.462
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1064",
+    "page": 0,
+    "rect": [
+      229.752,
+      324.522,
+      387.702,
+      334.458
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 323",
+    "page": 0,
+    "rect": [
+      408.528,
+      435.386,
+      414.432,
+      443.86
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 322",
+    "page": 0,
+    "rect": [
+      408.528,
+      421.391,
+      414.432,
+      429.865
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3067",
+    "page": 0,
+    "rect": [
+      408.528,
+      407.396,
+      414.432,
+      415.871
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3068",
+    "page": 0,
+    "rect": [
+      408.528,
+      393.402,
+      414.432,
+      401.877
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3069",
+    "page": 0,
+    "rect": [
+      408.528,
+      379.408,
+      414.432,
+      387.882
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3070",
+    "page": 0,
+    "rect": [
+      408.528,
+      365.413,
+      414.432,
+      373.887
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3071",
+    "page": 0,
+    "rect": [
+      408.528,
+      351.419,
+      414.432,
+      359.893
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3072",
+    "page": 0,
+    "rect": [
+      408.528,
+      337.424,
+      414.432,
+      345.898
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3073",
+    "page": 0,
+    "rect": [
+      408.528,
+      323.43,
+      414.432,
+      331.904
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1065",
+    "page": 0,
+    "rect": [
+      229.752,
+      310.554,
+      387.702,
+      320.49
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1066",
+    "page": 0,
+    "rect": [
+      229.752,
+      296.586,
+      387.702,
+      306.522
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1067",
+    "page": 0,
+    "rect": [
+      229.752,
+      282.546,
+      387.702,
+      292.482
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1068",
+    "page": 0,
+    "rect": [
+      229.752,
+      268.578,
+      387.702,
+      278.514
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1069",
+    "page": 0,
+    "rect": [
+      229.752,
+      254.542,
+      387.702,
+      264.479
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1070",
+    "page": 0,
+    "rect": [
+      229.752,
+      240.534,
+      387.702,
+      250.47
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1071",
+    "page": 0,
+    "rect": [
+      229.752,
+      226.548,
+      387.702,
+      236.484
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 317",
+    "page": 0,
+    "rect": [
+      221.4,
+      379.477,
+      227.304,
+      387.951
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1072",
+    "page": 0,
+    "rect": [
+      229.752,
+      212.562,
+      387.702,
+      222.498
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 23",
+    "page": 0,
+    "rect": [
+      240.837,
+      173.016,
+      280.077,
+      193.896
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 23",
+    "page": 0,
+    "rect": [
+      291.987,
+      173.016,
+      384.822,
+      193.896
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1073",
+    "page": 0,
+    "rect": [
+      229.752,
+      139.878,
+      387.702,
+      149.814
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1074",
+    "page": 0,
+    "rect": [
+      229.752,
+      153.954,
+      387.702,
+      163.89
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1075",
+    "page": 0,
+    "rect": [
+      229.752,
+      125.91,
+      387.702,
+      135.846
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1076",
+    "page": 0,
+    "rect": [
+      229.752,
+      111.942,
+      387.702,
+      121.878
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1077",
+    "page": 0,
+    "rect": [
+      229.752,
+      97.938,
+      387.702,
+      107.874
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1078",
+    "page": 0,
+    "rect": [
+      229.752,
+      83.97,
+      387.702,
+      93.906
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1079",
+    "page": 0,
+    "rect": [
+      229.752,
+      70.002,
+      387.702,
+      79.938
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1080",
+    "page": 0,
+    "rect": [
+      229.752,
+      55.962,
+      387.702,
+      65.898
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1081",
+    "page": 0,
+    "rect": [
+      229.752,
+      41.832,
+      387.702,
+      51.768
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 24",
+    "page": 0,
+    "rect": [
+      427.965,
+      625.176,
+      467.205,
+      646.056
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 24",
+    "page": 0,
+    "rect": [
+      479.115,
+      625.176,
+      571.95,
+      646.056
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1082",
+    "page": 0,
+    "rect": [
+      416.88,
+      592.128,
+      574.83,
+      602.064
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1083",
+    "page": 0,
+    "rect": [
+      416.88,
+      606.114,
+      574.83,
+      616.05
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1084",
+    "page": 0,
+    "rect": [
+      416.88,
+      578.07,
+      574.83,
+      588.006
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1085",
+    "page": 0,
+    "rect": [
+      416.88,
+      564.102,
+      574.83,
+      574.038
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1086",
+    "page": 0,
+    "rect": [
+      416.88,
+      550.098,
+      574.83,
+      560.034
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1087",
+    "page": 0,
+    "rect": [
+      416.88,
+      536.13,
+      574.83,
+      546.066
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1088",
+    "page": 0,
+    "rect": [
+      416.88,
+      522.144,
+      574.83,
+      532.08
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1089",
+    "page": 0,
+    "rect": [
+      416.88,
+      508.122,
+      574.83,
+      518.058
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1090",
+    "page": 0,
+    "rect": [
+      416.88,
+      494.136,
+      574.83,
+      504.072
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 25",
+    "page": 0,
+    "rect": [
+      427.965,
+      455.4,
+      467.205,
+      476.28
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 25",
+    "page": 0,
+    "rect": [
+      479.115,
+      455.4,
+      571.95,
+      476.28
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 1091",
+    "page": 0,
+    "rect": [
+      416.88,
+      422.352,
+      574.83,
+      432.288
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1092",
+    "page": 0,
+    "rect": [
+      416.88,
+      436.338,
+      574.83,
+      446.274
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1093",
+    "page": 0,
+    "rect": [
+      416.88,
+      408.294,
+      574.83,
+      418.23
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1094",
+    "page": 0,
+    "rect": [
+      416.88,
+      394.326,
+      574.83,
+      404.262
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1095",
+    "page": 0,
+    "rect": [
+      416.88,
+      380.322,
+      574.83,
+      390.258
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1096",
+    "page": 0,
+    "rect": [
+      416.88,
+      366.354,
+      574.83,
+      376.29
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1097",
+    "page": 0,
+    "rect": [
+      416.88,
+      352.368,
+      574.83,
+      362.304
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1098",
+    "page": 0,
+    "rect": [
+      416.88,
+      338.346,
+      574.83,
+      348.282
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 1099",
+    "page": 0,
+    "rect": [
+      416.88,
+      324.36,
+      574.83,
+      334.296
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 26",
+    "page": 0,
+    "rect": [
+      427.965,
+      285.624,
+      467.205,
+      306.504
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 26",
+    "page": 0,
+    "rect": [
+      479.115,
+      285.624,
+      571.95,
+      306.504
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Spells 10100",
+    "page": 0,
+    "rect": [
+      416.88,
+      252.576,
+      574.83,
+      262.512
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10101",
+    "page": 0,
+    "rect": [
+      416.88,
+      266.562,
+      574.83,
+      276.498
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10102",
+    "page": 0,
+    "rect": [
+      416.88,
+      238.518,
+      574.83,
+      248.454
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10103",
+    "page": 0,
+    "rect": [
+      416.88,
+      224.55,
+      574.83,
+      234.486
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 316",
+    "page": 0,
+    "rect": [
+      221.4,
+      365.478,
+      227.304,
+      373.953
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3042",
+    "page": 0,
+    "rect": [
+      221.4,
+      351.48,
+      227.304,
+      359.955
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3043",
+    "page": 0,
+    "rect": [
+      221.4,
+      337.482,
+      227.304,
+      345.957
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3044",
+    "page": 0,
+    "rect": [
+      221.4,
+      323.485,
+      227.304,
+      331.959
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3045",
+    "page": 0,
+    "rect": [
+      221.4,
+      309.487,
+      227.304,
+      317.961
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3046",
+    "page": 0,
+    "rect": [
+      221.4,
+      295.489,
+      227.304,
+      303.963
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3047",
+    "page": 0,
+    "rect": [
+      221.4,
+      281.491,
+      227.304,
+      289.965
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3048",
+    "page": 0,
+    "rect": [
+      221.4,
+      267.493,
+      227.304,
+      275.967
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3049",
+    "page": 0,
+    "rect": [
+      221.4,
+      253.495,
+      227.304,
+      261.969
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3050",
+    "page": 0,
+    "rect": [
+      221.4,
+      239.496,
+      227.304,
+      247.971
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3051",
+    "page": 0,
+    "rect": [
+      221.4,
+      225.499,
+      227.304,
+      233.973
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3052",
+    "page": 0,
+    "rect": [
+      221.4,
+      211.501,
+      227.304,
+      219.975
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10104",
+    "page": 0,
+    "rect": [
+      416.88,
+      210.546,
+      574.83,
+      220.482
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 325",
+    "page": 0,
+    "rect": [
+      408.528,
+      265.61,
+      414.432,
+      274.084
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 324",
+    "page": 0,
+    "rect": [
+      408.528,
+      251.597,
+      414.432,
+      260.071
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3074",
+    "page": 0,
+    "rect": [
+      408.528,
+      237.583,
+      414.432,
+      246.058
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3075",
+    "page": 0,
+    "rect": [
+      408.528,
+      223.57,
+      414.432,
+      232.045
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3076",
+    "page": 0,
+    "rect": [
+      408.528,
+      209.557,
+      414.432,
+      218.031
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3077",
+    "page": 0,
+    "rect": [
+      408.528,
+      195.544,
+      414.432,
+      204.018
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10105",
+    "page": 0,
+    "rect": [
+      416.88,
+      196.578,
+      574.83,
+      206.514
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10106",
+    "page": 0,
+    "rect": [
+      416.88,
+      182.592,
+      574.83,
+      192.528
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3078",
+    "page": 0,
+    "rect": [
+      408.528,
+      181.531,
+      414.432,
+      190.005
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SlotsTotal 27",
+    "page": 0,
+    "rect": [
+      427.965,
+      144.864,
+      467.205,
+      165.744
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "SlotsRemaining 27",
+    "page": 0,
+    "rect": [
+      479.115,
+      144.864,
+      571.95,
+      165.744
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Check Box 313",
+    "page": 0,
+    "rect": [
+      32.418,
+      208.747,
+      38.322,
+      217.221
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 310",
+    "page": 0,
+    "rect": [
+      32.418,
+      194.748,
+      38.322,
+      203.223
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3020",
+    "page": 0,
+    "rect": [
+      32.418,
+      180.75,
+      38.322,
+      189.225
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3021",
+    "page": 0,
+    "rect": [
+      32.418,
+      166.752,
+      38.322,
+      175.227
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3022",
+    "page": 0,
+    "rect": [
+      32.418,
+      152.755,
+      38.322,
+      161.229
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3023",
+    "page": 0,
+    "rect": [
+      32.418,
+      138.757,
+      38.322,
+      147.231
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3024",
+    "page": 0,
+    "rect": [
+      32.418,
+      124.759,
+      38.322,
+      133.233
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3025",
+    "page": 0,
+    "rect": [
+      32.418,
+      110.761,
+      38.322,
+      119.235
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3026",
+    "page": 0,
+    "rect": [
+      32.418,
+      96.7627,
+      38.322,
+      105.237
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3027",
+    "page": 0,
+    "rect": [
+      32.418,
+      82.7647,
+      38.322,
+      91.2388
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3028",
+    "page": 0,
+    "rect": [
+      32.418,
+      68.7667,
+      38.322,
+      77.2408
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3029",
+    "page": 0,
+    "rect": [
+      32.418,
+      54.7687,
+      38.322,
+      63.2428
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3030",
+    "page": 0,
+    "rect": [
+      32.418,
+      40.7707,
+      38.322,
+      49.2448
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10107",
+    "page": 0,
+    "rect": [
+      416.88,
+      111.816,
+      574.83,
+      121.752
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10108",
+    "page": 0,
+    "rect": [
+      416.88,
+      125.802,
+      574.83,
+      135.738
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 10109",
+    "page": 0,
+    "rect": [
+      416.88,
+      97.7585,
+      574.83,
+      107.694
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 101010",
+    "page": 0,
+    "rect": [
+      416.88,
+      83.7905,
+      574.83,
+      93.7265
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 101011",
+    "page": 0,
+    "rect": [
+      416.88,
+      69.786,
+      574.83,
+      79.722
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 101012",
+    "page": 0,
+    "rect": [
+      416.88,
+      55.818,
+      574.83,
+      65.754
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 319",
+    "page": 0,
+    "rect": [
+      221.4,
+      152.893,
+      227.304,
+      161.367
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 318",
+    "page": 0,
+    "rect": [
+      221.4,
+      138.898,
+      227.304,
+      147.373
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3053",
+    "page": 0,
+    "rect": [
+      221.4,
+      124.903,
+      227.304,
+      133.378
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3054",
+    "page": 0,
+    "rect": [
+      221.4,
+      110.909,
+      227.304,
+      119.384
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3055",
+    "page": 0,
+    "rect": [
+      221.4,
+      96.9148,
+      227.304,
+      105.389
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3056",
+    "page": 0,
+    "rect": [
+      221.4,
+      82.9202,
+      227.304,
+      91.3943
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3057",
+    "page": 0,
+    "rect": [
+      221.4,
+      68.9257,
+      227.304,
+      77.3998
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3058",
+    "page": 0,
+    "rect": [
+      221.4,
+      54.9312,
+      227.304,
+      63.4053
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3059",
+    "page": 0,
+    "rect": [
+      221.4,
+      40.9367,
+      227.304,
+      49.4108
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 327",
+    "page": 0,
+    "rect": [
+      408.528,
+      124.904,
+      414.432,
+      133.378
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 326",
+    "page": 0,
+    "rect": [
+      408.528,
+      110.882,
+      414.432,
+      119.356
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3079",
+    "page": 0,
+    "rect": [
+      408.528,
+      96.8596,
+      414.432,
+      105.334
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3080",
+    "page": 0,
+    "rect": [
+      408.528,
+      82.8376,
+      414.432,
+      91.3116
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3081",
+    "page": 0,
+    "rect": [
+      408.528,
+      68.8153,
+      414.432,
+      77.2894
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3082",
+    "page": 0,
+    "rect": [
+      408.528,
+      54.7931,
+      414.432,
+      63.2672
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Spells 101013",
+    "page": 0,
+    "rect": [
+      416.88,
+      41.832,
+      574.83,
+      51.768
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 3083",
+    "page": 0,
+    "rect": [
+      408.528,
+      40.7708,
+      414.432,
+      49.2449
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  }
+]

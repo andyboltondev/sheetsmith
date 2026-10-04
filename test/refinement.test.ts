@@ -1,0 +1,62 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import * as PDFLib from 'pdf-lib';
+import {sourceReference,gameplay} from '../src/importers/dndbeyond/gameplay.ts';
+import {normalise} from '../src/importers/dndbeyond/parser.ts';
+// @ts-expect-error Browser JS
+import {resolveTemplate} from '../src/pdf/selection.js';
+// @ts-expect-error Browser JS
+import {generatePdf} from '../src/pdf/generator.js';
+const catalog=JSON.parse(await readFile(new URL('../templates/catalog.json',import.meta.url),'utf8'));
+test('class matching covers every supplied class and exact subclass variants, never unrelated classes',()=>{
+ for(const t of catalog.filter((t:any)=>t.characterClass)){
+  const match=resolveTemplate(catalog,{classes:[{name:t.characterClass,subclass:t.subclass}]},'class');assert.equal(match.id,t.id);
+ }
+ assert.equal(resolveTemplate(catalog,{classes:[{name:'Fighter',subclass:'Champion'}]},'class').id,'class-fighter');
+ assert.throws(()=>resolveTemplate(catalog,{classes:[{name:'Wizard'},{name:'Fighter'}]},'class'),/multiclass/);
+ assert.throws(()=>resolveTemplate(catalog,{classes:[{name:'Unknown'}]},'class'),/No class sheet/);
+ assert.throws(()=>resolveTemplate(catalog,{classes:[{name:'Wizard'}]},'class-fighter'));
+});
+test('book pages require explicit matching source and do not relabel Basic Rules as PHB',()=>{
+ assert.equal(sourceReference({sources:[{sourceId:2,pageNumber:242}]}),'PHB (2014), p. 242');
+ assert.equal(sourceReference({sources:[{sourceId:1,pageNumber:20}]}),'Basic Rules (2014), p. 20');
+ assert.equal(sourceReference({sources:[{sourceId:2}]}),'');
+ assert.equal(sourceReference({isHomebrew:true,sources:[{sourceId:2,pageNumber:1}]}),'Homebrew');
+});
+test('grouped custom PDF keeps scores, saves and skills together and retains long content',async()=>{
+ const c=normalise(JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8')));
+ c.featureRows=Array.from({length:40},(_,i)=>({name:`Feature ${i}`,summary:'A useful rule for gameplay. '.repeat(8),reference:'',group:'Class',level:1}));
+ const {bytes}=await generatePdf(PDFLib,c,{templateId:'field-notes',abilityOrder:'modifier-first'});
+ const doc=await PDFLib.PDFDocument.load(bytes),form=doc.getForm();
+ assert.equal(form.getTextField('strength.modifier').getText(),'+3');
+ assert.equal(form.getTextField('strength.score').getText(),'16');
+ assert.match(form.getTextField('strength.saving throw').getText()!,/Saving throw/);
+ assert.match(form.getTextField('strength.Athletics').getText()!,/Athletics/);
+ assert.ok(form.getTextField('strength.modifier').acroField.getWidgets()[0].getRectangle().y>form.getTextField('strength.score').acroField.getWidgets()[0].getRectangle().y);
+ assert.ok(form.getFields().some(f=>f.getName().includes('Feature 39')));
+});
+test('every supplied class and subclass variant exports the matching artwork with all six abilities',async()=>{
+ const c=normalise(JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8')));
+ for(const t of catalog.filter((t:any)=>t.characterClass)){
+  const character={...c,classes:[{name:t.characterClass,subclass:t.subclass,level:3}]};
+  const templateBytes=await readFile(new URL(`../templates/${t.id}.pdf`,import.meta.url));
+  const layout=JSON.parse(await readFile(new URL(`../templates/${t.id}.json`,import.meta.url),'utf8'));
+  const {bytes}=await generatePdf(PDFLib,character,{templateId:t.id,templateBytes,layout});
+  const doc=await PDFLib.PDFDocument.load(bytes);
+  for(const name of Object.keys(c.abilities))assert.ok(doc.getForm().getTextField(`${name}.score`),t.id);
+ }
+});
+import {plainText} from '../src/importers/dndbeyond/text.ts';
+test('rich text removes markup, decodes entities and preserves useful paragraph and list boundaries',()=>{
+ assert.equal(plainText('<p><strong>Shield</strong> &amp; sword</p><ul><li>+5 AC</li><li>Don&#39;t lose &#x32; HP.</li></ul>'),"Shield & sword\n\n• +5 AC\n\n• Don't lose 2 HP.");
+ assert.equal(plainText('&lt;p&gt;A &ldquo;quoted&rdquo; note&lt;/p&gt;'),'A “quoted” note');
+ assert.equal(plainText('<script>alert(1)</script><style>body{}</style><p>Safe <a href="https://example.com?a=>">rules</a></p>'),'Safe rules');
+ assert.equal(plainText('Roll < 10; bonus > 2.'),'Roll < 10; bonus > 2.');
+});
+test('HTML cleanup covers identity, notes, traits, items, features and spells',async()=>{
+ const raw=JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8'));
+ raw.data.name='<b>Mara</b>';raw.data.notes={backstory:'<p>A &amp; B</p><p>Next chapter</p>'};raw.data.traits={ideals:'<i>Truth</i>'};
+ raw.data.inventory=[{quantity:1,definition:{name:'<strong>Sword</strong>'}}];
+ const c=normalise(raw);assert.equal(c.identity.name,'Mara');assert.equal(c.details?.backstory,'A & B\n\nNext chapter');assert.equal(c.details?.ideals,'Truth');assert.match(c.equipment,/1 x Sword/);
+});

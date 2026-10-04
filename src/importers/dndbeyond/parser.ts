@@ -1,3 +1,7 @@
+import { loadout } from './loadout.ts';
+import { plainText } from './text.ts';
+import { gameplay } from './gameplay.ts';
+import { calculateCombat } from './combat.ts';
 import { abilities } from '../../character/model.ts';
 import type { Character } from '../../character/model.ts';
 import { abilityModifier, proficiencyBonus } from '../../character/calculations.ts';
@@ -8,8 +12,18 @@ const obj = (value: unknown): ObjectData => value !== null && typeof value === '
 const array = (value: unknown): unknown[] => Array.isArray(value) ? value : [];
 const text = (value: unknown): string => typeof value === 'string' ? value : '';
 const number = (value: unknown): number | undefined => typeof value === 'number' && Number.isFinite(value) ? value : undefined;
-const plain = (value: unknown) => text(value).replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const plain = plainText;
 const slug = (value: string) => value.toLowerCase().replaceAll(' ', '-');
+
+
+// D&D Beyond public /api/config/json alignment IDs (verified 2026-09-25).
+const alignmentNames:Record<number,string>={1:'Lawful Good',2:'Neutral Good',3:'Chaotic Good',4:'Lawful Neutral',5:'Neutral',6:'Chaotic Neutral',7:'Lawful Evil',8:'Neutral Evil',9:'Chaotic Evil'};
+function alignment(raw:ObjectData):string {
+  const explicit=plain(text(raw.alignment)||text(obj(raw.alignment).name));
+  if(explicit)return explicit;
+  const id=typeof raw.alignmentId==='string'&&/^\d+$/.test(raw.alignmentId)?Number(raw.alignmentId):number(raw.alignmentId);
+  return id===undefined?'':alignmentNames[id]??'';
+}
 
 // All assumptions about the undocumented upstream format stay in this module.
 export function normalise(payload: unknown): Character {
@@ -17,14 +31,14 @@ export function normalise(payload: unknown): Character {
   if (!text(raw.name).trim()) throw new Error('D&D Beyond returned unsupported character data.');
   const classes = array(raw.classes).map(value => {
     const entry = obj(value);
-    return { name: text(obj(entry.definition).name), level: number(entry.level) ?? 0 };
+    return { name: plain(obj(entry.definition).name), level: number(entry.level) ?? 0, subclass: plain(obj(entry.subclassDefinition).name) };
   });
   const level = classes.reduce((sum, entry) => sum + entry.level, 0);
   if (!classes.length || classes.some(entry => !entry.name || !Number.isInteger(entry.level) || entry.level < 1)) throw new Error('Character class or level is missing or unsupported.');
   const proficiency = proficiencyBonus(level);
   const warnings = [
     'Review this first-build import before play. Conditional bonuses, magic items, custom overrides and advanced class rules may be missing.',
-    'Armour Class and maximum HP are left blank unless an explicit override is supplied. Enter verified values below. Attacks and spellcasting totals can be added in the editable PDF.',
+    'Combat values describe your normal equipment. Temporary effects are not automatically activated.',
   ];
   const modifiers = ['race', 'class', 'background', 'feat'].flatMap(key => array(obj(raw.modifiers)[key])).map(obj).filter(m => !m.restriction);
   const bonus = (subType: string) => modifiers.filter(m => m.type === 'bonus' && m.subType === subType).reduce((sum, m) => sum + (number(m.value) ?? 0), 0);
@@ -36,21 +50,40 @@ export function normalise(payload: unknown): Character {
     const score = override ?? ((base ?? 10) + (lookup('bonusStats') ?? 0) + bonus(`${ability}-score`));
     return [ability, { score, modifier: abilityModifier(score) }];
   })) as Character['abilities'];
+  const combat = calculateCombat(raw, scores, level);
+  warnings.push(...combat.warnings);
   const saves = abilities.map(name => ({ name, proficient: has('proficiency', `${name}-saving-throws`), bonus: scores[name].modifier + (has('proficiency', `${name}-saving-throws`) ? proficiency : 0) + bonus(`${name}-saving-throws`) + bonus('saving-throws') }));
   const skills = Object.entries(skillAbilities).map(([name, ability]) => {
     const key = slug(name); const expertise = has('expertise', key); const proficient = expertise || has('proficiency', key);
     return { name, proficient, expertise, bonus: scores[ability].modifier + (expertise ? 2 * proficiency : proficient ? proficiency : 0) + bonus(key) + bonus('ability-checks') };
   });
-  const equipment = array(raw.inventory).map(value => { const item = obj(value); return `${number(item.quantity) ?? 1} x ${text(obj(item.definition).name)}${item.equipped ? ' (equipped)' : ''}`; }).join('\n');
-  const featureGroups = [array(obj(raw.race).racialTraits), array(raw.feats), ...array(raw.classes).map(value => array(obj(value).classFeatures))];
-  const features = featureGroups.flat().map(value => { const entry = obj(value); const definition = obj(entry.definition ?? entry); return [text(definition.name), plain(definition.description)].filter(Boolean).join(': '); }).filter(Boolean).join('\n\n');
-  const spellEntries = [...array(raw.classSpells).flatMap(value => array(obj(value).spells)), ...Object.values(obj(raw.spells)).flatMap(array)];
-  const spells = [...new Set(spellEntries.map(value => { const spell = obj(value); const definition = obj(spell.definition); return `${number(definition.level) === 0 ? 'Cantrip' : `Level ${number(definition.level) ?? '?'}`} - ${text(definition.name)}${spell.prepared ? ' (prepared)' : ''}`; }))].join('\n');
+  const equipment = array(raw.inventory).map(value => { const item = obj(value); return `${number(item.quantity) ?? 1} x ${plain(obj(item.definition).name)}${item.equipped ? ' (equipped)' : ''}`; }).join('\n');
+  const play=gameplay(raw,scores,proficiency);
+  const features=play.featureRows.map(f=>`${f.name}${f.reference?' ['+f.reference+']':''}: ${f.summary}`).join('\n\n');
+  const spells=play.spellRows.map(s=>`${s.level===0?'Cantrip':'Level '+s.level} - ${s.name}${s.prepared?' (prepared)':''}${s.reference?' ['+s.reference+']':''}\n${s.casting} · ${s.range} · ${s.duration}${s.concentration?' (concentration)':''} · ${s.components}${s.ritual?' · Ritual':''}\n${s.summary}${s.restriction?' '+s.restriction:''}`).join('\n\n');
   const traits = Object.entries(obj(raw.traits)).map(([key, value]) => `${key.replace(/([A-Z])/g, ' $1').replace(/^./, letter => letter.toUpperCase())}: ${plain(value)}`).filter(line => !line.endsWith(': ')).join('\n\n');
+  // Use the supplied per-level table only for a single class; multiclass slot rules differ.
+  const classData = obj(array(raw.classes)[0]);
+  const spellRules = obj(obj(classData.subclassDefinition).spellRules ?? obj(classData.definition).spellRules);
+  const slotRow = classes.length === 1 ? array(array(spellRules.levelSpellSlots)[classes[0].level]) : [];
+  const spellSlots = slotRow.map((total, i) => ({
+    level: i + 1, total: number(total) ?? 0,
+    used: number(obj(array(raw.spellSlots).find(slot => obj(slot).level === i + 1)).used) ?? null,
+  })).filter(slot => slot.total > 0);
+  const featureUses = Object.values(obj(raw.actions)).flatMap(array).map(obj).flatMap(action => {
+    const use = obj(action.limitedUse), maximum = number(use.maxUses), used = number(use.numberUsed);
+    if (maximum === undefined || maximum < 0 || used === undefined || used < 0 || use.statModifierUsesId || use.useProficiencyBonus) return [];
+    return [{ name: plain(action.name), maximum, remaining: Math.max(0, maximum - used) }];
+  });
   return {
-    identity: { name: text(raw.name), playerName: '', species: text(obj(raw.race).fullName), background: text(obj(obj(raw.background).definition).name), portrait: text(obj(raw.decorations).avatarUrl) },
+    identity: { name: plain(raw.name), alignment: alignment(raw), playerName: '', species: plain(obj(raw.race).fullName), background: plain(obj(obj(raw.background).definition).name), portrait: text(obj(raw.decorations).avatarUrl) },
+    experience: number(raw.currentXp), inspiration: raw.inspiration===true,
+    spellSlots, featureUses,
     classes, abilities: scores, proficiencyBonus: proficiency,
-    combat: { armourClass: number(raw.overrideArmorClass) ?? null, maxHP: number(raw.overrideHitPoints) ?? null, speed: number(obj(obj(obj(raw.race).weightSpeeds).normal).walk) ?? null, initiative: scores.dexterity.modifier + bonus('initiative'), hitDice: array(raw.classes).map(value => { const entry = obj(value); return `${entry.level}d${number(obj(entry.definition).hitDice) ?? '?'}`; }).join(' + ') },
+    ...play, ...loadout(raw,scores,proficiency),
+    details: Object.fromEntries(Object.entries({ ...obj(raw.traits), ...obj(raw.notes), age: raw.age, height: raw.height, weight: raw.weight, eyes: raw.eyes, skin: raw.skin, hair: raw.hair }).map(([key,value])=>[key,plain(value)])),
+    coins: obj(raw.currencies),
+    combat: { currentHP: combat.maxHP!==null&&number(raw.removedHitPoints)!==undefined?Math.max(0,combat.maxHP-number(raw.removedHitPoints)!):null, temporaryHP:number(raw.temporaryHitPoints)??null,hitDiceUsed:array(raw.classes).every(c=>number(obj(c).hitDiceUsed)!==undefined)?array(raw.classes).reduce<number>((sum,c)=>sum+number(obj(c).hitDiceUsed)!,0):null, armourClass: combat.armourClass, maxHP: combat.maxHP, speed: combat.speed, initiative: scores.dexterity.modifier + bonus('initiative'), hitDice: array(raw.classes).map(value => { const entry = obj(value); return `${entry.level}d${number(obj(entry.definition).hitDice) ?? '?'}`; }).join(' + ') },
     saves, skills, passivePerception: 10 + (skills.find(skill => skill.name === 'Perception')?.bonus ?? 0) + bonus('passive-perception'),
     equipment, currency: ['cp','sp','ep','gp','pp'].map(key => `${number(obj(raw.currencies)[key]) ?? 0} ${key.toUpperCase()}`).join('   '), features, traits, spells, warnings,
   };

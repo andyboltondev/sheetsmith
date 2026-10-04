@@ -1,0 +1,242 @@
+[
+  {
+    "id": "official-standard",
+    "name": "Official Standard \u2014 5e",
+    "edition": "5e",
+    "file": "official-standard.pdf",
+    "family": "official"
+  },
+  {
+    "id": "official-alternative",
+    "name": "Official Alternative \u2014 5e",
+    "edition": "5e",
+    "file": "official-alternative.pdf",
+    "family": "official"
+  },
+  {
+    "id": "class-artificer",
+    "name": "Artificer Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-artificer.pdf",
+    "characterClass": "artificer",
+    "family": "class"
+  },
+  {
+    "id": "class-barbarian",
+    "name": "Barbarian Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-barbarian.pdf",
+    "characterClass": "barbarian",
+    "family": "class"
+  },
+  {
+    "id": "class-bard",
+    "name": "Bard Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-bard.pdf",
+    "characterClass": "bard",
+    "family": "class"
+  },
+  {
+    "id": "class-cleric",
+    "name": "Cleric Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-cleric.pdf",
+    "characterClass": "cleric",
+    "family": "class"
+  },
+  {
+    "id": "class-druid",
+    "name": "Druid Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-druid.pdf",
+    "characterClass": "druid",
+    "family": "class"
+  },
+  {
+    "id": "class-fighter",
+    "name": "Fighter Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-fighter.pdf",
+    "characterClass": "fighter",
+    "family": "class"
+  },
+  {
+    "id": "class-fighter-eldritch-knight",
+    "name": "Fighter (Eldritch Knight) Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-fighter-eldritch-knight.pdf",
+    "characterClass": "fighter",
+    "family": "class",
+    "subclass": "Eldritch Knight"
+  },
+  {
+    "id": "class-monk",
+    "name": "Monk Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-monk.pdf",
+    "characterClass": "monk",
+    "family": "class"
+  },
+  {
+    "id": "class-paladin",
+    "name": "Paladin Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-paladin.pdf",
+    "characterClass": "paladin",
+    "family": "class"
+  },
+  {
+    "id": "class-ranger",
+    "name": "Ranger Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-ranger.pdf",
+    "characterClass": "ranger",
+    "family": "class"
+  },
+  {
+    "id": "class-rogue",
+    "name": "Rogue Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-rogue.pdf",
+    "characterClass": "rogue",
+    "family": "class"
+  },
+  {
+    "id": "class-sorcerer",
+    "name": "Sorcerer Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-sorcerer.pdf",
+    "characterClass": "sorcerer",
+    "family": "class"
+  },
+  {
+    "id": "class-warlock",
+    "name": "Warlock Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-warlock.pdf",
+    "characterClass": "warlock",
+    "family": "class"
+  },
+  {
+    "id": "class-wizard",
+    "name": "Wizard Class Sheet \u2014 5e",
+    "edition": "5e",
+    "file": "class-wizard.pdf",
+    "characterClass": "wizard",
+    "family": "class"
+  },
+  {
+    "id": "class-fighter-battle-master",
+    "name": "Fighter (Battle Master) \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-fighter-battle-master.pdf",
+    "characterClass": "fighter",
+    "subclass": "Battle Master"
+  },
+  {
+    "id": "class-ranger-beast-master",
+    "name": "Ranger (Beast Master) \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-ranger-beast-master.pdf",
+    "characterClass": "ranger",
+    "subclass": "Beast Master"
+  },
+  {
+    "id": "class-rogue-arcane-trickster",
+    "name": "Rogue (Arcane Trickster) \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-rogue-arcane-trickster.pdf",
+    "characterClass": "rogue",
+    "subclass": "Arcane Trickster"
+  },
+  {
+    "id": "class-reference",
+    "file": "class-reference.pdf",
+    "family": "class",
+    "resource": true,
+    "edition": "5e"
+  },
+  {
+    "id": "class-spells",
+    "file": "class-spells.pdf",
+    "family": "class",
+    "resource": true,
+    "edition": "5e"
+  },
+  {
+    "id": "official-reference",
+    "file": "official-reference.pdf",
+    "family": "official",
+    "resource": true,
+    "edition": "5e"
+  },
+  {
+    "id": "official-spells",
+    "file": "official-spells.pdf",
+    "family": "official",
+    "resource": true,
+    "edition": "5e"
+  },
+  {
+    "id": "class-blood-hunter",
+    "name": "Blood Hunter \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-blood-hunter.pdf",
+    "characterClass": "blood hunter"
+  },
+  {
+    "id": "class-cook",
+    "name": "Cook \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-cook.pdf",
+    "characterClass": "cook"
+  },
+  {
+    "id": "class-fighter-gunslinger",
+    "name": "Fighter (Gunslinger) \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-fighter-gunslinger.pdf",
+    "characterClass": "fighter",
+    "subclass": "Gunslinger"
+  },
+  {
+    "id": "class-mystic",
+    "name": "Mystic \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-mystic.pdf",
+    "characterClass": "mystic"
+  },
+  {
+    "id": "class-pugilist",
+    "name": "Pugilist \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-pugilist.pdf",
+    "characterClass": "pugilist"
+  },
+  {
+    "id": "class-revised-ranger",
+    "name": "Revised Ranger \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-revised-ranger.pdf",
+    "characterClass": "revised ranger"
+  },
+  {
+    "id": "class-revised-ranger-beast-master",
+    "name": "Revised Ranger (Beast Master) \u2014 5e",
+    "edition": "5e",
+    "family": "class",
+    "file": "class-revised-ranger-beast-master.pdf",
+    "characterClass": "revised ranger",
+    "subclass": "Beast Master"
+  }
+]

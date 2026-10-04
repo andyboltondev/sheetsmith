@@ -8,6 +8,7 @@ export const template = {
     { name: 'Species', path: 'identity.species', label: 'SPECIES', x: 42, y: 599, width: 180, height: 28 },
     { name: 'Background', path: 'identity.background', label: 'BACKGROUND', x: 242, y: 599, width: 180, height: 28 },
     { name: 'PlayerName', path: 'identity.playerName', label: 'PLAYER NAME', x: 42, y: 547, width: 260, height: 28 },
+    { name: 'Alignment', path: 'identity.alignment', label: 'ALIGNMENT', x: 442, y: 547, width: 111, height: 28 },
     { name: 'Proficiency', path: 'proficiencyBonus', label: 'PROFICIENCY', x: 322, y: 547, width: 100, height: 28, signed: true },
     ...['strength','dexterity','constitution','intelligence','wisdom','charisma'].map((key, index) => ({ name: key, path: `abilityDisplay.${key}`, label: key.slice(0,3).toUpperCase(), x: 42 + index * 86, y: 470, width: 78, height: 42 })),
     ...[['AC','combat.armourClass','ARMOUR CLASS'],['HP','combat.maxHP','MAX HP'],['Initiative','combat.initiative','INITIATIVE'],['Speed','combat.speed','SPEED (FT)'],['HitDice','combat.hitDice','HIT DICE'],['Passive','passivePerception','PASSIVE PERCEPTION']].map(([name,path,label], index) => ({ name,path,label,x:42+index*86,y:400,width:78,height:32 })),

@@ -1,0 +1,1802 @@
+[
+  {
+    "name": "ClassLevel",
+    "page": 0,
+    "rect": [
+      270.043,
+      728.184,
+      375.883,
+      743.841
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Background",
+    "page": 0,
+    "rect": [
+      384.131,
+      728.184,
+      470.203,
+      743.841
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "PlayerName",
+    "page": 0,
+    "rect": [
+      480.283,
+      728.184,
+      570.283,
+      743.841
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "CharacterName",
+    "page": 0,
+    "rect": [
+      47.563,
+      709.801,
+      220.744,
+      730.681
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Race ",
+    "page": 0,
+    "rect": [
+      269.043,
+      702.104,
+      375.883,
+      717.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Alignment",
+    "page": 0,
+    "rect": [
+      383.519,
+      702.104,
+      473.519,
+      717.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "XP",
+    "page": 0,
+    "rect": [
+      480.283,
+      702.104,
+      570.283,
+      717.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Inspiration",
+    "page": 0,
+    "rect": [
+      96.8721,
+      643.953,
+      118.112,
+      660.513
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "STR",
+    "page": 0,
+    "rect": [
+      36.8213,
+      612.269,
+      77.803,
+      637.801
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ProfBonus",
+    "page": 0,
+    "rect": [
+      96.8347,
+      606.338,
+      118.075,
+      622.898
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "AC",
+    "page": 0,
+    "rect": [
+      234.043,
+      625.561,
+      261.403,
+      651.481
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Initiative",
+    "page": 0,
+    "rect": [
+      285.883,
+      618.361,
+      321.883,
+      651.481
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Speed",
+    "page": 0,
+    "rect": [
+      344.203,
+      618.361,
+      380.203,
+      651.481
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "PersonalityTraits ",
+    "page": 0,
+    "rect": [
+      418.723,
+      602.881,
+      571.543,
+      651.481
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "STRmod",
+    "page": 0,
+    "rect": [
+      46.483,
+      592.473,
+      67.723,
+      605.28
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Strength",
+    "page": 0,
+    "rect": [
+      112.723,
+      576.817,
+      127.123,
+      585.449
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "DEX",
+    "page": 0,
+    "rect": [
+      36.8213,
+      540.269,
+      77.803,
+      565.801
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Ideals",
+    "page": 0,
+    "rect": [
+      418.723,
+      547.801,
+      571.543,
+      582.361
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "DEXmod ",
+    "page": 0,
+    "rect": [
+      46.483,
+      520.473,
+      67.723,
+      533.28
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Bonds",
+    "page": 0,
+    "rect": [
+      418.723,
+      492.361,
+      571.543,
+      526.921
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "CON",
+    "page": 0,
+    "rect": [
+      36.8213,
+      468.989,
+      77.803,
+      494.521
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "HDTotal",
+    "page": 0,
+    "rect": [
+      247.003,
+      464.461,
+      295.243,
+      473.641
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 12",
+    "page": 0,
+    "rect": [
+      345.931,
+      458.985,
+      355.213,
+      471.212
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 13",
+    "page": 0,
+    "rect": [
+      358.747,
+      458.985,
+      368.029,
+      471.212
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 14",
+    "page": 0,
+    "rect": [
+      371.707,
+      458.985,
+      380.989,
+      471.212
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "CONmod",
+    "page": 0,
+    "rect": [
+      46.483,
+      449.193,
+      67.723,
+      462.0
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Check Box 15",
+    "page": 0,
+    "rect": [
+      345.865,
+      443.89,
+      355.147,
+      456.117
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 16",
+    "page": 0,
+    "rect": [
+      358.764,
+      443.89,
+      368.046,
+      456.117
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 17",
+    "page": 0,
+    "rect": [
+      371.663,
+      443.89,
+      380.945,
+      456.117
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "HD",
+    "page": 0,
+    "rect": [
+      231.883,
+      439.801,
+      295.243,
+      460.681
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Flaws",
+    "page": 0,
+    "rect": [
+      418.723,
+      437.641,
+      571.543,
+      472.201
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "INT",
+    "page": 0,
+    "rect": [
+      36.8213,
+      396.989,
+      77.803,
+      422.521
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Dexterity",
+    "page": 0,
+    "rect": [
+      112.723,
+      563.312,
+      127.123,
+      571.944
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Constitution",
+    "page": 0,
+    "rect": [
+      112.723,
+      549.825,
+      127.123,
+      558.457
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Intelligence",
+    "page": 0,
+    "rect": [
+      112.723,
+      536.289,
+      127.123,
+      544.921
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Wisdom",
+    "page": 0,
+    "rect": [
+      112.723,
+      522.753,
+      127.123,
+      531.385
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ST Charisma",
+    "page": 0,
+    "rect": [
+      112.723,
+      509.361,
+      127.123,
+      517.993
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Acrobatics",
+    "page": 0,
+    "rect": [
+      112.003,
+      461.664,
+      126.403,
+      470.296
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Animal",
+    "page": 0,
+    "rect": [
+      112.003,
+      448.128,
+      126.403,
+      456.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Athletics",
+    "page": 0,
+    "rect": [
+      112.003,
+      421.128,
+      126.403,
+      429.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Deception ",
+    "page": 0,
+    "rect": [
+      112.003,
+      407.592,
+      126.403,
+      416.224
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "History ",
+    "page": 0,
+    "rect": [
+      112.003,
+      394.056,
+      126.403,
+      402.688
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Wpn Name",
+    "page": 0,
+    "rect": [
+      223.963,
+      384.721,
+      285.523,
+      398.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Wpn1 AtkBonus",
+    "page": 0,
+    "rect": [
+      292.003,
+      384.721,
+      321.883,
+      398.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Wpn1 Damage",
+    "page": 0,
+    "rect": [
+      328.003,
+      384.721,
+      388.843,
+      398.761
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Insight",
+    "page": 0,
+    "rect": [
+      112.003,
+      380.592,
+      126.403,
+      389.224
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Intimidation",
+    "page": 0,
+    "rect": [
+      112.003,
+      367.128,
+      126.403,
+      375.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Wpn Name 2",
+    "page": 0,
+    "rect": [
+      223.963,
+      364.561,
+      285.523,
+      378.601
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Wpn2 AtkBonus ",
+    "page": 0,
+    "rect": [
+      292.003,
+      364.561,
+      321.883,
+      378.601
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Wpn Name 3",
+    "page": 0,
+    "rect": [
+      223.963,
+      343.681,
+      285.523,
+      357.721
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Wpn3 AtkBonus  ",
+    "page": 0,
+    "rect": [
+      292.003,
+      343.681,
+      321.883,
+      357.721
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 11",
+    "page": 0,
+    "rect": [
+      101.275,
+      576.22,
+      107.395,
+      584.91
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 18",
+    "page": 0,
+    "rect": [
+      101.275,
+      562.929,
+      107.395,
+      571.619
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 19",
+    "page": 0,
+    "rect": [
+      101.275,
+      549.179,
+      107.395,
+      557.869
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 20",
+    "page": 0,
+    "rect": [
+      101.275,
+      535.725,
+      107.395,
+      544.415
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 21",
+    "page": 0,
+    "rect": [
+      101.275,
+      522.27,
+      107.395,
+      530.96
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 22",
+    "page": 0,
+    "rect": [
+      101.275,
+      508.756,
+      107.395,
+      517.446
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "INTmod",
+    "page": 0,
+    "rect": [
+      46.483,
+      377.193,
+      67.723,
+      390.0
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Wpn2 Damage ",
+    "page": 0,
+    "rect": [
+      328.003,
+      364.561,
+      388.843,
+      378.601
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Investigation ",
+    "page": 0,
+    "rect": [
+      112.003,
+      353.52,
+      126.403,
+      362.152
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "WIS",
+    "page": 0,
+    "rect": [
+      36.8213,
+      325.709,
+      77.803,
+      351.241
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Arcana",
+    "page": 0,
+    "rect": [
+      112.003,
+      434.592,
+      126.403,
+      443.224
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Perception ",
+    "page": 0,
+    "rect": [
+      112.003,
+      313.056,
+      126.403,
+      321.688
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "WISmod",
+    "page": 0,
+    "rect": [
+      46.483,
+      305.913,
+      67.723,
+      318.72
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "CHA",
+    "page": 0,
+    "rect": [
+      36.8213,
+      254.429,
+      77.803,
+      279.961
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Nature",
+    "page": 0,
+    "rect": [
+      112.003,
+      326.52,
+      126.403,
+      335.152
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Performance",
+    "page": 0,
+    "rect": [
+      112.003,
+      299.592,
+      126.403,
+      308.224
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Medicine",
+    "page": 0,
+    "rect": [
+      112.003,
+      340.128,
+      126.403,
+      348.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Religion",
+    "page": 0,
+    "rect": [
+      112.003,
+      272.592,
+      126.403,
+      281.224
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Stealth ",
+    "page": 0,
+    "rect": [
+      112.003,
+      245.52,
+      126.403,
+      254.152
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Check Box 23",
+    "page": 0,
+    "rect": [
+      101.275,
+      461.14,
+      107.395,
+      469.83
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 24",
+    "page": 0,
+    "rect": [
+      101.275,
+      447.523,
+      107.395,
+      456.213
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 25",
+    "page": 0,
+    "rect": [
+      101.275,
+      433.987,
+      107.395,
+      442.677
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 26",
+    "page": 0,
+    "rect": [
+      101.275,
+      420.635,
+      107.395,
+      429.325
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 27",
+    "page": 0,
+    "rect": [
+      101.275,
+      407.304,
+      107.395,
+      415.994
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 28",
+    "page": 0,
+    "rect": [
+      101.275,
+      393.768,
+      107.395,
+      402.458
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 29",
+    "page": 0,
+    "rect": [
+      101.275,
+      380.008,
+      107.395,
+      388.698
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 30",
+    "page": 0,
+    "rect": [
+      101.275,
+      366.84,
+      107.395,
+      375.53
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 31",
+    "page": 0,
+    "rect": [
+      101.275,
+      353.304,
+      107.395,
+      361.994
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 32",
+    "page": 0,
+    "rect": [
+      101.275,
+      339.768,
+      107.395,
+      348.458
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 33",
+    "page": 0,
+    "rect": [
+      101.275,
+      326.068,
+      107.395,
+      334.758
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 34",
+    "page": 0,
+    "rect": [
+      101.275,
+      312.554,
+      107.395,
+      321.244
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 35",
+    "page": 0,
+    "rect": [
+      101.275,
+      298.977,
+      107.395,
+      307.667
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 36",
+    "page": 0,
+    "rect": [
+      101.275,
+      285.523,
+      107.395,
+      294.213
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 37",
+    "page": 0,
+    "rect": [
+      101.275,
+      271.987,
+      107.395,
+      280.677
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 38",
+    "page": 0,
+    "rect": [
+      101.275,
+      258.513,
+      107.395,
+      267.203
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 39",
+    "page": 0,
+    "rect": [
+      101.275,
+      244.977,
+      107.395,
+      253.667
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Check Box 40",
+    "page": 0,
+    "rect": [
+      101.275,
+      231.482,
+      107.395,
+      240.172
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Persuasion",
+    "page": 0,
+    "rect": [
+      112.003,
+      286.056,
+      126.403,
+      294.688
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "HPMax",
+    "page": 0,
+    "rect": [
+      290.923,
+      584.521,
+      380.203,
+      595.321
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "HPCurrent",
+    "page": 0,
+    "rect": [
+      231.163,
+      549.241,
+      380.203,
+      579.481
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "HPTemp",
+    "page": 0,
+    "rect": [
+      231.163,
+      497.401,
+      380.203,
+      527.641
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Wpn3 Damage ",
+    "page": 0,
+    "rect": [
+      328.003,
+      343.681,
+      388.843,
+      357.721
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SleightofHand",
+    "page": 0,
+    "rect": [
+      112.003,
+      259.128,
+      126.403,
+      267.76
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "CHamod",
+    "page": 0,
+    "rect": [
+      46.483,
+      234.633,
+      67.723,
+      247.44
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Survival",
+    "page": 0,
+    "rect": [
+      112.003,
+      232.056,
+      126.403,
+      240.688
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "AttacksSpellcasting",
+    "page": 0,
+    "rect": [
+      223.243,
+      224.521,
+      388.843,
+      338.281
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Passive",
+    "page": 0,
+    "rect": [
+      32.2887,
+      184.282,
+      53.5286,
+      200.842
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "CP",
+    "page": 0,
+    "rect": [
+      229.723,
+      175.374,
+      258.883,
+      192.979
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "ProficienciesLang",
+    "page": 0,
+    "rect": [
+      34.243,
+      35.8808,
+      199.843,
+      164.81
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "SP",
+    "page": 0,
+    "rect": [
+      229.723,
+      149.419,
+      258.883,
+      167.024
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "EP",
+    "page": 0,
+    "rect": [
+      229.723,
+      123.463,
+      258.883,
+      141.068
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "GP",
+    "page": 0,
+    "rect": [
+      229.723,
+      97.5077,
+      258.883,
+      115.113
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "PP",
+    "page": 0,
+    "rect": [
+      229.723,
+      71.5522,
+      258.883,
+      89.1572
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Equipment",
+    "page": 0,
+    "rect": [
+      268.963,
+      35.8808,
+      388.843,
+      198.601
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Features and Traits",
+    "page": 0,
+    "rect": [
+      412.439,
+      35.8808,
+      577.516,
+      405.465
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "CharacterName 2",
+    "page": 1,
+    "rect": [
+      47.52,
+      705.92,
+      255.96,
+      726.8
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Age",
+    "page": 1,
+    "rect": [
+      266.0,
+      725.303,
+      371.84,
+      740.96
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Height",
+    "page": 1,
+    "rect": [
+      379.152,
+      725.303,
+      465.224,
+      740.96
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Weight",
+    "page": 1,
+    "rect": [
+      475.24,
+      725.303,
+      572.8,
+      740.96
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Eyes",
+    "page": 1,
+    "rect": [
+      265.0,
+      699.223,
+      371.84,
+      714.88
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Skin",
+    "page": 1,
+    "rect": [
+      378.54,
+      699.223,
+      468.54,
+      714.88
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Hair",
+    "page": 1,
+    "rect": [
+      475.24,
+      699.223,
+      572.8,
+      714.88
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "CHARACTER IMAGE",
+    "page": 1,
+    "rect": [
+      36.4791,
+      443.398,
+      199.172,
+      661.497
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": true,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Faction Symbol Image",
+    "page": 1,
+    "rect": [
+      423.965,
+      508.532,
+      561.13,
+      617.975
+    ],
+    "type": "/Btn",
+    "multiline": false,
+    "pushbutton": true,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Allies",
+    "page": 1,
+    "rect": [
+      225.0,
+      442.08,
+      400.648,
+      660.826
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "FactionName",
+    "page": 1,
+    "rect": [
+      423.209,
+      622.696,
+      561.24,
+      638.536
+    ],
+    "type": "/Tx",
+    "multiline": false,
+    "pushbutton": false,
+    "value": "",
+    "align": 1
+  },
+  {
+    "name": "Backstory",
+    "page": 1,
+    "rect": [
+      34.78,
+      36.72,
+      199.22,
+      406.8
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Feat+Traits",
+    "page": 1,
+    "rect": [
+      223.78,
+      212.4,
+      577.44,
+      416.88
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  },
+  {
+    "name": "Treasure",
+    "page": 1,
+    "rect": [
+      223.78,
+      36.72,
+      577.44,
+      189.0
+    ],
+    "type": "/Tx",
+    "multiline": true,
+    "pushbutton": false,
+    "value": "",
+    "align": 0
+  }
+]
