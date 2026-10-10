@@ -13,7 +13,7 @@ deploy() {
   local activate="${NODE_ENV_ACTIVATE:-$(ls -d "$HOME/nodevenv/${PWD#"$HOME"/}"/*/bin/activate 2>/dev/null | sort -V | tail -1)}"
   if [ -n "$activate" ]; then source "$activate"; fi
   node --version
-  npm ci --omit=dev
+  npm ci --omit=dev --no-audit --no-fund
   mkdir -p tmp && touch tmp/restart.txt   # Passenger restarts the app on the next request
   echo "Deployed ${tag:-main} ($(git rev-parse --short HEAD))"
 }

@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run check
   deploy:
+    timeout-minutes: 10
     needs: check
     runs-on: ubuntu-latest
     concurrency: deploy

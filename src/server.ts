@@ -11,6 +11,7 @@ const root = new URL('../', import.meta.url);
 const pdfModule = /^\/pdf\/([a-z][a-z-]*)\.js$/;
 const assets: Record<string, [string, string]> = {
   '/': ['public/index.html', 'text/html'], '/app.js': ['public/app.js', 'text/javascript'], '/style.css': ['public/style.css', 'text/css'],
+  '/favicon.svg': ['public/favicon.svg', 'image/svg+xml'], '/favicon.ico': ['public/favicon.ico', 'image/x-icon'], '/apple-touch-icon.png': ['public/apple-touch-icon.png', 'image/png'],
   '/pdf-job.js': ['public/pdf-job.js', 'text/javascript'],
   '/character-url.js': ['public/character-url.js', 'text/javascript'],
   '/official.js': ['public/official.js', 'text/javascript'],
