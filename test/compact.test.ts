@@ -65,3 +65,13 @@ test('a crowded caster keeps every summary-page field inside the page margins',a
  assert.ok(all.includes('Item 59'),'overflowing equipment continues overleaf');
  assert.ok(form.getFields().some(f=>f.getName()==='Spell.Spell 29.name'),'every spell stays in the spellbook');
 });
+test('a notes block ends the last page, and extra note pages follow on request',async()=>{
+ const c=normalise(await raw()),pagesOf=async(options:object)=>{const doc=await P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact',...options})).bytes);return {doc,count:doc.getPageCount()};};
+ const base=await pagesOf({}),notesPage=(d:P.PDFDocument,i:number)=>d.getForm().getTextField(i?`Notes ${i+1}`:'Notes').acroField.getWidgets()[0].getRectangle();
+ assert.ok(notesPage(base.doc,0).height>=90,'the notes block fills the space left on the last page');
+ assert.equal(base.doc.getPageCount(),base.count);
+ const extra=await pagesOf({notePages:2});
+ assert.equal(extra.count,base.count+2,'each extra notes page is one page');
+ assert.ok(notesPage(extra.doc,1).height>650&&notesPage(extra.doc,2).height>650,'extra pages are full-page notes');
+ assert.equal((await pagesOf({notePages:-3})).count,base.count,'a bad count adds nothing');
+});

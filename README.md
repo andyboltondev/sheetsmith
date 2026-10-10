@@ -50,6 +50,7 @@ If Wizards publishes a revised sheet its checksum will differ; the app then says
 - Spellcasters get the matching spell page: the official spellcasting sheet (names by level, prepared marks, slots, DC and attack) followed by compact spell details.
 - Player-name override; D&D Beyond, uploaded PNG/JPEG/WebP, or no portrait. Images are fitted without cropping.
 - SheetSmith (default), plus Official Standard and Official Alternative once you add Wizards of the Coast's own PDFs (see “Official sheets”), all labelled 5e. 5.5e is reserved for future support.
+- SheetSmith sheet: full-width equipment at the foot of page one, a notes block that fills the space left on the last page, and an optional 1–5 extra lined notes pages (Sheet options).
 - Score-above-modifier or modifier-above-score positioning in both the preview and exported PDF.
 - Editable fields, fitted portraits and continuation pages for long text and spell lists. The official sheets keep their printed artwork.
 - Responsive interface, light/dark/system appearance, labeled controls, keyboard focus and announced status/errors.

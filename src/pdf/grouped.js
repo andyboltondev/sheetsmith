@@ -8,6 +8,7 @@ import { drawActions } from './compact-actions.js';
 import { drawEquipment } from './compact-equipment.js';
 import { drawSpells } from './compact-spells.js';
 import { drawDetails } from './compact-details.js';
+import { drawNotes } from './compact-notes.js';
 // SheetSmith (template id 'compact'): a minimal one-page summary (abilities, saves and skills in one table with proficiency dots),
 // followed by compact two-column detail and spellbook pages. Everything stays editable.
 // Each section draws into a shared context and reports where it ended; text that does not fit is queued in `overflow`
@@ -24,6 +25,7 @@ export async function generateGroupedPdf(PDFLib,c,options){
  drawEquipment(ctx,Math.min(abilitiesEnd,y));
  drawSpells(ctx);
  drawDetails(ctx);
+ drawNotes(ctx);
  // Footer numbers keep loose pages in order; they are on unless turned off.
  if(options.pageNumbers!==false){const pages=doc.getPages();pages.forEach((pg,i)=>{const t=`Page ${i+1} of ${pages.length}`;kit.text(pg,t,(A4[0]-kit.width(t,7))/2,20,7,kit.font,kit.muted);});}
  doc.setTitle(`${kit.clean(c.identity.name)} — SheetSmith — 5e (2014)`);

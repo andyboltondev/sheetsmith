@@ -3,7 +3,7 @@ import { wrapText, lineHeight } from './generator.js';
 import { classStats } from './class-info.js';
 const RX=M,RW=RIGHT-M;
 // Equipment spans the foot of page one, so the action columns stop above this line.
-const FLOOR=BOTTOM+150;
+const FLOOR=BOTTOM+120;
 // Actions by what they cost, with limited uses tracked beside them. Returns the y below them.
 export function drawActions(ctx,y){
  const {p,c,options,kit,overflow}=ctx; const {PDFLib,doc,form,fields,warnings,font,bold,ink,muted,hair,accent,tint,white,clean,width,text,label,centred,rightLabel,rule,vrule,rbox,named,unique,field,dot,diamond,heading,ruled}=kit;

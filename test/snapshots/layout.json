@@ -2,16 +2,16 @@
  "compact-sample": {
   "pages": [
    {
-    "fields": 276,
-    "geometry": "a5fa0c318432",
-    "text": "9e776a92cfc7",
-    "drawing": "ef1bdf47b498"
+    "fields": 350,
+    "geometry": "408c785671ce",
+    "text": "56adfc59dd4e",
+    "drawing": "21fe9ced4067"
    },
    {
-    "fields": 4,
-    "geometry": "ff09bfc2a57b",
-    "text": "300dd99af100",
-    "drawing": "33b2e4665285"
+    "fields": 5,
+    "geometry": "4ec6c9d267cf",
+    "text": "c13a5928a8cb",
+    "drawing": "a762bfea69a7"
    }
   ],
   "artwork": "da39a3ee5e6b"
@@ -19,16 +19,16 @@
  "compact-modifier-first": {
   "pages": [
    {
-    "fields": 276,
-    "geometry": "4fd2519e8f57",
-    "text": "085643bbfbf3",
-    "drawing": "ef1bdf47b498"
+    "fields": 350,
+    "geometry": "4631c2ee2244",
+    "text": "05c7e5bbc5be",
+    "drawing": "21fe9ced4067"
    },
    {
-    "fields": 4,
-    "geometry": "ff09bfc2a57b",
-    "text": "300dd99af100",
-    "drawing": "33b2e4665285"
+    "fields": 5,
+    "geometry": "4ec6c9d267cf",
+    "text": "c13a5928a8cb",
+    "drawing": "a762bfea69a7"
    }
   ],
   "artwork": "da39a3ee5e6b"
@@ -36,16 +36,16 @@
  "compact-portrait": {
   "pages": [
    {
-    "fields": 276,
-    "geometry": "6d71b7a09e2b",
-    "text": "29cfda5f4e94",
-    "drawing": "33f7489ad47d"
+    "fields": 350,
+    "geometry": "c41cdb3eb691",
+    "text": "2f80b1f17150",
+    "drawing": "b270df039343"
    },
    {
-    "fields": 4,
-    "geometry": "ff09bfc2a57b",
-    "text": "300dd99af100",
-    "drawing": "261fc7aa5baa"
+    "fields": 5,
+    "geometry": "4ec6c9d267cf",
+    "text": "c13a5928a8cb",
+    "drawing": "f2b464441200"
    }
   ],
   "artwork": "f8c250f21b95"
@@ -53,70 +53,70 @@
  "compact-heavy": {
   "pages": [
    {
-    "fields": 213,
-    "geometry": "cec21eadef73",
-    "text": "6b5873264932",
-    "drawing": "26b684d96013"
+    "fields": 229,
+    "geometry": "c9ad1f230068",
+    "text": "57cc8133c354",
+    "drawing": "6c476abb6740"
    },
    {
     "fields": 75,
     "geometry": "e9673ad99c79",
     "text": "062c610ef42a",
-    "drawing": "2eb14452b8ce"
+    "drawing": "53b625ed3d37"
    },
    {
     "fields": 80,
     "geometry": "08f30a6df472",
     "text": "47a92f1eb16a",
-    "drawing": "c7c1614643c2"
+    "drawing": "c728be783382"
    },
    {
     "fields": 80,
     "geometry": "70fdc22a4313",
     "text": "999f823306e9",
-    "drawing": "0dae68984f84"
+    "drawing": "a6db32bfaa4c"
    },
    {
     "fields": 76,
     "geometry": "938b93f36db5",
     "text": "bc5484624482",
-    "drawing": "37b6f1f951ce"
+    "drawing": "10f60c6f4865"
    },
    {
     "fields": 72,
     "geometry": "96e8542c533e",
     "text": "b2b56ca47576",
-    "drawing": "723dc4e0a386"
+    "drawing": "eccf905e8bc8"
    },
    {
     "fields": 26,
     "geometry": "4b0032a3523f",
     "text": "47e4cfce13e8",
-    "drawing": "47839b0e2215"
+    "drawing": "0bd28feba4d4"
    },
    {
     "fields": 19,
     "geometry": "f3caeb878b8b",
     "text": "177436464cd0",
-    "drawing": "85d7746957b9"
+    "drawing": "02b71b2e1706"
    },
    {
     "fields": 20,
-    "geometry": "973564a1cf9b",
-    "text": "3ea267e92224",
-    "drawing": "e2855d1c1ecc"
+    "geometry": "31fc4ac3c589",
+    "text": "c4457089ef39",
+    "drawing": "906c06df0be2"
    },
    {
     "fields": 8,
-    "geometry": "f4bfe20025e2",
-    "text": "d9258607d2e1",
-    "drawing": "e20257d63638"
+    "geometry": "8407cbc4b6f9",
+    "text": "f203527b3a41",
+    "drawing": "b5112e2a40e5"
    },
    {
-    "fields": 2,
-    "geometry": "30f97334e39d",
-    "text": "42ea3a84b3e4",
-    "drawing": "49a5431198cf"
+    "fields": 3,
+    "geometry": "91f5deb9284d",
+    "text": "3145d3854e3f",
+    "drawing": "67a084431236"
    }
   ],
   "artwork": "da39a3ee5e6b"
@@ -124,70 +124,70 @@
  "compact-heavy-bare": {
   "pages": [
    {
-    "fields": 195,
-    "geometry": "ea6266bb65ac",
-    "text": "5a20783085e4",
-    "drawing": "57141d969df5"
+    "fields": 208,
+    "geometry": "d7745522eeea",
+    "text": "6dfa6272d0c8",
+    "drawing": "cdb5e20a25ae"
    },
    {
     "fields": 75,
     "geometry": "e9673ad99c79",
     "text": "062c610ef42a",
-    "drawing": "f554b61b33a8"
+    "drawing": "5b6c0d69f94c"
    },
    {
     "fields": 80,
     "geometry": "08f30a6df472",
     "text": "47a92f1eb16a",
-    "drawing": "dc3d0e0fc715"
+    "drawing": "dedc6a1f12ed"
    },
    {
     "fields": 80,
     "geometry": "70fdc22a4313",
     "text": "999f823306e9",
-    "drawing": "659a0721ed01"
+    "drawing": "4b96993ae574"
    },
    {
     "fields": 76,
     "geometry": "938b93f36db5",
     "text": "bc5484624482",
-    "drawing": "5d92be24af36"
+    "drawing": "8541b220e049"
    },
    {
     "fields": 72,
     "geometry": "96e8542c533e",
     "text": "b2b56ca47576",
-    "drawing": "cd7c50025268"
+    "drawing": "881480e6b8f9"
    },
    {
     "fields": 26,
     "geometry": "4b0032a3523f",
     "text": "47e4cfce13e8",
-    "drawing": "654afa5abb1a"
+    "drawing": "c03f76b04724"
    },
    {
     "fields": 19,
     "geometry": "f3caeb878b8b",
     "text": "177436464cd0",
-    "drawing": "7cf57bd96eed"
+    "drawing": "d89621fe3280"
    },
    {
     "fields": 20,
-    "geometry": "973564a1cf9b",
-    "text": "3ea267e92224",
-    "drawing": "bc764d3492cb"
+    "geometry": "31fc4ac3c589",
+    "text": "c4457089ef39",
+    "drawing": "22197f6e2efb"
    },
    {
     "fields": 8,
-    "geometry": "f4bfe20025e2",
-    "text": "d9258607d2e1",
-    "drawing": "df899a5f2c13"
+    "geometry": "8407cbc4b6f9",
+    "text": "f203527b3a41",
+    "drawing": "1739e72372d9"
    },
    {
-    "fields": 2,
-    "geometry": "30f97334e39d",
-    "text": "42ea3a84b3e4",
-    "drawing": "825682084a6d"
+    "fields": 3,
+    "geometry": "91f5deb9284d",
+    "text": "3145d3854e3f",
+    "drawing": "a6bcdcb9122e"
    }
   ],
   "artwork": "da39a3ee5e6b"
@@ -195,70 +195,70 @@
  "compact-heavy-blank": {
   "pages": [
    {
-    "fields": 213,
-    "geometry": "cec21eadef73",
-    "text": "19e418559906",
-    "drawing": "26b684d96013"
+    "fields": 229,
+    "geometry": "c9ad1f230068",
+    "text": "c5f9c81c36b1",
+    "drawing": "6c476abb6740"
    },
    {
     "fields": 75,
     "geometry": "e9673ad99c79",
     "text": "062c610ef42a",
-    "drawing": "2eb14452b8ce"
+    "drawing": "53b625ed3d37"
    },
    {
     "fields": 80,
     "geometry": "08f30a6df472",
     "text": "47a92f1eb16a",
-    "drawing": "c7c1614643c2"
+    "drawing": "c728be783382"
    },
    {
     "fields": 80,
     "geometry": "70fdc22a4313",
     "text": "999f823306e9",
-    "drawing": "0dae68984f84"
+    "drawing": "a6db32bfaa4c"
    },
    {
     "fields": 76,
     "geometry": "938b93f36db5",
     "text": "bc5484624482",
-    "drawing": "37b6f1f951ce"
+    "drawing": "10f60c6f4865"
    },
    {
     "fields": 72,
     "geometry": "96e8542c533e",
     "text": "b2b56ca47576",
-    "drawing": "723dc4e0a386"
+    "drawing": "eccf905e8bc8"
    },
    {
     "fields": 26,
     "geometry": "4b0032a3523f",
     "text": "47e4cfce13e8",
-    "drawing": "47839b0e2215"
+    "drawing": "0bd28feba4d4"
    },
    {
     "fields": 19,
     "geometry": "f3caeb878b8b",
     "text": "177436464cd0",
-    "drawing": "85d7746957b9"
+    "drawing": "02b71b2e1706"
    },
    {
     "fields": 20,
-    "geometry": "973564a1cf9b",
-    "text": "3ea267e92224",
-    "drawing": "e2855d1c1ecc"
+    "geometry": "31fc4ac3c589",
+    "text": "c4457089ef39",
+    "drawing": "906c06df0be2"
    },
    {
     "fields": 8,
-    "geometry": "f4bfe20025e2",
-    "text": "d9258607d2e1",
-    "drawing": "e20257d63638"
+    "geometry": "8407cbc4b6f9",
+    "text": "f203527b3a41",
+    "drawing": "b5112e2a40e5"
    },
    {
-    "fields": 2,
-    "geometry": "30f97334e39d",
-    "text": "42ea3a84b3e4",
-    "drawing": "49a5431198cf"
+    "fields": 3,
+    "geometry": "91f5deb9284d",
+    "text": "3145d3854e3f",
+    "drawing": "67a084431236"
    }
   ],
   "artwork": "da39a3ee5e6b"

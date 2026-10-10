@@ -27,13 +27,14 @@ systemDark.addEventListener('change', () => { if (document.body.dataset.theme ==
 const BLANKS = ['hp','coins','advancement','proficiencies','equipment','spells','quantities','tracking'];
 // Sheet choices are remembered on this device too; never character data.
 const PREFS = 'sheetsmith-prefs';
-const savePrefs = () => { try { localStorage.setItem(PREFS, JSON.stringify({ template: $('template').value, abilityOrder: $('ability-order').value, weight: $('equipment-weight').checked, noPageNumbers: $('no-page-numbers').checked })); } catch {} };
+const savePrefs = () => { try { localStorage.setItem(PREFS, JSON.stringify({ template: $('template').value, abilityOrder: $('ability-order').value, weight: $('equipment-weight').checked, noPageNumbers: $('no-page-numbers').checked, notePages: $('note-pages').value })); } catch {} };
 try {
   const saved = JSON.parse(localStorage.getItem(PREFS) ?? '{}');
   if (['score-first','modifier-first'].includes(saved.abilityOrder)) $('ability-order').value = saved.abilityOrder;
   if ([...$('template').options].some(o => o.value === saved.template)) $('template').value = saved.template;
   if (typeof saved.weight === 'boolean') $('equipment-weight').checked = saved.weight;
   if (typeof saved.noPageNumbers === 'boolean') $('no-page-numbers').checked = saved.noPageNumbers;
+  if (typeof saved.notePages === 'string' && [...$('note-pages').options].some(o => o.value === saved.notePages)) $('note-pages').value = saved.notePages;
 } catch {}
 $('theme').addEventListener('click', event => { const next = event.currentTarget.getAttribute('aria-checked') === 'true' ? 'light' : 'dark'; applyTheme(next); try { localStorage.setItem('theme', next); } catch {} });
 function setBusy(value) {
@@ -214,7 +215,7 @@ async function buildSheet({ refresh = false } = {}) {
     const reminders = playReminders(final);
     const notes = Object.keys(blanks).filter(key => blanks[key]).map(key => reminders[key].replace(/^Currently:? /,'').replace(/\.$/,''));
     const printed = Object.values(blanks).some(Boolean) ? blankForPlay(final,blanks) : final;
-    const options = {playerName:$('player-name').value.trim(),templateId:$('template').value,abilityOrder:$('ability-order').value,equipmentWeight:$('equipment-weight').checked,pageNumbers:!$('no-page-numbers').checked,catalog,...($('template').value!=='compact'?{officialFiles:official.stored()}:{})};
+    const options = {playerName:$('player-name').value.trim(),templateId:$('template').value,abilityOrder:$('ability-order').value,equipmentWeight:$('equipment-weight').checked,pageNumbers:!$('no-page-numbers').checked,notePages:Number($('note-pages').value),catalog,...($('template').value!=='compact'?{officialFiles:official.stored()}:{})};
     if ($('template').value !== 'compact' && !official.isReady($('template').value)) { $('official-setup').open = true; throw new Error(`Add the official sheet PDFs first: still needed — ${official.missingFor($('template').value).join(', ')}. See “Official sheets” below the sheet choice.`); }
     const portrait = await portraitBytes();
     if (run !== runId) return;
@@ -296,7 +297,7 @@ $('official-link').href=OFFICIAL_PAGE;$('official-zip').href=OFFICIAL_ARCHIVE;
 official.restore().then(()=>{renderOfficial();if(catalog)renderTemplates();});
 $('ability-order').addEventListener('change',()=>{renderAbilities();$('position-status').textContent=$('ability-order').selectedOptions[0].textContent;});
 $('cancel-export').addEventListener('click',()=>{runId++;pdfJob?.cancel();pdfJob=null;$('cancel-export').hidden=true;$('export-status').textContent='Export cancelled.';setBusy(false);});
-for(const id of ['template','ability-order','equipment-weight','no-page-numbers'])$(id).addEventListener('change',savePrefs);
+for(const id of ['template','ability-order','equipment-weight','no-page-numbers','note-pages'])$(id).addEventListener('change',savePrefs);
 window.addEventListener('pagehide',()=>{pdfJob?.cancel();if(downloadUrl)URL.revokeObjectURL(downloadUrl);if(avatarUrl)URL.revokeObjectURL(avatarUrl);});
 // Native validation retains browser-specific guidance; expose errors to assistive technology too.
 for(const formId of ['import-form','generate-form']){

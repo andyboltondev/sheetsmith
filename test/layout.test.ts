@@ -49,7 +49,7 @@ test('the fit check notices real problems', async () => {
 test('a long attack list does not push the actions off page one, and the attacks it drops continue overleaf', async () => {
   const heavy = all.find(s => s.name === 'compact-heavy')!, { list } = await widgets(heavy.bytes);
   const attacks = list.filter(f => f.name.startsWith('Attack.') && f.name.endsWith('.Name') && f.text);
-  assert.equal(attacks.length, 6, 'the table stops at six rows when there are actions to show');
+  assert.equal(attacks.length, 7, 'the table stops at seven rows when there are actions to show');
   assert.ok(list.some(f => f.page === 0 && f.name.startsWith('Action.')), 'actions appear on page one');
   assert.ok(list.some(f => f.page > 0 && /Attacks \(continued\)/.test(f.name)), 'the remaining attacks are not lost');
 });
