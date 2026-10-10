@@ -25,6 +25,7 @@ jobs:
     needs: check
     runs-on: ubuntu-latest
     concurrency: deploy
+    timeout-minutes: 10
     steps:
       - name: Update the server
         env:
