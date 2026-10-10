@@ -1,26 +1,42 @@
 name: Deploy
-# Runs after the Check workflow passes on main, then updates the cPanel server over SSH.
+# Pushing a version tag (v1.2.3, made by `npm run release:patch`) tests that exact commit, then updates the cPanel server over SSH.
 on:
-  workflow_run:
-    workflows: [Check]
-    branches: [main]
-    types: [completed]
+  push:
+    tags: ['v*']
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to deploy (e.g. v0.1.1), for re-deploying or rolling back
+        required: true
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
   deploy:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    needs: check
     runs-on: ubuntu-latest
     concurrency: deploy
     steps:
       - name: Update the server
         env:
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
           SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           SSH_HOST: ${{ secrets.DEPLOY_HOST }}
           SSH_USER: ${{ secrets.DEPLOY_USER }}
           SSH_PORT: ${{ secrets.DEPLOY_PORT }}
           APP_DIR: ${{ secrets.DEPLOY_APP_DIR }}
         run: |
+          [[ "$TAG" =~ ^v[0-9A-Za-z.+-]+$ ]] || { echo "Unexpected tag: $TAG"; exit 1; }
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
           ssh-keyscan -p "${SSH_PORT:-22}" "$SSH_HOST" >> ~/.ssh/known_hosts
-          ssh -i ~/.ssh/id_deploy -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "cd '$APP_DIR' && bash scripts/deploy.sh"
+          ssh -i ~/.ssh/id_deploy -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "cd '$APP_DIR' && bash scripts/deploy.sh '$TAG'"

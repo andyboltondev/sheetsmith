@@ -18,7 +18,16 @@ SheetSmith runs as a cPanel **Node.js app** (Passenger). Needs Node 22.18+ (pick
 
 ## Auto-deploy from GitHub
 
-Pushes to `main` run the Check workflow; if it passes, the Deploy workflow (`.github/workflows/deploy.yml`) SSHes into the server and runs `scripts/deploy.sh` (fetch, hard reset to `origin/main`, `npm ci --omit=dev`, touch `tmp/restart.txt`).
+Pushes to `main` only run the Check workflow. A deploy happens when you push a version tag:
+
+```sh
+git switch main && git pull
+npm run release:patch   # or release:minor / release:major
+```
+
+This runs the checks, bumps `version` in `package.json`, commits, tags (`v0.1.1`), and pushes. The Deploy workflow (`.github/workflows/deploy.yml`) re-tests that tag, SSHes into the server and runs `scripts/deploy.sh <tag>` (fetch the tag, hard reset to it, `npm ci --omit=dev`, touch `tmp/restart.txt`).
+
+To roll back or redeploy: Actions > Deploy > Run workflow, enter an older tag such as `v0.1.0`.
 
 1. **SSH access.** Many hosts need it enabled (cPanel > *SSH Access*, or ask support). Confirm `ssh user@host` works.
 2. **Deploy key.** Make a dedicated key locally: `ssh-keygen -t ed25519 -f sheetsmith_deploy -N ""`. In cPanel > SSH Access > Import Key, upload the public key (`.pub`) and *Authorize* it.
@@ -28,7 +37,7 @@ Pushes to `main` run the Check workflow; if it passes, the Deploy workflow (`.gi
    - `DEPLOY_USER`: cPanel username
    - `DEPLOY_PORT`: SSH port (often 22; some hosts use another)
    - `DEPLOY_APP_DIR`: `/home/<user>/sheetsmith`
-4. Delete the local private key once saved. Run the workflow once from the Actions tab (*Deploy* > Run workflow) to test.
+4. Delete the local private key once saved. Test with Actions > Deploy > Run workflow, entering an existing tag (create one first with `npm run release:patch`).
 
 If the script can't find Node, set `NODE_ENV_ACTIVATE` to the `source .../activate` path shown on the Node.js app page.
 
