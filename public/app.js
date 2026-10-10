@@ -94,8 +94,12 @@ const PRESET_NOTES = {
   printable: 'Everything that changes during play (current HP, money, XP, slots used, item quantities, ticks) is left blank so you can pencil it in. Print at actual size, with no scaling.',
   custom: 'A custom mix of pre-filled and blank values.',
 };
+function currentPreset() {
+  const ticked = BLANKS.filter(key => $(`blank-${key}`).checked).length;
+  return ticked === 0 ? 'digital' : ticked === BLANKS.length ? 'printable' : 'custom';
+}
 function syncPreset() {
-  const ticked = BLANKS.filter(key => $(`blank-${key}`).checked).length, preset = ticked === 0 ? 'digital' : ticked === BLANKS.length ? 'printable' : 'custom';
+  const preset = currentPreset();
   $('preset-digital').checked = preset === 'digital';$('preset-printable').checked = preset === 'printable';
   $('preset-note').textContent = PRESET_NOTES[preset];
 }
@@ -220,7 +224,8 @@ async function buildSheet({ refresh = false } = {}) {
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     downloadUrl = URL.createObjectURL(new Blob([result.bytes],{type:'application/pdf'}));
     const link = $('download-link');link.href = downloadUrl;
-    link.download = `${final.identity.name.replace(/[^a-z0-9_-]/gi,'-').slice(0,70)||'character'}-sheet.pdf`;
+    const preset = currentPreset(), who = final.identity.name.replace(/[\\/:*?"<>|\x00-\x1f]/g,' ').replace(/\s+/g,' ').trim().slice(0,70) || 'Character';
+    link.download = `${who} - SheetSmith Character Sheet - ${preset[0].toUpperCase()}${preset.slice(1)}.pdf`;
     // Browsers without a built-in PDF viewer (most phones) get the download only.
     const inline = navigator.pdfViewerEnabled !== false;
     $('preview-frame').hidden = !inline;

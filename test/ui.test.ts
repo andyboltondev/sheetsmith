@@ -81,7 +81,7 @@ test('previewing sends the chosen options and catalogue to the worker and shows 
   assert.equal(app.$('preview').hidden, false);
   assert.equal(worker.stopped, true);
   assert.match(app.$('export-status').textContent!, /Preview ready/);
-  assert.equal(app.$('download-link').getAttribute('download'), 'Mara-Ashford-sheet.pdf');
+  assert.equal(app.$('download-link').getAttribute('download'), 'Mara Ashford - SheetSmith Character Sheet - Digital.pdf');
   assert.match(app.$('download-link').getAttribute('href')!, /^blob:/);
   assert.match((app.$('preview-frame') as HTMLIFrameElement).src, /^blob:.*#view=FitH$/);
 });
