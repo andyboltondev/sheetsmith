@@ -72,6 +72,13 @@ test('requests to an unexpected host are refused before anything is served', asy
     assert.equal(await status('localhost:3000'), 200);
   } finally { await app.close(); }
 });
+test('a public host is served only when named in the allowed hosts', async () => {
+  const server = createApp(undefined, ['sheets.example.com']); server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const port = (server.address() as AddressInfo).port;
+  const status = (host: string) => new Promise<number>((resolve, reject) => { const req = request({ host: '127.0.0.1', port, path: '/', headers: { Host: host } }, res => { res.resume(); resolve(res.statusCode!); }); req.on('error', reject); req.end(); });
+  try { assert.equal(await status('Sheets.Example.com'), 200); assert.equal(await status('other.example.com'), 403); }
+  finally { server.close(); }
+});
 test('every response carries the security headers, and caching follows what the content is', async () => {
   const app = await serve();
   try {

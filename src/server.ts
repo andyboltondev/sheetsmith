@@ -41,7 +41,9 @@ export const limiter = (limit: number) => {
   let times: number[] = [];
   return () => { const now = Date.now(); times = times.filter(time => now - time < 60_000); if (times.length >= limit) return false; times.push(now); return true; };
 };
-export function createApp(importer = createDndBeyondImporter()) {
+// Hosting under a real domain: ALLOWED_HOSTS="sheets.example.com" (comma-separated). Localhost is always allowed.
+const publicHosts = (process.env.ALLOWED_HOSTS ?? '').split(',').map(h => h.trim().toLowerCase()).filter(Boolean);
+export function createApp(importer = createDndBeyondImporter(), hosts = publicHosts) {
   let active = 0;
   const importAllowed = limiter(20), portraitAllowed = limiter(40);
   return createServer(async (req, res) => {
@@ -64,11 +66,11 @@ export function createApp(importer = createDndBeyondImporter()) {
       res.writeHead(200);res.end(body);
     };
     const host = req.headers.host ?? '';
-    if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return send(403, { error: 'Unrecognized local host.' });
+    if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host) && !hosts.includes(host.toLowerCase())) return send(403, { error: 'Unrecognized host.' });
     const path = new URL(req.url ?? '/', `http://${host}`).pathname;
     try {
       if (path === '/api/import' && req.method === 'POST') {
-        if (req.headers.origin && req.headers.origin !== `http://${host}`) return send(403, { error: 'Import must be requested from this app.' });
+        if (req.headers.origin && ![`http://${host}`, `https://${host}`].includes(req.headers.origin)) return send(403, { error: 'Import must be requested from this app.' });
         if (!req.headers['content-type']?.startsWith('application/json')) return send(415, { error: 'Expected a JSON request.' });
         if (active >= 3 || !importAllowed()) return send(429, { error: 'Too many imports. Please wait a minute and try again.' });
         let body = ''; for await (const chunk of req) { body += chunk.toString(); if (body.length > 4096) return send(413, { error: 'Import request is too large.' }); }
@@ -109,7 +111,7 @@ export function createApp(importer = createDndBeyondImporter()) {
     } catch (error) { send((error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 404 : 500, { error: (error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 'Not found.' : 'Something went wrong. Please try again.' }); }
   });
 }
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.env.SHEETSMITH_START || process.argv[1] === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT ?? 3000);
   createApp().listen(port, '127.0.0.1', () => console.log(`SheetSmith is ready at http://localhost:${port}`));
 }
