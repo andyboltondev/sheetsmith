@@ -34,13 +34,13 @@ test('imports weights, carrying capacity, armour drawbacks, recovery and appeara
  assert.deepEqual(c.proficiencyGroups,{armour:['Heavy Armor','Shields'],weapons:['Martial Weapons'],tools:["Smith's Tools"]});
  assert.equal(c.details!.gender,'Male');assert.equal(c.details!.faith,'Moradin');assert.equal(c.details!.size,'Medium');
 });
-test('compact summary page carries actions, spells, weights and milestone; personality moves overleaf',async()=>{
+test('compact summary page carries actions, spells, weights; personality moves overleaf',async()=>{
  const c=normalise(await raw());
  c.spellRows=[{name:'Shield',level:1,school:'Abjuration',casting:'Reaction',range:'Self',duration:'1 Round',components:'V, S',summary:'+5 AC until the start of your next turn.',reference:'',prepared:false,ritual:false,concentration:false,requiresSave:false,requiresAttack:false,attackBonus:null,saveDC:13,savingThrow:'',restriction:''}];
  const {bytes}=await generatePdf(P,c,{templateId:'compact'}),doc=await P.PDFDocument.load(bytes),form=doc.getForm(),first=doc.getPages()[0].ref;
  const annots=doc.getPages()[0].node.Annots()!.asArray().map(String);void first;
  const onFirst=(name:string)=>form.getField(name).acroField.getWidgets().some(w=>annots.includes(String(doc.context.getObjectRef(w.dict))));
- assert.equal(form.getTextField('Experience').getText(),'Milestone');
+ assert.equal(form.getTextField('Experience').getText()??'','');
  assert.match(form.getTextField('Action.Second Wind').getText()!,/Regain/);assert.ok(onFirst('Action.Second Wind'));
  assert.ok(form.getCheckBox('Uses.Action Surge.1').isChecked());assert.ok(!form.getCheckBox('Uses.Second Wind.1').isChecked());
  assert.equal(form.getTextField('Spell.Shield.time').getText(),'Reaction');assert.ok(!onFirst('Spell.Shield.effect'),'spells live on their own page');

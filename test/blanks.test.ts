@@ -45,12 +45,18 @@ test('each tick-box group can be left blank on its own',async()=>{
  assert.deepEqual(marks(blankForPlay(c,{spells:true})),[true,true,false]);
  assert.deepEqual(blankForPlay(c,{}).saves,c.saves,'nothing is cleared unless asked');
 });
-test('advancement can be left blank for XP and for milestone sheets',async()=>{
+test('XP can be left blank, and a milestone sheet shows an empty XP box',async()=>{
  const c=await character();
  assert.equal(blankForPlay(c,{advancement:true}).experience,'');
  const milestone={...c,advancement:'milestone',experience:null};
  assert.equal((await text((await generatePdf(P,blankForPlay(milestone,{advancement:true}),{templateId:'compact'})).bytes)).Experience,'');
- assert.equal((await text((await generatePdf(P,milestone,{templateId:'compact'})).bytes)).Experience,'Milestone');
+ assert.equal((await text((await generatePdf(P,milestone,{templateId:'compact'})).bytes)).Experience,'');
+});
+test('the XP and Milestone toggles follow the import and are both off when blanked',async()=>{
+ const c=await character(),toggles=async(ch:any)=>{const form=(await P.PDFDocument.load((await generatePdf(P,ch,{templateId:'compact'})).bytes)).getForm();return [form.getCheckBox('AdvancementXP').isChecked(),form.getCheckBox('AdvancementMilestone').isChecked()];};
+ assert.deepEqual(await toggles({...c,advancement:'xp',experience:900}),[true,false]);
+ assert.deepEqual(await toggles({...c,advancement:'milestone'}),[false,true]);
+ assert.deepEqual(await toggles(blankForPlay({...c,advancement:'xp',experience:900},{advancement:true})),[false,false]);
 });
 test('page numbers are on by default and can be removed from the SheetSmith sheet',async()=>{
  const c=await character(),size=async(options:object)=>(await generatePdf(P,c,{templateId:'compact',...options})).bytes.length;

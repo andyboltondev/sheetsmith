@@ -5,15 +5,16 @@ export async function drawHeader(ctx){
  const {p,c,options,kit,overflow}=ctx; const {PDFLib,doc,form,fields,warnings,font,bold,ink,muted,hair,accent,tint,white,clean,width,text,label,centred,rightLabel,rule,vrule,rbox,named,unique,field,dot,diamond,heading,ruled}=kit;
  // Identity band: name and summary line, with level, XP or milestone and portrait to the right.
  const level=c.classes.reduce((n,v)=>n+(v.level||0),0),portraitW=options.portrait?48:0;
- const milestone=c.advancement==='milestone',showXP=c.experience!=null||milestone;
- const statsW=showXP?110:40,nameW=RIGHT-M-portraitW-statsW-(portraitW?8:0);
+ const statsW=110,nameW=RIGHT-M-portraitW-statsW-(portraitW?8:0);
  field(p,'CharacterName',c.identity.name,M-2,784,nameW,26,{size:21,f:bold});
  const player=options.playerName||c.identity.playerName;
  const identity=[c.identity.species,...c.classes.map(v=>`${v.name} ${v.level}${v.subclass?' ('+v.subclass+')':''}`),c.identity.background,c.identity.alignment,player?'Player: '+player:''].filter(Boolean).join('  ·  ');
  field(p,'Identity',identity,M-2,769,nameW+statsW-4,13,{size:8.5});
  {let x=RIGHT-portraitW-(portraitW?8:0);
-  // A blanked export clears experience to '' so it can be pencilled in.
-  if(showXP){rightLabel(p,milestone?'Advancement':'XP',x,801);field(p,'Experience',c.experience===''?'':milestone?'Milestone':c.experience,x-62,784,64,15,{size:milestone?10:12,align:'center'});x-=70;}
+  // XP box, always drawn, with XP / Milestone toggles in its label row (preset from the import, both off when blanked for play).
+  const milestone=c.advancement==='milestone',unset=!!c.blanked?.advancement,mark=(id,text,right,on)=>{const dx=right-width(text.toUpperCase(),6,bold)-5;rightLabel(p,text,right,801);dot(p,id,dx,803.2,on&&!unset,2.3);return dx-8;};
+  mark('AdvancementXP','XP',mark('AdvancementMilestone','Milestone',x,milestone),!milestone);
+  field(p,'Experience',milestone?'':c.experience??'',x-62,784,64,15,{size:12,align:'center'});x-=70;
   rightLabel(p,'Level',x,801);text(p,String(level),x-width(String(level),15,bold),787.5,15,bold);}
  if(options.portrait){const image=await embedPortrait(doc,options.portrait),s=Math.min(portraitW/image.width,portraitW/image.height);p.drawImage(image,{x:RIGHT-portraitW+(portraitW-image.width*s)/2,y:765+(portraitW-image.height*s)/2,width:image.width*s,height:image.height*s});}
  rule(p,M,RIGHT,761,accent,1.2);
