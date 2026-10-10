@@ -15,6 +15,8 @@ deploy() {
   node --version
   npm ci --omit=dev --no-audit --no-fund
   mkdir -p tmp && touch tmp/restart.txt   # Passenger restarts the app on the next request
+  # Some cPanel hosts ignore restart.txt and keep the old process, so also stop it; Passenger starts a fresh one on the next request.
+  pkill -u "$(id -u)" -f "lsnode:$PWD" || true
   echo "Deployed ${tag:-main} ($(git rev-parse --short HEAD))"
 }
 deploy "$@"
