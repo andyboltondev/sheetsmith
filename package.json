@@ -15,9 +15,9 @@
     "test:update-snapshots": "UPDATE_SNAPSHOTS=1 node --test test/snapshot.test.ts",
     "check:js": "node scripts/check-js.mjs",
     "check": "npm run typecheck && npm run check:js && npm test",
-    "release:patch": "npm run check && npm version patch && git push --follow-tags",
-    "release:minor": "npm run check && npm version minor && git push --follow-tags",
-    "release:major": "npm run check && npm version major && git push --follow-tags",
+    "release:patch": "node scripts/release.mjs patch",
+    "release:minor": "node scripts/release.mjs minor",
+    "release:major": "node scripts/release.mjs major",
     "coverage": "node --test --experimental-test-coverage test/*.test.ts"
   },
   "dependencies": {

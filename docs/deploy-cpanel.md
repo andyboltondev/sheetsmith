@@ -25,7 +25,7 @@ git switch main && git pull
 npm run release:patch   # or release:minor / release:major
 ```
 
-This runs the checks, bumps `version` in `package.json`, commits, tags (`v0.1.1`), and pushes. The Deploy workflow (`.github/workflows/deploy.yml`) re-tests that tag, SSHes into the server and runs `scripts/deploy.sh <tag>` (fetch the tag, hard reset to it, `npm ci --omit=dev`, touch `tmp/restart.txt`).
+The script (`scripts/release.mjs`) checks you're on an up-to-date `main` with a clean tree, shows the version change and the commits since the last tag, and asks for confirmation. On `y` it runs the checks, bumps `version` in `package.json`, commits, tags (`v0.1.1`), and pushes. The Deploy workflow (`.github/workflows/deploy.yml`) re-tests that tag, SSHes into the server and runs `scripts/deploy.sh <tag>` (fetch the tag, hard reset to it, `npm ci --omit=dev`, touch `tmp/restart.txt`).
 
 To roll back or redeploy: Actions > Deploy > Run workflow, enter an older tag such as `v0.1.0`.
 
