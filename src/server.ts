@@ -1,12 +1,15 @@
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { createServer } from 'node:http';
+import { readFileSync } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createDndBeyondImporter } from './importers/dndbeyond/index.ts';
 import { normalise } from './importers/dndbeyond/parser.ts';
 import { fetchPortrait, portraitUrl } from './importers/dndbeyond/portrait.ts';
 const root = new URL('../', import.meta.url);
+// The footer shows package.json's version, so `npm version` (run by the release command) is the only place to change it.
+const appVersion = (JSON.parse(readFileSync(new URL('package.json', root), 'utf8')) as { version: string }).version;
 // Browser-facing PDF modules are any plain `src/pdf/<name>.js`, so a new module needs no registration here.
 const pdfModule = /^\/pdf\/([a-z][a-z-]*)\.js$/;
 const assets: Record<string, [string, string]> = {
@@ -19,7 +22,7 @@ const assets: Record<string, [string, string]> = {
   '/pdf-lib.js': ['node_modules/pdf-lib/dist/pdf-lib.esm.min.js', 'text/javascript'],
 };
 // Static files are hashed and compressed once per version on disk, not on every request.
-type Cached = { version: string; content: Buffer; etag: string; gzip?: Buffer };
+type Cached = { version: string; content: Buffer; etag: string; gzip?: Buffer; page?: Cached };
 const fileCache = new Map<string, Cached>();
 const catalogs = new Map<string, unknown>();
 // The template catalogue is read through the same validated cache and parsed once per version.
@@ -108,7 +111,9 @@ export function createApp(importer = createDndBeyondImporter(), hosts = publicHo
       const module = pdfModule.exec(path);
       const asset = module ? [`src/pdf/${module[1]}.js`, 'text/javascript'] : assets[path];
       if (!asset) return send(404, { error: 'Not found.' });
-      sendAsset(await cachedFile(asset[0]),`${asset[1]}; charset=utf-8`);
+      const file = await cachedFile(asset[0]);
+      if (path === '/' && !file.page) file.page = { ...file, content: Buffer.from(file.content.toString('utf8').replace('{{version}}', appVersion)) };
+      sendAsset(file.page ?? file, `${asset[1]}; charset=utf-8`);
     } catch (error) { send((error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 404 : 500, { error: (error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 'Not found.' : 'Something went wrong. Please try again.' }); }
   });
 }
