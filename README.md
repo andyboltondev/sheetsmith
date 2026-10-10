@@ -55,7 +55,7 @@ If Wizards publishes a revised sheet its checksum will differ; the app then says
 - Responsive interface, light/dark/system appearance, labeled controls, keyboard focus and announced status/errors.
 - A live preview of the finished PDF with a Download button. The preview refreshes shortly after any option changes; the chosen sheet, ability order and equipment options are remembered on this device. Browsers without a built-in PDF viewer (most phones) get the download only.
 - The character link field also accepts the bare character number or a link without `https://`.
-- No accounts, character database, saved uploads or saved generated PDFs. PDF generation happens in the browser; the import server handles character data transiently. The browser downloads the resulting file only when requested.
+- No accounts, character database, saved uploads or saved generated PDFs. PDF generation happens in the browser; the import server fetches the character from D&D Beyond and passes it straight to your browser without storing it (so the character number does leave your device, and D&D Beyond sees the request from the server). Uploaded portraits, edits, generated PDFs and official sheets are never sent to the server. There is no analytics, tracking or third-party request. The browser downloads the resulting file only when requested.
 
 ## Initial-build limits
 
