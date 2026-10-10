@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createDndBeyondImporter } from './importers/dndbeyond/index.ts';
@@ -21,6 +21,19 @@ const assets: Record<string, [string, string]> = {
   '/pdf-worker.js': ['public/pdf-worker.js', 'text/javascript'],
   '/pdf-lib.js': ['node_modules/pdf-lib/dist/pdf-lib.esm.min.js', 'text/javascript'],
 };
+// Scripts and styles are served under /v/<build>/..., where the build is the package version plus a hash of the shipped files.
+// Every release (or edit) therefore gets new URLs, which lets those URLs be cached for a year and never revalidated.
+let buildToken: string | undefined;
+function buildId() {
+  if (buildToken) return buildToken;
+  const hash = createHash('sha256');
+  const files = [...Object.values(assets).map(([file]) => file), ...readdirSync(new URL('src/pdf/', root)).filter(name => name.endsWith('.js')).map(name => `src/pdf/${name}`)].sort();
+  for (const file of files) hash.update(file).update(readFileSync(new URL(file, root)));
+  return buildToken = `${appVersion}-${hash.digest('hex').slice(0, 8)}`;
+}
+const versionable = (path: string) => pdfModule.test(path) || (path !== '/' && path in assets && !/\.(ico|png|svg)$/.test(path));
+// Absolute module imports (and the worker URL) are pointed at the versioned copies, so nested imports inherit the build too.
+const absoluteImport = /(\bfrom\s*|\bWorkerClass\(\s*)(['"])\/(?!\/)/g;
 // Static files are hashed and compressed once per version on disk, not on every request.
 type Cached = { version: string; content: Buffer; etag: string; gzip?: Buffer; page?: Cached };
 const fileCache = new Map<string, Cached>();
@@ -55,11 +68,12 @@ export function createApp(importer = createDndBeyondImporter(), hosts = publicHo
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: https://*.dndbeyond.com; connect-src 'self' https://*.dndbeyond.com; worker-src 'self'; frame-src blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
+    const sendNotFound = () => { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not found.' })); };
     const send = (status: number, data: unknown) => { res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); };
-    const sendAsset = (file: Cached, type: string) => {
+    const sendAsset = (file: Cached, type: string, immutable = false) => {
       // Cache public application resources, never imported character data or portraits.
       const { etag } = file;
-      res.setHeader('Cache-Control','public, max-age=0, must-revalidate');
+      res.setHeader('Cache-Control',immutable?'public, max-age=31536000, immutable':'public, max-age=0, must-revalidate');
       res.setHeader('ETag',etag);res.setHeader('Vary','Accept-Encoding');
       if(req.headers['if-none-match']===etag){res.writeHead(304);res.end();return;}
       res.setHeader('Content-Type',type);
@@ -71,7 +85,11 @@ export function createApp(importer = createDndBeyondImporter(), hosts = publicHo
     };
     const host = req.headers.host ?? '';
     if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host) && !hosts.includes(host.toLowerCase())) return send(403, { error: 'Unrecognized host.' });
-    const path = new URL(req.url ?? '/', `http://${host}`).pathname;
+    const requested = new URL(req.url ?? '/', `http://${host}`).pathname;
+    const build = /^\/v\/([^/]+)(\/.+)$/.exec(requested);
+    // A stale build is a 404 rather than the current file, so an old URL can never be cached with newer content.
+    if (build && (build[1] !== buildId() || !versionable(build[2]))) return sendNotFound();
+    const path = build ? build[2] : requested;
     try {
       if (path === '/api/import' && req.method === 'POST') {
         if (req.headers.origin && ![`http://${host}`, `https://${host}`].includes(req.headers.origin)) return send(403, { error: 'Import must be requested from this app.' });
@@ -112,8 +130,14 @@ export function createApp(importer = createDndBeyondImporter(), hosts = publicHo
       const asset = module ? [`src/pdf/${module[1]}.js`, 'text/javascript'] : assets[path];
       if (!asset) return send(404, { error: 'Not found.' });
       const file = await cachedFile(asset[0]);
-      if (path === '/' && !file.page) file.page = { ...file, content: Buffer.from(file.content.toString('utf8').replace('{{version}}', appVersion)) };
-      sendAsset(file.page ?? file, `${asset[1]}; charset=utf-8`);
+      // Derived copies get their own ETag, since their content depends on the build as well as the file.
+      if (!file.page && (path === '/' || asset[1] === 'text/javascript')) {
+        const text = file.content.toString('utf8');
+        const derived = path === '/' ? text.replaceAll('{{version}}', appVersion).replaceAll('{{build}}', buildId()) : text.replace(absoluteImport, `$1$2/v/${buildId()}/`);
+        const content = Buffer.from(derived);
+        file.page = { version: file.version, content, etag: `W/"${createHash('sha256').update(content).digest('hex')}"` };
+      }
+      sendAsset(file.page ?? file, `${asset[1]}; charset=utf-8`, Boolean(build));
     } catch (error) { send((error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 404 : 500, { error: (error as NodeJS.ErrnoException)?.code === 'ENOENT' ? 'Not found.' : 'Something went wrong. Please try again.' }); }
   });
 }

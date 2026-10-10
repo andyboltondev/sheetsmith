@@ -3,6 +3,22 @@ import assert from 'node:assert/strict';
 import { createApp } from '../src/server.ts';
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
+test('scripts and styles are served under a versioned URL that is cached for a year, and stale versions are not served', async () => {
+  const server = createApp();server.listen(0,'127.0.0.1');await once(server,'listening');
+  const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  try {
+    const page = await (await fetch(base)).text();
+    const build = /\/v\/([^/"]+)\/app\.js/.exec(page)?.[1];
+    assert.ok(build, 'the page loads app.js from a versioned URL'); assert.ok(page.includes(`/v/${build}/style.css`)); assert.ok(!page.includes('{{'));
+    const script = await fetch(`${base}/v/${build}/app.js`), body = await script.text();
+    assert.equal(script.headers.get('cache-control'), 'public, max-age=31536000, immutable');
+    assert.ok(body.includes(`from '/v/${build}/pdf/selection.js'`), 'imports point at the same build');
+    assert.ok((await (await fetch(`${base}/v/${build}/pdf-job.js`)).text()).includes(`WorkerClass('/v/${build}/pdf-worker.js'`));
+    assert.equal((await fetch(`${base}/v/${build}/pdf/generator.js`)).status, 200);
+    for (const path of [`/v/stale/app.js`, `/v/${build}/api/sample`, `/v/${build}/favicon.svg`, `/v/${build}/pdf/nope.js`]) assert.equal((await fetch(base + path)).status, 404, path);
+    assert.match((await fetch(`${base}/`)).headers.get('cache-control') ?? '', /must-revalidate/, 'the page itself is always revalidated');
+  } finally { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); }
+});
 test('HTTP server serves the app and sample, rejects invalid input and foreign origins', async () => {
   const server = createApp();server.listen(0,'127.0.0.1');await once(server,'listening');
   const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
