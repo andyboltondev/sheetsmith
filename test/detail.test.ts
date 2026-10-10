@@ -1,3 +1,4 @@
+import {loadTemplate,templatePdf,layoutOf} from './helpers/templates.ts';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -5,9 +6,11 @@ import * as PDFLib from 'pdf-lib';
 import {normalise} from '../src/importers/dndbeyond/parser.ts';
 // @ts-expect-error Browser-compatible JS
 import {generatePdf} from '../src/pdf/generator.js';
+// @ts-expect-error Browser module
+import {preparedLimit} from '../src/pdf/prepared.js';
 // Mirrors the D&D Beyond export for a Mountain Dwarf Eldritch Knight with the Dueling style.
 async function raw(){
- const raw=JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8'));
+ const raw=JSON.parse(await readFile(new URL('../src/sample/martial.json',import.meta.url),'utf8'));
  raw.data.inventory=[
   {quantity:1,equipped:true,definition:{name:'Warhammer',filterType:'Weapon',type:'Warhammer',categoryId:2,attackType:1,damage:{diceString:'1d8'},damageType:'Bludgeoning',range:5,properties:[{name:'Versatile',notes:'1d10'}]}},
   {quantity:1,equipped:true,definition:{name:'Greataxe',filterType:'Weapon',type:'Greataxe',categoryId:2,attackType:1,damage:{diceString:'1d12'},damageType:'Slashing',range:5,properties:[{name:'Two-Handed'},{name:'Heavy'}]}},
@@ -35,13 +38,13 @@ test('unconditional weapon modifiers such as Dueling reach one-handed melee dama
  assert.match(by('Greataxe').damage,new RegExp(`1d12 \\+${str} Slashing`));
  assert.match(by('Crossbow, Light').damage,new RegExp(`1d8 \\+${c.abilities.dexterity.modifier} Piercing`));
 });
-test('attack rows add damaging cantrips scaled by character level, then unarmed strike',async()=>{
+test('attack rows run ranged weapons, melee weapons, unarmed strike, then damaging cantrips',async()=>{
  const c=await sample(),names=c.attacks!.map(a=>a.name);
- assert.deepEqual(names,['Warhammer','Greataxe','Crossbow, Light','Fire Bolt','Unarmed Strike']);
+ assert.deepEqual(names,['Crossbow, Light','Warhammer','Greataxe','Unarmed Strike','Fire Bolt']);
  const bolt=c.attacks!.find(a=>a.name==='Fire Bolt')!;
  assert.equal(bolt.damage,'2d10 Fire');
  assert.equal(bolt.attackBonus,c.abilities.intelligence.modifier+c.proficiencyBonus);
- assert.equal(c.attacks!.at(-1)!.damage,`${1+c.abilities.strength.modifier} Bludgeoning`);
+ assert.equal(c.attacks!.find(a=>a.name==='Unarmed Strike')!.damage,`${1+c.abilities.strength.modifier} Bludgeoning`);
 });
 test('senses, defences, save notes and extra passive scores are imported',async()=>{
  const c=await sample();
@@ -50,7 +53,7 @@ test('senses, defences, save notes and extra passive scores are imported',async(
  assert.equal(c.passiveInsight,10+c.skills.find(s=>s.name==='Insight')!.bonus);
  assert.equal(c.passiveInvestigation,10+c.skills.find(s=>s.name==='Investigation')!.bonus);
 });
-const load=async(id:string)=>({bytes:await readFile(new URL(`../templates/${id}.pdf`,import.meta.url)),layout:JSON.parse(await readFile(new URL(`../templates/${id}.json`,import.meta.url),'utf8'))});
+const load=loadTemplate;
 test('official sheets add the spellcasting page and show cantrips, senses and defences',async()=>{
  const c=await sample(),main=await load('official-standard');
  const {bytes}=await generatePdf(PDFLib,c,{templateId:'official-standard',templateBytes:main.bytes,layout:main.layout,spellResource:await load('official-spells')});
@@ -66,4 +69,12 @@ test('official sheets add the spellcasting page and show cantrips, senses and de
  assert.match(text('AttacksSpellcasting'),/Unarmed Strike/);
  assert.match(text('ProficienciesLang'),/Senses: Darkvision 60 ft\.[\s\S]*Resistances: Poison[\s\S]*Advantage on saving throws against\spoison/);
  assert.match(text('Feat+Traits'),/SPELL DETAILS[\s\S]*Thunderwave \(level 1\)[^\n]*CON save DC/);
+});
+
+test('only classes that prepare from a list have a preparation limit',async()=>{
+ const c=await sample();
+ assert.equal(preparedLimit(c),null,'a fighter has none');
+ const wizard={...c,classes:[{name:'Wizard',level:5}],abilities:{...c.abilities,intelligence:{...c.abilities.intelligence,modifier:3}}};
+ assert.equal(preparedLimit(wizard),8);
+ assert.equal(preparedLimit({...wizard,classes:[{name:'Paladin',level:5}],abilities:{...wizard.abilities,charisma:{...wizard.abilities.charisma,modifier:2}}}),4);
 });

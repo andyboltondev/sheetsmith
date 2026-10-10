@@ -5,7 +5,7 @@ import {signed as sign} from '../../character/calculations.ts';
 type Data=Record<string,any>;
 export function loadout(raw:Data,scores:Character['abilities'],proficiency:number){
  // Weight is per bundle (20 bolts weigh 1.5 lb); stealthCheck 2 marks armour that imposes Stealth disadvantage.
- const inventoryRows:NonNullable<Character['inventoryRows']>=(raw.inventory??[]).map((i:Data)=>{const d=i.definition??{},quantity=i.quantity??1;
+ const inventoryRows:NonNullable<Character['inventoryRows']>=(raw.inventory??[]).map((i:Data)=>{const d=i.definition??{},quantity=Number.isFinite(i.quantity)&&i.quantity>=0?i.quantity:1;
   return {name:plainText(d.name),quantity,equipped:!!i.equipped,category:plainText(d.filterType),armourType:d.armorTypeId??null,armourClass:Number.isFinite(d.armorClass)?d.armorClass:null,
    weight:Math.round((Number(d.weight)||0)*(Number(d.weightMultiplier)||1)*quantity/(Number(d.bundleSize)||1)*100)/100,attuned:!!i.isAttuned,stealthDisadvantage:d.stealthCheck===2,
    ...(d.magic?{magic:true,rarity:plainText(d.rarity),attunement:!!d.canAttune,summary:plainText(d.snippet)||plainText(d.description)}:{})};});
@@ -26,11 +26,11 @@ export function loadout(raw:Data,scores:Character['abilities'],proficiency:numbe
   // Base rolls only: conditional styles, alternate abilities and magic effects are not silently activated.
   const supported=[1,2].includes(d.attackType)&&!d.magic&&!d.isHomebrew;
   const dice=plainText(d.damage?.diceString)||String(d.fixedDamage??'');
-  return {name:plainText(d.name),equipped:!!i.equipped,attackBonus:supported?modifier+(proficient?proficiency:0)+extraAttack:null,damage:`${dice}${supported&&dice?' '+sign(modifier+extraDamage):''} ${plainText(d.damageType)}`.trim(),notes:[d.range?(d.longRange>d.range?`Range ${d.range}/${d.longRange} ft`:d.range<=5?`Melee · ${d.range} ft`:`Range ${d.range} ft`):'',properties.filter((p:Data)=>!/^range$/i.test(p.name)).map((p:Data)=>p.name+(p.notes?' ('+plainText(p.notes)+')':'')).join(', '),supported&&oneHanded?`Includes ${sign(oneHanded)} damage when wielded in one hand with no other weapon`:'',supported?'Base roll; conditional bonuses not included.':'Check attack and damage bonuses.'].filter(Boolean).join('; ')};
+  return {name:plainText(d.name),equipped:!!i.equipped,ranged:d.attackType===2,attackBonus:supported?modifier+(proficient?proficiency:0)+extraAttack:null,damage:`${dice}${supported&&dice?' '+sign(modifier+extraDamage):''} ${plainText(d.damageType)}`.trim(),notes:[d.range?(d.longRange>d.range?`Range ${d.range}/${d.longRange} ft`:d.range<=5?`Melee · ${d.range} ft`:`Range ${d.range} ft`):'',properties.filter((p:Data)=>!/^range$/i.test(p.name)).map((p:Data)=>p.name+(p.notes?' ('+plainText(p.notes)+')':'')).join(', '),supported&&oneHanded?`Includes ${sign(oneHanded)} damage when wielded in one hand with no other weapon`:'',supported?'Base roll; conditional bonuses not included.':'Check attack and damage bonuses.'].filter(Boolean).join('; ')};
  });
  return {inventoryRows,weapons};
 }
-// The attack table follows the D&D Beyond sheet: equipped weapons, damaging cantrips, unarmed strike, then carried weapons.
+// The attack table runs from range to close: ranged weapons, melee weapons, unarmed strike, then spells. Equipped weapons lead within each group.
 export function attackRows(weapons:NonNullable<Character['weapons']>,spells:NonNullable<Character['spellRows']>,scores:Character['abilities'],proficiency:number,classes:Character['classes']):NonNullable<Character['attacks']>{
  const weapon=(w:typeof weapons[number])=>({name:w.name,source:'weapon' as const,attackBonus:w.attackBonus,damage:w.damage,notes:w.notes});
  const cantrips=spells.filter(s=>s.level===0&&s.damage&&(s.requiresAttack||s.requiresSave)).map(s=>({name:s.name,source:'spell' as const,attackBonus:s.requiresAttack?s.attackBonus??null:null,save:s.requiresSave&&!s.requiresAttack?`${s.savingThrow} ${s.saveDC??'?'}`.trim():undefined,damage:s.damage!,notes:[s.range,s.components].filter(Boolean).join('; ')}));
@@ -39,5 +39,7 @@ export function attackRows(weapons:NonNullable<Character['weapons']>,spells:NonN
  const mod=monk?Math.max(scores.strength.modifier,scores.dexterity.modifier):scores.strength.modifier;
  const die=monk>=17?'1d10':monk>=11?'1d8':monk>=5?'1d6':monk?'1d4':'';
  const unarmed={name:'Unarmed Strike',source:'unarmed' as const,attackBonus:mod+proficiency,damage:die?`${die} ${sign(mod)} Bludgeoning`:`${Math.max(0,1+mod)} Bludgeoning`,notes:monk?'Martial Arts':'Melee; 5 ft'};
- return [...weapons.filter(w=>w.equipped).map(weapon),...cantrips,unarmed,...weapons.filter(w=>!w.equipped).map(weapon)];
+ const ranged=(w:typeof weapons[number])=>!!w.ranged;
+ const group=(test:(w:typeof weapons[number])=>boolean)=>[...weapons.filter(w=>test(w)&&w.equipped),...weapons.filter(w=>test(w)&&!w.equipped)].map(weapon);
+ return [...group(ranged),...group(w=>!ranged(w)),unarmed,...cantrips];
 }

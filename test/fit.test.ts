@@ -1,3 +1,4 @@
+import {templatePdf,layoutOf} from './helpers/templates.ts';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -6,7 +7,6 @@ import * as PDFLib from 'pdf-lib';
 import { fitText, generatePdf, lineHeight } from '../src/pdf/generator.js';
 import { normalise } from '../src/importers/dndbeyond/parser.ts';
 const font = async () => (await PDFLib.PDFDocument.create()).embedFont(PDFLib.StandardFonts.Helvetica);
-const load = async (name: string) => readFile(new URL(`../templates/${name}`, import.meta.url));
 
 test('text keeps the largest size that fits and shrinks before overflowing', async () => {
   const f = await font();
@@ -30,11 +30,11 @@ test('overflow splits at line and sentence boundaries and keeps list structure',
 });
 
 test('continued text is titled for readers and never splits list lines together', async () => {
-  const c = normalise(JSON.parse(await readFile(new URL('./fixtures/martial.json', import.meta.url), 'utf8')));
+  const c = normalise(JSON.parse(await readFile(new URL('../src/sample/martial.json', import.meta.url), 'utf8')));
   c.details = { ...c.details, personalityTraits: Array.from({ length: 12 }, (_, i) => `Trait sentence ${i} is quite memorable.`).join(' ') };
   c.equipment = Array.from({ length: 60 }, (_, i) => `1 x Thing ${i} with a long descriptive inventory name`).join('\n');
   c.inventoryRows = Array.from({ length: 60 }, (_, i) => ({ name: `Thing ${i} with a long descriptive inventory name`, quantity: 1, equipped: false, category: 'Gear', armourType: null }));
-  const result = await generatePdf(PDFLib, c, { templateId: 'official-standard', templateBytes: await load('official-standard.pdf'), layout: JSON.parse((await load('official-standard.json')).toString()) });
+  const result = await generatePdf(PDFLib, c, { templateId: 'official-standard', templateBytes: await templatePdf('official-standard'), layout: await layoutOf('official-standard') });
   const doc = await PDFLib.PDFDocument.load(result.bytes);
   const text = doc.getForm().getFields().map(field => field instanceof PDFLib.PDFTextField ? field.getText() ?? '' : '').join('\n');
   assert.match(text, /PERSONALITY TRAITS \(CONTINUED\)/);

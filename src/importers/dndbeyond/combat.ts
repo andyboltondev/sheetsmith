@@ -22,7 +22,8 @@ export function calculateCombat(raw: Data, scores: Character['abilities'], level
     }
   }
   let hp: number | null = num(raw.baseHitPoints) ? raw.baseHitPoints + scores.constitution.modifier * level + (raw.bonusHitPoints ?? 0) + bonus('hit-points') + bonus('hit-points-per-level') * level : null;
-  let speed: number | null = raw.race?.weightSpeeds?.normal?.walk ?? null;
+  const walk = raw.race?.weightSpeeds?.normal?.walk;
+  let speed: number | null = num(walk) ? walk : null;
   if (num(speed)) {
     speed += bonus('speed') + bonus('walking-speed');
     const a = armour[0]?.definition;

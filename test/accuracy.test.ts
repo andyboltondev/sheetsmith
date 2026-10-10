@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {normalise} from '../src/importers/dndbeyond/parser.ts';
-const fixture=async()=>JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8'));
+const fixture=async()=>JSON.parse(await readFile(new URL('../src/sample/martial.json',import.meta.url),'utf8'));
 const table=(rows:Record<number,number[]>)=>Array.from({length:21},(_,level)=>rows[level]??[]);
 // D&D Beyond flags casting per class and subclass, and gives each class its multiclass divisor and rounding.
 const caster=(name:string,level:number,divisor:number,rounding=1,slots:Record<number,number[]>={})=>({level,definition:{name,hitDice:8,canCastSpells:true,spellRules:{multiClassSpellSlotDivisor:divisor,multiClassSpellSlotRounding:rounding,levelSpellSlots:table(slots)}}});

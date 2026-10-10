@@ -1,15 +1,10 @@
 import { lineHeight, wrapText } from './generator.js';
 // Continuation panels reuse the template's own "Additional features & traits" artwork, embedded from the page
 // already in this document: no second template download, and the page image is stored once.
-const panels = {
- official: { field: 'Feat+Traits', crop: { left: 215, bottom: 197, right: 589, top: 426 }, page: [612, 792], size: 10, lines: 278, width: 489,
-  title: { x: 46, y: 757 }, slots: [[40, 405], [40, 68]], panel: [532, 326], text: [17, 30, 510, 308] },
- class: { field: 'Back_Additional Features & Traits', crop: { left: 8, bottom: 10, right: 199, top: 474 }, page: [595.28, 841.89], size: 8, lines: 624, width: 241,
-  title: { x: 28, y: 797 }, slots: [[12, 62], [303, 62]], panel: [277, 673], text: [16, 24, 261, 651] },
-};
+const spec = { field: 'Feat+Traits', crop: { left: 215, bottom: 197, right: 589, top: 426 }, page: [612, 792], size: 10, lines: 278, width: 489,
+  title: { x: 46, y: 757 }, slots: [[40, 405], [40, 68]], panel: [532, 326], text: [17, 30, 510, 308] };
 export async function appendContinuations(PDFLib, doc, fields, font, groups, options, clean) {
  if (!groups.length) return;
- const spec = panels[options.templateId.startsWith('class-') ? 'class' : 'official'];
  const native = options.layout.find(f => f.name === spec.field);
  if (!native) throw new Error('Missing matching continuation panel.');
  const [panel] = await doc.embedPages([doc.getPage(native.page)], [spec.crop]);

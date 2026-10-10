@@ -37,9 +37,16 @@ function alignment(raw:ObjectData):string {
   return id===undefined?'':alignmentNames[id]??'';
 }
 
+// Upstream lists occasionally hold nulls or odd types; drop them once here so every reader below can rely on the shape.
+// Returns a shallow copy, never touching the source payload.
+function tidy(raw: ObjectData): ObjectData {
+  const objects = (value: unknown) => array(value).filter(item => item !== null && typeof item === 'object' && !Array.isArray(item)) as ObjectData[];
+  const modifiers = Object.fromEntries(Object.entries(obj(raw.modifiers)).map(([key, list]) => [key, objects(list).map(m => typeof m.subType === 'string' ? m : { ...m, subType: '' })]));
+  return { ...raw, inventory: objects(raw.inventory), modifiers };
+}
 // All assumptions about the undocumented upstream format stay in this module.
 export function normalise(payload: unknown): Character {
-  const raw = obj(obj(payload).data);
+  const raw = tidy(obj(obj(payload).data));
   if (!text(raw.name).trim()) throw new Error('D&D Beyond returned unsupported character data.');
   const classes = array(raw.classes).map(value => {
     const entry = obj(value);
@@ -48,10 +55,8 @@ export function normalise(payload: unknown): Character {
   const level = classes.reduce((sum, entry) => sum + entry.level, 0);
   if (!classes.length || classes.some(entry => !entry.name || !Number.isInteger(entry.level) || entry.level < 1)) throw new Error('Character class or level is missing or unsupported.');
   const proficiency = proficiencyBonus(level);
-  const warnings = [
-    'Review this first-build import before play. Conditional bonuses, magic items, custom overrides and advanced class rules may be missing.',
-    'Combat values describe your normal equipment. Temporary effects are not automatically activated.',
-  ];
+  // Only problems specific to this character; the general review caveat is shown by the page.
+  const warnings: string[] = [];
   const modifiers = characterModifiers(raw).filter(m => !m.restriction);
   const bonus = (subType: string) => modifiers.filter(m => m.type === 'bonus' && m.subType === subType).reduce((sum, m) => sum + (number(m.value) ?? 0), 0);
   const has = (type: string, subType: string) => modifiers.some(m => m.type === type && m.subType === subType);

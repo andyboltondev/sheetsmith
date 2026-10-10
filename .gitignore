@@ -7,3 +7,6 @@ coverage/
 .DS_Store
 output/
 .claude/
+
+# Wizards of the Coast PDFs are never bundled; users add them in the app.
+templates/*.pdf

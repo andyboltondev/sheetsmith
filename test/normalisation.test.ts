@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { normalise } from '../src/importers/dndbeyond/parser.ts';
-const fixture = async () => JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8'));
+const fixture = async () => JSON.parse(await readFile(new URL('../src/sample/martial.json',import.meta.url),'utf8'));
 test('feat bonuses, save proficiency, skill expertise, inventory and currency', async () => {
   const source = await fixture();source.data.modifiers.feat=[{type:'bonus',subType:'strength-score',value:2},{type:'expertise',subType:'athletics'}];
   const character = normalise(source);

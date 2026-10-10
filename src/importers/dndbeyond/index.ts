@@ -2,11 +2,12 @@ import type { CharacterImporter } from '../../character/model.ts';
 import { characterId } from './url.ts';
 import { normalise } from './parser.ts';
 
-export function createDndBeyondImporter(fetcher: typeof fetch = fetch): CharacterImporter {
+export function createDndBeyondImporter(fetcher: typeof fetch = fetch, parse: typeof normalise = normalise): CharacterImporter {
   return {
     canImport(input) { try { characterId(input); return true; } catch { return false; } },
     async import(input) {
       const id = characterId(input);
+      let payload: unknown;
       try {
         const response = await fetcher(`https://character-service.dndbeyond.com/character/v5/character/${id}`, {
           signal: AbortSignal.timeout(15_000), redirect: 'error', headers: { Accept: 'application/json' },
@@ -22,11 +23,14 @@ export function createDndBeyondImporter(fetcher: typeof fetch = fetch): Characte
           if (size > 5_000_000) { await reader.cancel(); throw new Error('Character data exceeds the supported size.'); }
           chunks.push(value);
         }
-        let payload: unknown;
         try { payload = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new Error('D&D Beyond returned unsupported character data.'); }
-        return normalise(payload);
       } catch (error) {
         if (error instanceof Error && (error.name === 'AbortError' || error.name === 'TimeoutError' || error instanceof TypeError)) throw new Error('D&D Beyond character data is currently unavailable. Please try again later.');
+        throw error;
+      }
+      // Outside the network handling above, so a parser fault is not reported as an upstream outage.
+      try { return parse(payload); } catch (error) {
+        if (error instanceof TypeError || error instanceof RangeError) throw new Error("This character's data could not be read. It may use something SheetSmith does not support yet.");
         throw error;
       }
     },

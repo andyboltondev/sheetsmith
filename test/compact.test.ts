@@ -7,7 +7,7 @@ import {normalise} from '../src/importers/dndbeyond/parser.ts';
 import {generatePdf} from '../src/pdf/generator.js';
 // Mirrors the play-relevant data D&D Beyond exports for a Mountain Dwarf fighter in chain mail.
 async function raw(){
- const raw=JSON.parse(await readFile(new URL('./fixtures/martial.json',import.meta.url),'utf8')),d=raw.data;
+ const raw=JSON.parse(await readFile(new URL('../src/sample/martial.json',import.meta.url),'utf8')),d=raw.data;
  Object.assign(d,{username:'player1',gender:'Male',faith:'Moradin',weight:175,preferences:{progressionType:1,ignoreCoinWeight:true},currentXp:0});
  d.race={...d.race,sizeId:4};
  d.inventory=[
@@ -44,8 +44,8 @@ test('compact summary page carries actions, spells, weights and milestone; perso
  assert.match(form.getTextField('Action.Second Wind').getText()!,/Regain/);assert.ok(onFirst('Action.Second Wind'));
  assert.ok(form.getCheckBox('Uses.Action Surge.1').isChecked());assert.ok(!form.getCheckBox('Uses.Second Wind.1').isChecked());
  assert.equal(form.getTextField('Spell.Shield.time').getText(),'Reaction');assert.ok(!onFirst('Spell.Shield.effect'),'spells live on their own page');
- // Every levelled spell carries a prepared bullet, ticked only when the source marks it prepared.
- assert.ok(!form.getFields().some(f=>f.getName().endsWith('.prepared')),'known-spell casters get no prepared marker');
+ // Every cantrip and spell carries a prepared bullet; known-spell casters have them all ticked.
+ const prepared=form.getFields().filter(f=>f.getName().endsWith('.prepared'));assert.ok(prepared.length>0&&prepared.every(f=>form.getCheckBox(f.getName()).isChecked()),'known spells and cantrips start prepared');
  assert.ok(!form.getFields().some(f=>f.getName().startsWith('Carry.')),'no carried box');
  assert.equal(form.getTextField('Item.1.Weight').getText(),'55 lb');assert.equal(form.getTextField('Item.2.Qty').getText(),'20');
  assert.match(form.getTextField('Proficiencies').getText()!,/Armour: Heavy Armor, Shields\nWeapons: Martial Weapons\nTools: Smith's Tools/);

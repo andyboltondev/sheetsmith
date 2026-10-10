@@ -1,0 +1,370 @@
+{
+ "compact-sample": {
+  "pages": [
+   {
+    "fields": 273,
+    "geometry": "f89c554dd347",
+    "text": "29a9e6a67d12",
+    "drawing": "ae8e549ec478"
+   },
+   {
+    "fields": 4,
+    "geometry": "ff09bfc2a57b",
+    "text": "300dd99af100",
+    "drawing": "565c2fd27a31"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "compact-modifier-first": {
+  "pages": [
+   {
+    "fields": 273,
+    "geometry": "b1ed384588e9",
+    "text": "b0806fe769ca",
+    "drawing": "ae8e549ec478"
+   },
+   {
+    "fields": 4,
+    "geometry": "ff09bfc2a57b",
+    "text": "300dd99af100",
+    "drawing": "565c2fd27a31"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "compact-portrait": {
+  "pages": [
+   {
+    "fields": 273,
+    "geometry": "66e776bcbb61",
+    "text": "058c714c829b",
+    "drawing": "e7f17ca77cb3"
+   },
+   {
+    "fields": 4,
+    "geometry": "ff09bfc2a57b",
+    "text": "300dd99af100",
+    "drawing": "5878ed838003"
+   }
+  ],
+  "artwork": "f8c250f21b95"
+ },
+ "compact-heavy": {
+  "pages": [
+   {
+    "fields": 210,
+    "geometry": "6538ea4379cf",
+    "text": "48c42037871e",
+    "drawing": "85c22aa4fa14"
+   },
+   {
+    "fields": 75,
+    "geometry": "e9673ad99c79",
+    "text": "062c610ef42a",
+    "drawing": "f554b61b33a8"
+   },
+   {
+    "fields": 80,
+    "geometry": "08f30a6df472",
+    "text": "47a92f1eb16a",
+    "drawing": "dc3d0e0fc715"
+   },
+   {
+    "fields": 80,
+    "geometry": "70fdc22a4313",
+    "text": "999f823306e9",
+    "drawing": "659a0721ed01"
+   },
+   {
+    "fields": 76,
+    "geometry": "938b93f36db5",
+    "text": "bc5484624482",
+    "drawing": "5d92be24af36"
+   },
+   {
+    "fields": 72,
+    "geometry": "96e8542c533e",
+    "text": "b2b56ca47576",
+    "drawing": "cd7c50025268"
+   },
+   {
+    "fields": 26,
+    "geometry": "4b0032a3523f",
+    "text": "47e4cfce13e8",
+    "drawing": "654afa5abb1a"
+   },
+   {
+    "fields": 19,
+    "geometry": "f3caeb878b8b",
+    "text": "177436464cd0",
+    "drawing": "7cf57bd96eed"
+   },
+   {
+    "fields": 20,
+    "geometry": "973564a1cf9b",
+    "text": "3ea267e92224",
+    "drawing": "bc764d3492cb"
+   },
+   {
+    "fields": 8,
+    "geometry": "f4bfe20025e2",
+    "text": "d9258607d2e1",
+    "drawing": "df899a5f2c13"
+   },
+   {
+    "fields": 2,
+    "geometry": "30f97334e39d",
+    "text": "42ea3a84b3e4",
+    "drawing": "825682084a6d"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "compact-heavy-bare": {
+  "pages": [
+   {
+    "fields": 192,
+    "geometry": "8f2ec88cd154",
+    "text": "64ac55235c0a",
+    "drawing": "241f3598853a"
+   },
+   {
+    "fields": 75,
+    "geometry": "e9673ad99c79",
+    "text": "062c610ef42a",
+    "drawing": "d112795c9d86"
+   },
+   {
+    "fields": 80,
+    "geometry": "08f30a6df472",
+    "text": "47a92f1eb16a",
+    "drawing": "b35bcec9f2c8"
+   },
+   {
+    "fields": 80,
+    "geometry": "70fdc22a4313",
+    "text": "999f823306e9",
+    "drawing": "dd52daf1634c"
+   },
+   {
+    "fields": 76,
+    "geometry": "938b93f36db5",
+    "text": "bc5484624482",
+    "drawing": "d7b2ee885526"
+   },
+   {
+    "fields": 72,
+    "geometry": "96e8542c533e",
+    "text": "b2b56ca47576",
+    "drawing": "4e9b81703dab"
+   },
+   {
+    "fields": 26,
+    "geometry": "4b0032a3523f",
+    "text": "47e4cfce13e8",
+    "drawing": "810822d03664"
+   },
+   {
+    "fields": 19,
+    "geometry": "f3caeb878b8b",
+    "text": "177436464cd0",
+    "drawing": "61c50e43f367"
+   },
+   {
+    "fields": 20,
+    "geometry": "973564a1cf9b",
+    "text": "3ea267e92224",
+    "drawing": "7238aed40a01"
+   },
+   {
+    "fields": 8,
+    "geometry": "f4bfe20025e2",
+    "text": "d9258607d2e1",
+    "drawing": "692d10907ad4"
+   },
+   {
+    "fields": 2,
+    "geometry": "30f97334e39d",
+    "text": "42ea3a84b3e4",
+    "drawing": "56e68c7bf3f3"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "compact-heavy-blank": {
+  "pages": [
+   {
+    "fields": 210,
+    "geometry": "6538ea4379cf",
+    "text": "b9e572a8c645",
+    "drawing": "85c22aa4fa14"
+   },
+   {
+    "fields": 75,
+    "geometry": "e9673ad99c79",
+    "text": "062c610ef42a",
+    "drawing": "f554b61b33a8"
+   },
+   {
+    "fields": 80,
+    "geometry": "08f30a6df472",
+    "text": "47a92f1eb16a",
+    "drawing": "dc3d0e0fc715"
+   },
+   {
+    "fields": 80,
+    "geometry": "70fdc22a4313",
+    "text": "999f823306e9",
+    "drawing": "659a0721ed01"
+   },
+   {
+    "fields": 76,
+    "geometry": "938b93f36db5",
+    "text": "bc5484624482",
+    "drawing": "5d92be24af36"
+   },
+   {
+    "fields": 72,
+    "geometry": "96e8542c533e",
+    "text": "b2b56ca47576",
+    "drawing": "cd7c50025268"
+   },
+   {
+    "fields": 26,
+    "geometry": "4b0032a3523f",
+    "text": "47e4cfce13e8",
+    "drawing": "654afa5abb1a"
+   },
+   {
+    "fields": 19,
+    "geometry": "f3caeb878b8b",
+    "text": "177436464cd0",
+    "drawing": "7cf57bd96eed"
+   },
+   {
+    "fields": 20,
+    "geometry": "973564a1cf9b",
+    "text": "3ea267e92224",
+    "drawing": "bc764d3492cb"
+   },
+   {
+    "fields": 8,
+    "geometry": "f4bfe20025e2",
+    "text": "d9258607d2e1",
+    "drawing": "df899a5f2c13"
+   },
+   {
+    "fields": 2,
+    "geometry": "30f97334e39d",
+    "text": "42ea3a84b3e4",
+    "drawing": "825682084a6d"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "official-standard-sample": {
+  "pages": [
+   {
+    "fields": 106,
+    "geometry": "f0351013a66f",
+    "text": "fd07b3369ecc",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 12,
+    "geometry": "ad5aee6b9043",
+    "text": "fcd767218473",
+    "drawing": "67e0b1b0ed30"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "official-standard-heavy": {
+  "pages": [
+   {
+    "fields": 106,
+    "geometry": "e308d8e1e950",
+    "text": "62a2ccb72c70",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 13,
+    "geometry": "554fa065805c",
+    "text": "f7976d1df4e7",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 150,
+    "geometry": "5fd175fd92ed",
+    "text": "11fd33c93b93",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 2,
+    "geometry": "5cc43778bc8a",
+    "text": "d57e3b26c394",
+    "drawing": "a12df89c0e19"
+   },
+   {
+    "fields": 2,
+    "geometry": "d3747858942d",
+    "text": "77e9abd82106",
+    "drawing": "c3a2fb59e6ea"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "official-alternative-sample": {
+  "pages": [
+   {
+    "fields": 99,
+    "geometry": "d1f3dd66f88f",
+    "text": "ffa6622dbffb",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 12,
+    "geometry": "ad5aee6b9043",
+    "text": "fcd767218473",
+    "drawing": "67e0b1b0ed30"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ },
+ "official-alternative-heavy": {
+  "pages": [
+   {
+    "fields": 99,
+    "geometry": "ddd0f4366485",
+    "text": "3eecde9a3ee0",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 13,
+    "geometry": "554fa065805c",
+    "text": "f7976d1df4e7",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 150,
+    "geometry": "5fd175fd92ed",
+    "text": "11fd33c93b93",
+    "drawing": "67e0b1b0ed30"
+   },
+   {
+    "fields": 2,
+    "geometry": "5cc43778bc8a",
+    "text": "db8db6a60996",
+    "drawing": "a12df89c0e19"
+   },
+   {
+    "fields": 2,
+    "geometry": "d3747858942d",
+    "text": "4c3dd2d33568",
+    "drawing": "c3a2fb59e6ea"
+   }
+  ],
+  "artwork": "da39a3ee5e6b"
+ }
+}

@@ -23,7 +23,7 @@ export interface Character {
   inventoryRows?: {name:string;quantity:number;equipped:boolean;category:string;armourType:number|null;armourClass?:number|null;weight?:number;attuned?:boolean;stealthDisadvantage?:boolean;magic?:boolean;rarity?:string;attunement?:boolean;summary?:string}[];
   // Pounds; capacity follows the standard 15 × STR rule with size multipliers.
   carrying?: {weight:number;capacity:number;pushDragLift:number};
-  weapons?: {name:string;equipped:boolean;attackBonus:number|null;damage:string;notes:string}[];
+  weapons?: {name:string;equipped:boolean;ranged?:boolean;attackBonus:number|null;damage:string;notes:string}[];
   // Rows for the attack table: equipped weapons, damaging cantrips, unarmed strike, then carried weapons.
   attacks?: {name:string;source:'weapon'|'spell'|'unarmed';attackBonus:number|null;save?:string;damage:string;notes:string}[];
   senses?: string[];

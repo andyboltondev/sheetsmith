@@ -15,7 +15,10 @@ test('HTTP server serves the app and sample, rejects invalid input and foreign o
     assert.equal((await fetch(`${base}/pdf-worker.js`)).status,200);
     assert.equal((await fetch(`${base}/pdf-job.js`)).status,200);
     const catalog=await (await fetch(`${base}/api/templates`)).json();assert.equal(catalog[0].id,'official-standard');assert.ok(catalog.every((t:{edition:string})=>t.edition==='5e'));
-    assert.equal((await fetch(`${base}/templates/official-standard.pdf`)).headers.get('content-type'),'application/pdf');
+    // Wizards' PDFs are never served: only field layouts are.
+    for(const id of ['official-standard','official-alternative','official-spells'])assert.equal((await fetch(`${base}/templates/${id}.pdf`)).status,404,id);
+    assert.equal((await fetch(`${base}/templates/class-fighter.json`)).status,404);
+    assert.equal((await fetch(`${base}/official.js`)).status,200);assert.equal((await fetch(`${base}/pdf/official.js`)).status,200);
     assert.equal((await fetch(`${base}/templates/official-standard.json`)).status,200);
     assert.equal((await fetch(`${base}/templates/not-real.pdf`)).status,404);
     const sample = await fetch(`${base}/api/sample`);assert.equal(sample.headers.get('cache-control'),'no-store');assert.equal((await sample.json()).identity.name,'Mara Ashford');
