@@ -63,7 +63,11 @@ test('page numbers are on by default and can be removed from the SheetSmith shee
  const plain=await P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact',pageNumbers:false})).bytes),numbered=await P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact'})).bytes);
  assert.equal(plain.getPageCount(),numbered.getPageCount());
  assert.ok(await size({})>await size({pageNumbers:false}),'the footer is added unless turned off');
- assert.equal(await size({}),await size({pageNumbers:true}));
+ // Two exports can differ by a byte or two of metadata, so compare their content: same pages and same fields.
+ const explicit=await P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact',pageNumbers:true})).bytes);
+ assert.equal(explicit.getPageCount(),numbered.getPageCount());
+ assert.deepEqual(explicit.getForm().getFields().map(f=>f.getName()),numbered.getForm().getFields().map(f=>f.getName()));
+ assert.ok(Math.abs(await size({})-await size({pageNumbers:true}))<64,'an explicit pageNumbers:true is the default');
 });
 test('item quantities can be left blank on their own, as stacks or all counts',async()=>{
  const c=await character(),blank=blankForPlay(c,{quantities:true});
