@@ -111,7 +111,7 @@ function syncBlankAll() {
 }
 $('blank-all').addEventListener('change', () => { for (const key of BLANKS) $(`blank-${key}`).checked = $('blank-all').checked;syncBlankAll(); });
 for (const key of BLANKS) $(`blank-${key}`).addEventListener('change', syncBlankAll);
-for (const id of ['preset-digital','preset-printable']) $(id).addEventListener('change', () => { for (const key of BLANKS) $(`blank-${key}`).checked = id === 'preset-printable';syncBlankAll(); });
+for (const id of ['preset-digital','preset-printable']) $(id).addEventListener('change', () => { for (const key of BLANKS) $(`blank-${key}`).checked = id === 'preset-printable';$('lock-sheet').checked = id === 'preset-printable';syncBlankAll(); });
 syncPreset();
 async function loadCharacter(sample = false) {
   if (busy) return;
@@ -167,7 +167,7 @@ $('portrait-file').addEventListener('change', () => {
 let portraitCache = null;
 function portraitBytes() {
   const file = $('portrait-file').files[0], mode = $('portrait-mode').value;
-  const key = [mode, mode === 'custom' ? [file?.name, file?.size, file?.lastModified].join(':') : '', character?.identity.portrait].join('|');
+  const key = [mode, mode === 'custom' ? [file?.name, file?.size, file?.lastModified].join(':') : '', character?.identity.portrait, currentPreset() === 'printable'].join('|');
   if (portraitCache?.key !== key) { const promise = preparePortrait();portraitCache = { key, promise };promise.catch(() => { if (portraitCache?.promise === promise) portraitCache = null; }); }
   return portraitCache.promise;
 }
@@ -186,13 +186,14 @@ async function preparePortrait() {
   let bitmap;
   try { bitmap = await createImageBitmap(blob); } catch { throw new Error('This image could not be opened. Please choose another PNG, JPG or WebP.'); }
   if (bitmap.width * bitmap.height > 40_000_000) { bitmap.close();throw new Error('This image is too large. Choose an image under 40 megapixels.'); }
-  const scale = Math.min(1,1200/Math.max(bitmap.width,bitmap.height));
+  // The printable sheet keeps the portrait larger and almost uncompressed.
+  const print = currentPreset() === 'printable', scale = Math.min(1,(print ? 2400 : 1200)/Math.max(bitmap.width,bitmap.height));
   const canvas = document.createElement('canvas');canvas.width = Math.max(1,Math.round(bitmap.width*scale));canvas.height = Math.max(1,Math.round(bitmap.height*scale));
   const context = canvas.getContext('2d');context.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
   // Photos travel as JPEG, several times smaller in the PDF than PNG; images with transparency stay PNG.
   const { data } = context.getImageData(0,0,canvas.width,canvas.height);
   let opaque = true;for (let i = 3; i < data.length; i += 4) if (data[i] < 255) { opaque = false;break; }
-  const image = await new Promise(resolve => opaque ? canvas.toBlob(resolve,'image/jpeg',0.9) : canvas.toBlob(resolve,'image/png'));
+  const image = await new Promise(resolve => opaque ? canvas.toBlob(resolve,'image/jpeg',print ? 0.98 : 0.9) : canvas.toBlob(resolve,'image/png'));
   if (!image) throw new Error('Could not prepare your portrait. Please choose another image.');
   return new Uint8Array(await image.arrayBuffer());
 }
@@ -215,7 +216,7 @@ async function buildSheet({ refresh = false } = {}) {
     const reminders = playReminders(final);
     const notes = Object.keys(blanks).filter(key => blanks[key]).map(key => reminders[key].replace(/^Currently:? /,'').replace(/\.$/,''));
     const printed = Object.values(blanks).some(Boolean) ? blankForPlay(final,blanks) : final;
-    const options = {playerName:$('player-name').value.trim(),templateId:$('template').value,abilityOrder:$('ability-order').value,equipmentWeight:$('equipment-weight').checked,pageNumbers:!$('no-page-numbers').checked,notePages:Number($('note-pages').value),catalog,...($('template').value!=='compact'?{officialFiles:official.stored()}:{})};
+    const options = {playerName:$('player-name').value.trim(),templateId:$('template').value,abilityOrder:$('ability-order').value,equipmentWeight:$('equipment-weight').checked,pageNumbers:!$('no-page-numbers').checked,notePages:Number($('note-pages').value),locked:$('lock-sheet').checked,forPrint:currentPreset() === 'printable',catalog,...($('template').value!=='compact'?{officialFiles:official.stored()}:{})};
     if ($('template').value !== 'compact' && !official.isReady($('template').value)) { $('official-setup').open = true; throw new Error(`Add the official sheet PDFs first: still needed — ${official.missingFor($('template').value).join(', ')}. See “Official sheets” below the sheet choice.`); }
     const portrait = await portraitBytes();
     if (run !== runId) return;

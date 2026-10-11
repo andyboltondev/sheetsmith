@@ -29,5 +29,5 @@ export async function generateGroupedPdf(PDFLib,c,options){
  // Footer numbers keep loose pages in order; they are on unless turned off.
  if(options.pageNumbers!==false){const pages=doc.getPages();pages.forEach((pg,i)=>{const t=`Page ${i+1} of ${pages.length}`;kit.text(pg,t,(A4[0]-kit.width(t,7))/2,20,7,kit.font,kit.muted);});}
  doc.setTitle(`${kit.clean(c.identity.name)} — SheetSmith — 5e (2014)`);
- return {bytes:await savePdf(PDFLib,doc,kit.form,font),warnings:kit.warnings};
+ return {bytes:await savePdf(PDFLib,doc,kit.form,font,{locked:!!options.locked,forPrint:!!options.forPrint}),warnings:kit.warnings};
 }

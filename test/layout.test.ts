@@ -1,7 +1,9 @@
 import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
 import * as P from 'pdf-lib';
-import { exportAll, type Scenario } from './helpers/scenarios.ts';
+import { exportAll, sample, type Scenario } from './helpers/scenarios.ts';
+// @ts-expect-error Browser module
+import { generatePdf } from '../src/pdf/generator.js';
 import { fitProblems, overlaps, widgets } from './helpers/layout.ts';
 let all: Scenario[];
 before(async () => { all = await exportAll(); });
@@ -55,4 +57,22 @@ test('every prepared damaging spell is in the attack table; a long table moves e
   assert.ok(list.find(f => f.name === 'Item.1.Name')!.page > 0, 'equipment moves to the next page');
   const sample = await widgets(all.find(s => s.name === 'compact-sample')!.bytes);
   assert.equal(sample.list.find(f => f.name === 'Item.1.Name')!.page, 0, 'a short table keeps equipment on page one');
+});
+test('the Appearance boxes flex: any count shares evenly over full-width rows of equal boxes', async () => {
+  const keys = ['gender', 'age', 'size', 'height', 'weight', 'eyes', 'skin', 'hair', 'faith', 'lifestyle'];
+  for (let n = 1; n <= keys.length; n++) {
+    const c = await sample();
+    (c as any).details = Object.fromEntries(keys.slice(0, n).map(k => [k, 'x']));
+    const { list } = await widgets((await generatePdf(P, c, { templateId: 'compact' })).bytes);
+    const boxes = list.filter(f => f.name.startsWith('Appearance.')), rows = new Map<number, typeof boxes>();
+    for (const f of boxes) rows.set(Math.round(f.y), [...(rows.get(Math.round(f.y)) ?? []), f]);
+    assert.equal(boxes.length, n);
+    const sizes = [...rows.values()].map(r => r.length);
+    assert.ok(Math.max(...sizes) <= 5 && Math.max(...sizes) - Math.min(...sizes) <= 1, `${n} boxes split ${sizes}`);
+    for (const row of rows.values()) {
+      const sorted = [...row].sort((a, b) => a.x - b.x);
+      assert.ok(new Set(row.map(f => Math.round(f.w))).size === 1, 'equal boxes within a row');
+      assert.ok(Math.abs(sorted[0].x - 31) < 4 && Math.abs(sorted.at(-1)!.x + sorted.at(-1)!.w - 565) < 4, 'the row spans the width');
+    }
+  }
 });

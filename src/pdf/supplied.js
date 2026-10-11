@@ -176,5 +176,5 @@ export async function generateSuppliedPdf(PDFLib, character, options) {
   await appendContinuations(PDFLib,doc,fields,font,overflow.map(g=>({...g,label:headingFor(g)})),options,clean);
   doc.setTitle(`${clean(identity.name)} — 5e Character Sheet`);
   doc.setSubject(`5e; ${options.abilityOrder==='modifier-first'?'Modifier above score':'Score above modifier'}`);
-  return {bytes:await savePdf(PDFLib,doc,form,font),warnings};
+  return {bytes:await savePdf(PDFLib,doc,form,font,{locked:!!options.locked,forPrint:!!options.forPrint}),warnings};
 }

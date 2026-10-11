@@ -81,3 +81,16 @@ test('equipment names write feet as ft',async()=>{
  assert.equal(form.getTextField('Item.1.Name').getText(),'Rope, Hempen (50 ft)');
  assert.equal(form.getTextField('Item.2.Name').getText(),'Pole (10 ft)');
 });
+test('a locked sheet has no editable fields but keeps its content',async()=>{
+ const c=normalise(await raw()),load=async(options:object)=>P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact',...options})).bytes);
+ const open=await load({}),locked=await load({locked:true});
+ assert.ok(open.getForm().getFields().length>50,'an unlocked sheet is a form');
+ assert.equal(locked.getForm().getFields().length,0,'every field is gone');
+ assert.equal(locked.getPageCount(),open.getPageCount());
+ assert.ok(locked.getPages().every(p=>(p.node.Annots()?.size()??0)===0),'no widgets are left on any page');
+});
+test('a print export is saved without object streams',async()=>{
+ const c=normalise(await raw()),text=async(options:object)=>Buffer.from((await generatePdf(P,c,{templateId:'compact',...options})).bytes).toString('latin1');
+ assert.match(await text({}),/\/Type\s*\/ObjStm/,'the default export packs objects into streams');
+ assert.doesNotMatch(await text({forPrint:true}),/\/Type\s*\/ObjStm/,'the print export keeps every object plain');
+});

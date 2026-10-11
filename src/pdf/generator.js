@@ -56,9 +56,15 @@ export const embedPortrait = (doc, bytes) => bytes[0] === 0xff && bytes[1] === 0
 export const loadPdf =(PDFLib, bytes) => PDFLib.PDFDocument.load(bytes, { parseSpeed: PDFLib.ParseSpeeds.Fastest });
 // pdf-lib keeps every object it ever made, including appearance streams replaced when a field changes after
 // placement and template objects nothing points to. Draw final appearances, embed, drop the unreferenced, save.
-export async function savePdf(PDFLib, doc, form, font) {
+// `forPrint` saves with less compression. `locked` flattens every field into fixed page content, so the sheet can be read and printed but not edited.
+export async function savePdf(PDFLib, doc, form, font, { locked = false, forPrint = false } = {}) {
   const { PDFRef, PDFDict, PDFArray, PDFStream } = PDFLib, context = doc.context, reachable = new Set();
   form.updateFieldAppearances(font);
+  if (locked) {
+    form.flatten({ updateFieldAppearances: false });
+    // Flattening draws each value into the page but can leave the empty widget boxes behind: drop them.
+    for (const page of doc.getPages()) page.node.delete(PDFLib.PDFName.of('Annots'));
+  }
   // Viewers show the character's name in the title bar rather than a file name.
   doc.catalog.getOrCreateViewerPreferences().setDisplayDocTitle(true);
   doc.setProducer('SheetSmith'); doc.setCreator('SheetSmith');
@@ -74,7 +80,8 @@ export async function savePdf(PDFLib, doc, form, font) {
     else if (value instanceof PDFArray) pending.push(...value.asArray());
   }
   for (const [ref] of context.enumerateIndirectObjects()) if (!reachable.has(ref)) context.delete(ref);
-  return doc.save({ updateFieldAppearances: false, objectsPerTick: Infinity });
+  // The printable sheet skips object streams, so older print software and RIPs read it without trouble.
+  return doc.save({ updateFieldAppearances: false, objectsPerTick: Infinity, useObjectStreams: !forPrint });
 }
 export async function generatePdf(PDFLib, character, options = {}) {
   if (options.templateId === 'compact') return generateGroupedPdf(PDFLib,character,options);

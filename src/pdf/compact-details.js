@@ -45,10 +45,13 @@ export function drawDetails(ctx){
   const tail=ctx.tail&&ctx.tail.y-BOTTOM>200?ctx.tail:null;
   if(tail){page=tail.page;col=0;y=tail.y-6;text(page,'Features & notes',M,y-11,11,bold,accent);y-=26;bandPage=page;bandY=y;}else start('Features & notes');
   // Appearance at a glance: a table of short fields across the top of the page.
-  if(tableKeys.some(k=>d[k])){const keys=tableKeys.filter(k=>d[k]),per=keys.length<=5?keys.length:Math.ceil(keys.length/2),cw=(RIGHT-M-(per-1)*8)/per;heading(page,'Appearance',M,y,RIGHT-M);y-=8;
-   keys.forEach((k,i)=>{const x=M+(i%per)*(cw+8),top=y-Math.floor(i/per)*30;rbox(page,x,top-24,cw,24,{});label(page,titleCase(k),x+5,top-8,6);
-    field(page,`Appearance.${titleCase(k)}`,d[k]?String(physicalValue(k)):'',x+3,top-22,cw-6,13,{size:9});});
-   y-=Math.ceil(keys.length/per)*30+16;bandPage=page;bandY=y;}
+  if(tableKeys.some(k=>d[k])){const keys=tableKeys.filter(k=>d[k]);heading(page,'Appearance',M,y,RIGHT-M);y-=8;
+   // Any number of boxes: at most five to a row, shared out evenly over the rows (they differ by one at most), each row spanning the full width with equal boxes.
+   const nrows=Math.ceil(keys.length/5),rows=Array.from({length:nrows},(_,r)=>keys.splice(0,Math.ceil(keys.length/(nrows-r))));
+   rows.forEach((row,r)=>{const cw=(RIGHT-M-(row.length-1)*8)/row.length,top=y-r*30;
+    row.forEach((k,i)=>{const x=M+i*(cw+8);rbox(page,x,top-24,cw,24,{});label(page,titleCase(k),x+5,top-8,6);
+     field(page,`Appearance.${titleCase(k)}`,d[k]?String(physicalValue(k)):'',x+3,top-22,cw-6,13,{size:9});});});
+   y-=nrows*30+16;bandPage=page;bandY=y;}
   if(bandCols.length){const bw=(RIGHT-M-16*(bandCols.length-1))/bandCols.length,bsize=7.6,blh=lineHeight(font,bsize);
    const parts=bandCols.map(([t,b,id])=>({t,id,text:clean(b),lines:wrapText(clean(b),font,bsize,bw-4)})),bh=Math.min(150,Math.max(...parts.map(v=>v.lines.length))*blh+4);
    parts.forEach((v,i)=>{const x=M+i*(bw+16);heading(page,v.t,x,y,bw);

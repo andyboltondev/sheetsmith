@@ -73,7 +73,7 @@ test('previewing sends the chosen options and catalogue to the worker and shows 
   app.$('generate-button').click(); await app.settle(20);
   const [worker] = app.workers; assert.equal(app.workers.length, 1);
   assert.equal(worker.url, '/pdf-worker.js');
-  assert.deepEqual({ ...worker.message.options, catalog: undefined, portrait: undefined }, { playerName: 'Andy', templateId: 'compact', abilityOrder: 'modifier-first', equipmentWeight: false, pageNumbers: true, notePages: 0, catalog: undefined, portrait: undefined });
+  assert.deepEqual({ ...worker.message.options, catalog: undefined, portrait: undefined }, { playerName: 'Andy', templateId: 'compact', abilityOrder: 'modifier-first', equipmentWeight: false, pageNumbers: true, notePages: 0, locked: false, forPrint: false, catalog: undefined, portrait: undefined });
   assert.ok(worker.message.options.catalog.some((t: { id: string }) => t.id === 'official-standard'), 'the worker needs no second catalogue request');
   assert.equal(app.calls.filter(c => c.path === '/api/templates').length, 1);
   assert.equal(app.$('preview').hidden, true, 'nothing is shown until the PDF exists');
