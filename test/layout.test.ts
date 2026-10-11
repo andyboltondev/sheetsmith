@@ -46,10 +46,13 @@ test('the fit check notices real problems', async () => {
   box.addToPage(offPage, { x: 90, y: 90, width: 40, height: 14 });
   assert.match((await fitProblems(await off.save()))[0].problem, /outside the page/);
 });
-test('a long attack list does not push the actions off page one, and the attacks it drops continue overleaf', async () => {
+test('every prepared damaging spell is in the attack table; a long table moves equipment to its own page', async () => {
   const heavy = all.find(s => s.name === 'compact-heavy')!, { list } = await widgets(heavy.bytes);
-  const attacks = list.filter(f => f.name.startsWith('Attack.') && f.name.endsWith('.Name') && f.text);
-  assert.equal(attacks.length, 7, 'the table stops at seven rows when there are actions to show');
-  assert.ok(list.some(f => f.page === 0 && f.name.startsWith('Action.')), 'actions appear on page one');
-  assert.ok(list.some(f => f.page > 0 && /Attacks \(continued\)/.test(f.name)), 'the remaining attacks are not lost');
+  const attacks = list.filter(f => /^Attack\.\d+\.Name$/.test(f.name) && f.text);
+  assert.ok(attacks.length > 7, 'the table grows past the usual row count instead of dropping attacks');
+  assert.ok(attacks.every(f => f.page === 0), 'all of them are on page one');
+  assert.ok(!list.some(f => /Attacks \(continued\)/.test(f.name)), 'nothing is pushed to a continuation list');
+  assert.ok(list.find(f => f.name === 'Item.1.Name')!.page > 0, 'equipment moves to the next page');
+  const sample = await widgets(all.find(s => s.name === 'compact-sample')!.bytes);
+  assert.equal(sample.list.find(f => f.name === 'Item.1.Name')!.page, 0, 'a short table keeps equipment on page one');
 });

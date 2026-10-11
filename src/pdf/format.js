@@ -2,3 +2,5 @@
 export const signed = value => value >= 0 ? `+${value}` : String(value);
 export const ordinal = n => n+(['th','st','nd','rd'][n%100>10&&n%100<14?0:n%10]??'th');
 export const PROFICIENCY_ONLY = 'Included in proficiencies.';
+// Item names carry the unit spelled out (Rope, Hempen (50 feet)); the sheet writes "50 ft".
+export const shortFeet = text => String(text ?? '').replace(/(\d)[ -]?(?:feet|foot)\b/gi, '$1 ft');

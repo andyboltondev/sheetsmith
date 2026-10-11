@@ -1,8 +1,12 @@
-import { M, RIGHT, BOTTOM } from './compact-kit.js';
+import { M, RIGHT, BOTTOM, A4 } from './compact-kit.js';
 import { displayItems } from './generator.js';
+import { shortFeet } from './format.js';
 // The foot of page one: equipment, full width (coins, then three columns of items).
 export function drawEquipment(ctx,from){
- const {p,c,options,kit,overflow}=ctx; const {PDFLib,doc,form,fields,warnings,font,bold,ink,muted,hair,accent,tint,white,clean,width,text,label,centred,rightLabel,rule,vrule,rbox,named,unique,field,dot,diamond,heading,ruled}=kit;
+ const {c,options,kit,overflow}=ctx; const {PDFLib,doc,form,fields,warnings,font,bold,ink,muted,hair,accent,tint,white,clean,width,text,label,centred,rightLabel,rule,vrule,rbox,named,unique,field,dot,diamond,heading,ruled}=kit;
+ // A long attack table leaves no room on page one, so the equipment gets a page of its own.
+ const overleaf=!!ctx.equipmentOverleaf,p=overleaf?doc.addPage(A4):ctx.p;
+ if(overleaf){const name=clean(c.identity.name);text(p,'Equipment',M,800,13,bold,accent);text(p,name,RIGHT-width(name,7.5),801,7.5,font,muted);rule(p,M,RIGHT,792,accent,1.2);from=784;}
  {const weights=options.equipmentWeight!==false;
   const HW=RIGHT-M;
   let ey=from-2;
@@ -16,9 +20,9 @@ export function drawEquipment(ctx,from){
   ey-=24;
   const gap=14,COLS=3,colW=(HW-gap*(COLS-1))/COLS,qw=15,ww=weights?27:0,nameW=colW-9-qw-ww-2-(weights?2:0)-(rowsIn.some(r=>r.attunement||r.attuned)?8:0);
   const lb=n=>n?`${Math.round(n*100)/100} lb`:'';
-  const items=c.inventoryRows?.length?c.inventoryRows.map(r=>({name:r.name,qty:r.quantity==null?'':r.quantity,weight:lb(r.weight),equipped:r.equipped,attunable:!!(r.attunement||r.attuned),attuned:!!r.attuned}))
+  const items=c.inventoryRows?.length?c.inventoryRows.map(r=>({name:shortFeet(r.name),qty:r.quantity==null?'':r.quantity,weight:lb(r.weight),equipped:r.equipped,attunable:!!(r.attunement||r.attuned),attuned:!!r.attuned}))
    :displayItems(c.equipment).split('\n').filter(t=>t.trim()).map(t=>({name:t,qty:'',weight:'',equipped:false}));
-  const rowH=11,perCol=Math.max(3,Math.floor((ey-BOTTOM-9)/rowH));
+  const rowH=11,fitCol=Math.max(3,Math.floor((ey-BOTTOM-9)/rowH)),perCol=overleaf?Math.min(fitCol,Math.max(10,Math.ceil(items.length/COLS)+3)):fitCol;
   [...Array(COLS).keys()].forEach(col=>{const x=M+col*(colW+gap);
    label(p,'Qty',x+9,ey-5,6);label(p,'Item',x+9+qw+2,ey-5,6);if(weights)rightLabel(p,'Weight',x+colW,ey-5,6);});
   const top=ey-8;

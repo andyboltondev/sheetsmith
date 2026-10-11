@@ -33,7 +33,7 @@ export function drawActions(ctx,y){
    text(p,label,x,y,7.5,font,muted);text(p,value,x+width(label,7.5,font)+5,y,sz,bold);});
   ry-=Math.ceil(traits.length/3)*12+2;}
  // Space below is kept for the equipment; actions that do not fit continue overleaf.
- const floor=FLOOR+10,later=[],aw=(RW-16)/2,y0=ry;
+ const floor=(ctx.equipmentOverleaf?BOTTOM:FLOOR)+10,later=[],aw=(RW-16)/2,y0=ry;
  const entryHeight=e=>13+(e.summary?Math.min(3,wrapText(clean(e.summary),font,6.6,aw-10).length)*lineHeight(font,6.6)+6:2);
  const groupHeight=entries=>entries.length?22+entries.reduce((n,e)=>n+entryHeight(e),0):0;
  // Fill the left column up to half the total height, then continue in the right.

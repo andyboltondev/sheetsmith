@@ -75,3 +75,9 @@ test('a notes block ends the last page, and extra note pages follow on request',
  assert.ok(notesPage(extra.doc,1).height>650&&notesPage(extra.doc,2).height>650,'extra pages are full-page notes');
  assert.equal((await pagesOf({notePages:-3})).count,base.count,'a bad count adds nothing');
 });
+test('equipment names write feet as ft',async()=>{
+ const c=normalise(await raw());c.inventoryRows=[{name:'Rope, Hempen (50 feet)',quantity:1,weight:10},{name:'Pole (10-foot)',quantity:1,weight:7}] as typeof c.inventoryRows;
+ const form=(await P.PDFDocument.load((await generatePdf(P,c,{templateId:'compact'})).bytes)).getForm();
+ assert.equal(form.getTextField('Item.1.Name').getText(),'Rope, Hempen (50 ft)');
+ assert.equal(form.getTextField('Item.2.Name').getText(),'Pole (10 ft)');
+});
