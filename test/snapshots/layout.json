@@ -2,10 +2,10 @@
  "compact-sample": {
   "pages": [
    {
-    "fields": 350,
-    "geometry": "89db049b72d2",
-    "text": "56adfc59dd4e",
-    "drawing": "522e41b63101"
+    "fields": 364,
+    "geometry": "fd1bfa494501",
+    "text": "e1db3eb23255",
+    "drawing": "d21744c3f1ca"
    },
    {
     "fields": 5,
@@ -19,10 +19,10 @@
  "compact-modifier-first": {
   "pages": [
    {
-    "fields": 350,
-    "geometry": "d08bf1bf8d95",
-    "text": "05c7e5bbc5be",
-    "drawing": "522e41b63101"
+    "fields": 364,
+    "geometry": "a29d25c7a4d1",
+    "text": "0eabb65ef2fc",
+    "drawing": "d21744c3f1ca"
    },
    {
     "fields": 5,
@@ -36,10 +36,10 @@
  "compact-portrait": {
   "pages": [
    {
-    "fields": 350,
-    "geometry": "f70dc7c2a1a2",
-    "text": "2f80b1f17150",
-    "drawing": "2e34582af9c2"
+    "fields": 364,
+    "geometry": "bb2639128234",
+    "text": "0a3b3cb43ce0",
+    "drawing": "a450c133a5df"
    },
    {
     "fields": 5,

@@ -21,12 +21,12 @@ export function drawAttacks(ctx,y){
  const nlh=lineHeight(font,7),NX=RX+322,NWd=RW-322;
  // One table: weapons, unarmed strikes and spell attacks are all just attacks, followed by blank rows to pencil in.
  {rbox(p,RX,ry-10,RW,10,{fill:tint,border:undefined,r:2});label(p,'Name',RX+4,ry-7,6);centred(p,'Hit / DC',RX+134,ry-7,36,6);label(p,'Damage',RX+178,ry-7,6);label(p,'Range · properties · notes',NX+2,ry-7,6);ry-=10;
-  // Every attack is listed. Up to the usual row count the table is padded with blank rows (two or more, where there is room) for attacks picked up in play; a longer list grows instead,
+  // Every attack is listed. Up to the usual row count the table is always followed by two blank rows for attacks picked up in play; a longer list grows instead,
   // and equipment moves to its own page so the actions still fit. Only a list too long even for that continues overleaf.
   const cap=c.actions?.length?8:12,grow=attackList.length>cap;ctx.equipmentOverleaf=grow;
   // Filled rows are as tall as their notes need; blank rows are a fixed two lines, to write in.
-  const BLANK_H=2*nlh+6,rowHeight=a=>a?Math.max(16,Math.min(3,wrapText(clean((a.notes??'').replace(/; /g,'  ·  ')),font,7,NWd-4).length)*nlh+6):BLANK_H;
-  let rows=Math.min(cap,Math.max(4,attackList.length+3));
+  const BLANK_ROWS=2,BLANK_H=2*nlh+6,rowHeight=a=>a?Math.max(16,Math.min(3,wrapText(clean((a.notes??'').replace(/; /g,'  ·  ')),font,7,NWd-4).length)*nlh+6):BLANK_H;
+  let rows=attackList.length+BLANK_ROWS;
   if(grow){rows=0;for(let top=ry;rows<attackList.length;rows++){const h=rowHeight(attackList[rows]);if(rows>=4&&top-h<BOTTOM+60)break;top-=h;}}
   for(let i=0;i<rows;i++){const a=attackList[i]??{},notes=wrapText(clean((a.notes??'').replace(/; /g,'  ·  ')),font,7,NWd-4),shown=notes.length>3?[notes[0],notes[1],notes[2].replace(/[ ,;.]*$/,'')+' …']:notes,h=attackList[i]?Math.max(16,shown.length*nlh+6):BLANK_H,y=ry-h;
    field(p,`Attack.${i+1}.Name`,a.name??'',RX+2,y+h-14,130,13,{size:8.4,f:bold});field(p,`Attack.${i+1}.Hit`,a.hit??'',RX+134,y+h-14,36,13,{size:8.4,align:'center'});
