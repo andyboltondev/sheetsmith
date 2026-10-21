@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eo pipefail
 
 deploy() {
   local tag="${1:?Provide a release tag}"
